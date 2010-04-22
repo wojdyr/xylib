@@ -28,7 +28,7 @@ Supported formats:
 
 For API description, see `xylib/xylib.h`__ file.
 
-__ http://fityk.svn.sourceforge.net/viewvc/fityk/trunk/xylib/xylib/xylib.h?view=markup
+__ http://xylib.svn.sourceforge.net/viewvc/xylib/trunk/xylib/xylib.h?view=markup
 
 Licence: `LGPL <http://www.opensource.org/licenses/lgpl-2.1.php>`_
 
@@ -42,8 +42,8 @@ To build xylib you need:
 * any modern C++ compiler 
 * Boost_ libraries (only at compile time). 
 
-.. _`source tarball`: http://downloads.sourceforge.net/fityk/xylib-0.5.tar.bz2
-.. _repository: https://fityk.svn.sourceforge.net/svnroot/fityk/trunk/xylib
+.. _`source tarball`: http://downloads.sourceforge.net/xylib/xylib-0.5.tar.bz2
+.. _repository: https://xylib.svn.sourceforge.net/svnroot/xylib/trunk/
 .. _Boost: http://www.boost.org/
 
 **Linux, FreeBSD, etc:** 
@@ -55,7 +55,7 @@ MISC NOTES
 
 The file `sample-urls`__ contains links to files in formats handled by xylib.
 
-__ https://fityk.svn.sourceforge.net/svnroot/fityk/trunk/xylib/sample-urls
+__ https://xylib.svn.sourceforge.net/svnroot/xylib/trunk/sample-urls
 
 The library comes with a tiny program *xyconv*, which converts files
 supported by xylib to TSV.

@@ -92,10 +92,6 @@ case $host in
     ;;
 esac
 
-# this is for compatibility with fityk configure.ac 
-# see xylib/Makefile.am for comments on CPPFLAGS_3RDPARTY
-AC_SUBST(CPPFLAGS_3RDPARTY)
-
 AC_SUBST(XYLIB_ADDLIB)
 
 AC_OUTPUT([
