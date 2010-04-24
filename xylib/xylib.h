@@ -29,7 +29,7 @@
 /// in the file.
 /// DataSet and Block contain also MetaData, which is a string to string map.
 ///
-
+/// The API uses std::string. It may not be 
 
 #ifndef XYLIB_XYLIB_H_
 #define XYLIB_XYLIB_H_
@@ -52,7 +52,6 @@
 
 #include <string>
 #include <vector>
-#include <map>
 #include <stdexcept>
 #include <fstream>
 #include <algorithm>
@@ -150,14 +149,32 @@ public:
 };
 
 
-/// stores meta-data (additional data, that usually describe x-y data)
+struct MetaDataImp; // implementation details
+
+/// Map that stores meta-data (additional data, that usually describe x-y data)
 /// for block or dataset. For example: date of the experiment, wavelength, ...
-class XYLIB_API MetaData : public std::map<std::string, std::string>
+/// The only way to get all elements is using size(), get_key() and get().
+class XYLIB_API MetaData
 {
 public:
-    bool has_key(std::string const& key) const { return find(key) != end(); }
-    std::string const& get(std::string const& key) const;
+    // for use only in xylib
+    MetaData();
+    ~MetaData();
+    void operator=(const MetaData& other);
+    void clear();
     bool set(std::string const& key, std::string const& val);
+    std::string& operator[] (const std::string& x);
+
+    // use these functions to query meta data
+    bool has_key(std::string const& key) const;
+    std::string const& get(std::string const& key) const;
+    size_t size() const;
+    std::string const& get_key(size_t index) const;
+
+private:
+    MetaData(const MetaData&); // disallow
+
+    MetaDataImp *imp_;
 };
 
 
@@ -187,8 +204,9 @@ public:
     // add one column; for use in filetype implementations
     void add_column(Column *c, std::string const& title="", bool append=true);
 
+    // TODO: move to utils
     // split block if it has columns with different sizes
-    std::vector<Block*> split_on_column_lentgh();
+    std::vector<Block*> split_on_column_length();
 
 protected:
     std::vector<Column*> cols;
@@ -269,7 +287,7 @@ XYLIB_API std::string get_wildcards_string(std::string const& all_files="*");
 
 extern "C" {
 
-#else // !__cplusplus
+#endif // !__cplusplus
 
 /* Minimal C API.
  * Note that blocks and rows are indexed from 0, but columns are indexed from 1,
@@ -284,8 +302,6 @@ XYLIB_API double xylib_get_data(void* block, int column, int row);
 XYLIB_API const char* xylib_dataset_metadata(void* dataset, const char* key);
 XYLIB_API const char* xylib_block_metadata(void* block, const char* key);
 XYLIB_API void xylib_free_dataset(void* dataset);
-
-#endif //__cplusplus
 
 #ifdef __cplusplus
 }

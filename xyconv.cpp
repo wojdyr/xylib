@@ -91,14 +91,15 @@ void print_filetype_info(string const& filetype)
 
 void export_metadata(ostream &of, xylib::MetaData const& meta)
 {
-    for (map<string,string>::const_iterator i = meta.begin();
-                                                        i != meta.end(); ++i) {
-        of << "# " << i->first << ": ";
-        for (string::const_iterator j = i->second.begin();
-                                                   j != i->second.end(); ++j) {
+    for (size_t i = 0; i != meta.size(); ++i) {
+        const string& key = meta.get_key(i);
+        const string& value = meta.get(key);
+        of << "# " << key << ": ";
+        // value can be multiline
+        for (string::const_iterator j = value.begin(); j != value.end(); ++j) {
             of << *j;
             if (*j == '\n')
-                of << "# " << i->first << ": ";
+                of << "# " << key << ": ";
         }
         of << endl;
     }

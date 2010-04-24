@@ -528,7 +528,7 @@ void PdCifDataSet::load_data(std::istream &f)
                            + S(actions.invalid_line_counter) + " invalid lines,"
                            " no data found");
     for (int i = 0; i < n; ++i) {
-        vector<Block*> sb = actions.block_list[i]->split_on_column_lentgh();
+        vector<Block*> sb = actions.block_list[i]->split_on_column_length();
         blocks.insert(blocks.end(), sb.begin(), sb.end());
     }
 }

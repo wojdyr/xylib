@@ -38,6 +38,8 @@
 #include "xfit_xdd.h"
 #include "riet7.h"
 
+#include <map>
+
 using namespace std;
 using namespace xylib::util;
 
@@ -78,19 +80,66 @@ const FormatInfo* get_format(int n)
 }
 
 
+struct MetaDataImp : public map<string, string>
+{
+};
+
+MetaData::MetaData()
+    : imp_(new MetaDataImp)
+{
+}
+
+MetaData::~MetaData()
+{
+    delete imp_;
+}
+
+void MetaData::operator=(const MetaData& other)
+{
+    *imp_ = *other.imp_;
+}
+
+bool MetaData::has_key(std::string const& key) const
+{
+    return imp_->find(key) != imp_->end();
+}
+
 string const& MetaData::get(string const& key) const
 {
-    const_iterator it = find(key);
-    if (it == end())
+    map<string,string>::const_iterator it = imp_->find(key);
+    if (it == imp_->end())
         throw RunTimeError("no such key in meta-info found");
     return it->second;
 }
 
 bool MetaData::set(string const& key, string const& val)
 {
-    return insert(make_pair(key, val)).second;
+    //map::insert returns pair<iterator,bool>
+    return imp_->insert(make_pair(key, val)).second;
 }
 
+size_t MetaData::size() const
+{
+    return imp_->size();
+}
+
+string const& MetaData::get_key(size_t index) const
+{
+    map<string,string>::const_iterator it = imp_->begin();
+    for (int i = 0; i < index; ++i)
+        ++it;
+    return it->first;
+}
+
+void MetaData::clear()
+{
+    imp_->clear();
+}
+
+string& MetaData::operator[] (string const& x)
+{
+    return (*imp_)[x];
+}
 
 Column* const Block::index_column = new StepColumn(0, 1);
 
@@ -131,7 +180,7 @@ int Block::get_point_count() const
     return min_n;
 }
 
-vector<Block*> Block::split_on_column_lentgh()
+vector<Block*> Block::split_on_column_length()
 {
     vector<Block*> result;
     if (cols.empty())
