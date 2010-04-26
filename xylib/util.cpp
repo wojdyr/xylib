@@ -200,64 +200,6 @@ string read_line(istream& is)
     return line;
 }
 
-
-// get all numbers in the first legal line
-// sep is _optional_ separator that can be used in addition to white space
-void VecColumn::add_values_from_str(string const& str, char sep)
-{
-    const char* p = str.c_str();
-    while (isspace(*p) || *p == sep)
-        ++p;
-    while (*p != 0) {
-        char *endptr = NULL;
-        errno = 0; // To distinguish success/failure after call
-        double val = strtod(p, &endptr);
-        if (p == endptr)
-            throw(xylib::FormatError("Number not found in line:\n" + str));
-        if (errno != 0)
-            throw(xylib::FormatError("Numeric overflow or underflow in line:\n"
-                                     + str));
-        add_val(val);
-        p = endptr;
-        while (isspace(*p) || *p == sep)
-            ++p;
-    }
-}
-
-double VecColumn::get_min() const
-{
-    calculate_min_max();
-    return min_val;
-}
-
-double VecColumn::get_max(int /*point_count*/) const
-{
-    calculate_min_max();
-    return max_val;
-}
-
-void VecColumn::calculate_min_max() const
-{
-    static bool has_min_max = false;
-    static size_t previous_length = 0;
-    // public api of VecColumn don't allow changing data, only appending
-    if (has_min_max && data.size() == previous_length)
-        return;
-    if (data.empty()) {
-        min_val = max_val = 0.;
-        return;
-    }
-    min_val = max_val = data[0];
-    for (vector<double>::const_iterator i = data.begin() + 1; i != data.end();
-                                                                         ++i) {
-        if (*i < min_val)
-            min_val = *i;
-        if (*i > max_val)
-            max_val = *i;
-    }
-}
-
-
 // get a trimmed line that is not empty and not a comment
 bool get_valid_line(std::istream &is, std::string &line, char comment_char)
 {
@@ -351,6 +293,103 @@ Block* read_ssel_and_data(istream &f, int max_headers)
     }
     return blk;
 }
+
+vector<Block*> split_on_column_length(Block *block)
+{
+    vector<Block*> result;
+    int ncol = block->get_column_count();
+    if (ncol == 0)
+        return result;
+    result.push_back(block);
+    const int n1 = block->get_column(0).get_point_count();
+    for (int i = 1; i < ncol; /*nothing*/) {
+        Column const& col = block->get_column(i);
+        const int n = col.get_point_count();
+        if (n == n1)
+            ++i;
+        else {
+            int new_b_idx = -1;
+            for (size_t j = 1; j < result.size(); ++j) {
+                if (result[j]->get_point_count() == n) {
+                    new_b_idx = (int) j;
+                    break;
+                }
+            }
+            if (new_b_idx == -1) {
+                new_b_idx = (int) result.size();
+                Block* new_block = new Block;
+                new_block->meta = block->meta;
+                new_block->set_name(block->get_name() + "_" + S(n));
+                result.push_back(new_block);
+            }
+            // we don't want to add to much functions to class Column,
+            // because this class is a part of public API, so we rather
+            // use const_cast here.
+            result[new_b_idx]->add_column(const_cast<Column*>(&col));
+            block->del_column(i);
+        }
+    }
+    return result;
+}
+
+
+
+// get all numbers in the first legal line
+// sep is _optional_ separator that can be used in addition to white space
+void VecColumn::add_values_from_str(string const& str, char sep)
+{
+    const char* p = str.c_str();
+    while (isspace(*p) || *p == sep)
+        ++p;
+    while (*p != 0) {
+        char *endptr = NULL;
+        errno = 0; // To distinguish success/failure after call
+        double val = strtod(p, &endptr);
+        if (p == endptr)
+            throw(xylib::FormatError("Number not found in line:\n" + str));
+        if (errno != 0)
+            throw(xylib::FormatError("Numeric overflow or underflow in line:\n"
+                                     + str));
+        add_val(val);
+        p = endptr;
+        while (isspace(*p) || *p == sep)
+            ++p;
+    }
+}
+
+double VecColumn::get_min() const
+{
+    calculate_min_max();
+    return min_val;
+}
+
+double VecColumn::get_max(int /*point_count*/) const
+{
+    calculate_min_max();
+    return max_val;
+}
+
+void VecColumn::calculate_min_max() const
+{
+    static bool has_min_max = false;
+    static size_t previous_length = 0;
+    // public api of VecColumn don't allow changing data, only appending
+    if (has_min_max && data.size() == previous_length)
+        return;
+    if (data.empty()) {
+        min_val = max_val = 0.;
+        return;
+    }
+    min_val = max_val = data[0];
+    for (vector<double>::const_iterator i = data.begin() + 1; i != data.end();
+                                                                         ++i) {
+        if (*i < min_val)
+            min_val = *i;
+        if (*i > max_val)
+            max_val = *i;
+    }
+}
+
 
 } } // namespace xylib::util
 

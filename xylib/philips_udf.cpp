@@ -60,7 +60,7 @@ void UdfDataSet::load_data(std::istream &f)
         string::size_type pos1 = line.find(',');
         string::size_type pos2 = line.rfind(',');
         // there should be at least two ',' in a key-value line
-        format_assert(pos1 != pos2);
+        format_assert(this, pos1 != pos2);
         string key = str_trim(line.substr(0, pos1));
         string val = str_trim(line.substr(pos1 + 1, pos2 - pos1 - 1));
 
@@ -78,7 +78,8 @@ void UdfDataSet::load_data(std::istream &f)
     }
 
     StepColumn *xcol = new StepColumn(x_start, x_step);
-    blk->add_column(xcol, "data angle");
+    xcol->set_name("data angle");
+    blk->add_column(xcol);
 
     VecColumn *ycol = new VecColumn;
     string line;
@@ -102,8 +103,9 @@ void UdfDataSet::load_data(std::istream &f)
         if (has_slash)
             break;
     }
-    blk->add_column(ycol, "raw scan");
-    blocks.push_back(blk);
+    ycol->set_name("raw scan");
+    blk->add_column(ycol);
+    add_block(blk);
 }
 
 } // namespace xylib

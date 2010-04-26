@@ -37,9 +37,9 @@ bool Riet7DataSet::check(istream &f)
 
 void Riet7DataSet::load_data(std::istream &f)
 {
-    Block *block = read_ssel_and_data(f, 5);
-    format_assert(block != NULL);
-    blocks.push_back(block);
+    Block *blk = read_ssel_and_data(f, 5);
+    format_assert(this, blk != NULL);
+    add_block(blk);
 }
 
 } // namespace xylib

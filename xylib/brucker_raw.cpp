@@ -34,7 +34,7 @@ bool BruckerRawDataSet::check(istream &f)
 void BruckerRawDataSet::load_data(std::istream &f)
 {
     string head = read_string(f, 4);
-    format_assert(head == "RAW " || head == "RAW2" || head == "RAW1");
+    format_assert(this, head == "RAW " || head == "RAW2" || head == "RAW1");
     if (head[3] == ' ')
         load_version1(f);
     else if (head[3] == '2')
@@ -56,7 +56,7 @@ void BruckerRawDataSet::load_version1(std::istream &f)
         // early DIFFRAC-AT raw data files didn't repeat the "RAW "
         // on additional ranges
         // (and if it's the first block, 4 bytes from file were already read)
-        if (!blocks.empty()) {
+        if (get_block_count() != 0) {
             istringstream raw_stream("RAW ");
             unsigned raw_int = read_uint32_le(raw_stream);
             if (cur_range_steps == raw_int)
@@ -99,7 +99,7 @@ void BruckerRawDataSet::load_version1(std::istream &f)
         }
         blk->add_column(ycol);
 
-        blocks.push_back(blk);
+        add_block(blk);
     }
 }
 
@@ -125,7 +125,7 @@ void BruckerRawDataSet::load_version2(std::istream &f)
 
         // add the block-scope meta-info
         unsigned cur_header_len = read_uint16_le(f);
-        format_assert (cur_header_len > 48);
+        format_assert(this, cur_header_len > 48);
 
         unsigned cur_range_steps = read_uint16_le(f);
         f.ignore(4);
@@ -147,7 +147,7 @@ void BruckerRawDataSet::load_version2(std::istream &f)
         }
         blk->add_column(ycol);
 
-        blocks.push_back(blk);
+        add_block(blk);
     }
 }
 
@@ -212,7 +212,7 @@ void BruckerRawDataSet::load_version1_01(std::istream &f)
     for (int cur_range = 0; cur_range < range_cnt; ++cur_range) {
         Block* blk = new Block;
         int header_len = read_uint32_le(f);     // address 0
-        format_assert (header_len == 304);
+        format_assert(this, header_len == 304);
         int steps = read_uint32_le(f);          // address 4
         blk->meta["STEPS"] = S(steps);
         double start_theta = read_dbl_le(f);    // address 8
@@ -286,7 +286,7 @@ void BruckerRawDataSet::load_version1_01(std::istream &f)
         }
         blk->add_column(ycol);
 
-        blocks.push_back(blk);
+        add_block(blk);
     }
 }
 

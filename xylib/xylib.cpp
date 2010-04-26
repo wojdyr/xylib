@@ -141,76 +141,73 @@ string& MetaData::operator[] (string const& x)
     return (*imp_)[x];
 }
 
+
 Column* const Block::index_column = new StepColumn(0, 1);
+
+struct BlockImp
+{
+    string name;
+    vector<Column*> cols;
+};
+
+Block::Block()
+    : imp_(new BlockImp)
+{
+}
 
 Block::~Block()
 {
-    vector<Column*>::iterator it;
-    for (it = cols.begin(); it != cols.end(); ++it) {
+    for (vector<Column*>::iterator it = imp_->cols.begin();
+                                                it != imp_->cols.end(); ++it)
         delete *it;
-    }
+    delete imp_;
 }
 
+std::string const& Block::get_name() const
+{
+    return imp_->name;
+}
+
+void Block::set_name(std::string const& name)
+{
+    imp_->name = name;
+}
+
+int Block::get_column_count() const
+{
+    return (int) imp_->cols.size();
+}
 
 const Column& Block::get_column(int n) const
 {
     if (n == 0)
         return *index_column;
-    int c = (n < 0 ? n + (int) cols.size() : n - 1);
-    if (c < 0 || c >= (int) cols.size())
+    int c = (n < 0 ? n + (int) imp_->cols.size() : n - 1);
+    if (c < 0 || c >= (int) imp_->cols.size())
         throw RunTimeError("column index out of range: " + S(n));
-    return *cols[c];
+    return *imp_->cols[c];
 }
 
-void Block::add_column(Column *c, string const& title, bool append)
+void Block::add_column(Column* c, bool append)
 {
-    if (!title.empty())
-        c->name = title;
-    cols.insert((append ? cols.end() : cols.begin()), c);
+    imp_->cols.insert((append ? imp_->cols.end() : imp_->cols.begin()), c);
+}
+
+void Block::del_column(int n)
+{
+    imp_->cols.erase(imp_->cols.begin() + n);
 }
 
 int Block::get_point_count() const
 {
     int min_n = -1;
-    for (vector<Column*>::const_iterator i=cols.begin(); i != cols.end(); ++i){
+    for (vector<Column*>::const_iterator i = imp_->cols.begin();
+                                                i != imp_->cols.end(); ++i) {
         int n = (*i)->get_point_count();
         if (min_n == -1 || (n != -1 && n < min_n))
             min_n = n;
     }
     return min_n;
-}
-
-vector<Block*> Block::split_on_column_length()
-{
-    vector<Block*> result;
-    if (cols.empty())
-        return result;
-    result.push_back(this);
-    const int n1 = cols[0]->get_point_count();
-    for (size_t i = 1; i < cols.size(); /*nothing*/) {
-        const int n = cols[i]->get_point_count();
-        if (n == n1)
-            ++i;
-        else {
-            int new_b_idx = -1;
-            for (size_t j = 1; j < result.size(); ++j) {
-                if (result[j]->get_point_count() == n) {
-                    new_b_idx = (int) j;
-                    break;
-                }
-            }
-            if (new_b_idx == -1) {
-                new_b_idx = (int) result.size();
-                Block* new_block = new Block;
-                new_block->meta = meta;
-                new_block->name = name + "_" + S(n);
-                result.push_back(new_block);
-            }
-            result[new_b_idx]->add_column(cols[i]);
-            cols.erase(cols.begin() + i);
-        }
-    }
-    return result;
 }
 
 
@@ -222,6 +219,11 @@ DataSet::~DataSet()
 {
     for (vector<Block*>::iterator i = blocks.begin(); i != blocks.end(); ++i)
         delete *i;
+}
+
+int DataSet::get_block_count() const
+{
+    return (int) blocks.size();
 }
 
 const Block* DataSet::get_block(int n) const
@@ -237,6 +239,21 @@ void DataSet::clear()
     this->~DataSet();
     blocks.clear();
     meta.clear();
+}
+
+bool DataSet::has_option(std::string const& t)
+{
+    return (std::find(options_.begin(), options_.end(), t) != options_.end());
+}
+
+void DataSet::add_block(Block* block)
+{
+    blocks.push_back(block);
+}
+
+void DataSet::set_options(vector<string> const& options)
+{
+    options_ = options;
 }
 
 // One pass input streambuf. It reads and decompress whole file in ctor.
@@ -386,10 +403,10 @@ DataSet* load_stream(istream &is, FormatInfo const* fi,
     if (is.eof())
         throw FormatError("The file is empty.");
 
-    DataSet *pd = (*fi->ctor)();
-    pd->options = options;
-    pd->load_data(is);
-    return pd;
+    DataSet *ds = (*fi->ctor)();
+    ds->set_options(options);
+    ds->load_data(is);
+    return ds;
 }
 
 // filename: path, filename or only extension with dot

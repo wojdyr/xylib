@@ -140,14 +140,14 @@ void WinspecSpeDataSet::load_data(std::istream &f)
         }
         blk->add_column(ycol);
 
-        blocks.push_back(blk);
+        add_block(blk);
     }
 }
 
 
 Column* WinspecSpeDataSet::get_calib_column(const spe_calib *calib, int dim)
 {
-    format_assert(calib->polynom_order <= 6, "bad polynom header");
+    format_assert(this, calib->polynom_order <= 6, "bad polynom header");
 
     if (!calib->calib_valid)    //use idx as X instead
         return new StepColumn(0, 1);

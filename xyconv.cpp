@@ -122,8 +122,8 @@ void export_plain_text(xylib::DataSet const *d, string const &fname,
 
     for (int i = 0; i < range_num; ++i) {
         const xylib::Block *block = d->get_block(i);
-        if (range_num > 1 || !block->name.empty())
-            of << endl << "### block #" << i << " " << block->name << endl;
+        if (range_num > 1 || !block->get_name().empty())
+            of << "\n### block #" << i << " " << block->get_name() << endl;
         if (with_metadata)
             export_metadata(of, block->meta);
 
@@ -131,7 +131,7 @@ void export_plain_text(xylib::DataSet const *d, string const &fname,
         of << "# ";
         // column 0 is pseudo-column with point indices, we skip it
         for (int k = 1; k <= ncol; ++k) {
-            string const& name = block->get_column(k).name;
+            string const& name = block->get_column(k).get_name();
             if (k > 1)
                 of << "\t";
             if (name.empty())

@@ -94,7 +94,7 @@ void CanberraMcaDataSet::load_data(std::istream &f)
     }
     blk->add_column(ycol);
 
-    blocks.push_back(blk);
+    add_block(blk);
 }
 
 // function that converts:

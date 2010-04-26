@@ -80,12 +80,12 @@ void RigakuDataSet::load_data(std::istream &f)
                 blk = new Block;
             }
             else if (str_startwith(line, "*END")) { // block ends
-                format_assert(count == ycol->get_point_count(),
+                format_assert(this, count == ycol->get_point_count(),
                               "count of x and y differ");
                 StepColumn *xcol = new StepColumn(start, step, count);
                 blk->add_column(xcol);
                 blk->add_column(ycol);
-                blocks.push_back(blk);
+                add_block(blk);
                 blk = NULL;
                 ycol = NULL;
             }
@@ -112,12 +112,12 @@ void RigakuDataSet::load_data(std::istream &f)
             }
         }
         else { // should be a line of values
-            format_assert(is_numeric(line[0]));
+            format_assert(this, is_numeric(line[0]));
             ycol->add_values_from_str(line, ',');
         }
     }
-    format_assert(grp_cnt != 0, "no GROUP_COUNT attribute given");
-    format_assert(grp_cnt == (int) blocks.size(),
+    format_assert(this, grp_cnt != 0, "no GROUP_COUNT attribute given");
+    format_assert(this, grp_cnt == get_block_count(),
                   "block count different from expected");
 }
 

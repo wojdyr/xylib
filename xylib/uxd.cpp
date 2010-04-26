@@ -120,7 +120,7 @@ void UxdDataSet::load_data(std::istream &f)
             blk->add_column(ycol);
             cols[0] = ycol;
             ncols = 1;
-            blocks.push_back(blk);
+            add_block(blk);
             peak_list = false;
         }
         else if (str_startwith(line, "_2THETACOUNTS") ||
@@ -133,7 +133,7 @@ void UxdDataSet::load_data(std::istream &f)
             cols[0] = xcol;
             cols[1] = ycol;
             ncols = 2;
-            blocks.push_back(blk);
+            add_block(blk);
             peak_list = false;
         }
         // these keywords specify peak list, which we are not interested in
@@ -159,13 +159,13 @@ void UxdDataSet::load_data(std::istream &f)
             }
         }
         else if (!peak_list) { //data
-            format_assert(is_numeric(line[0]), "line: "+line);
-            format_assert(cols[0] != NULL,
+            format_assert(this, is_numeric(line[0]), "line: "+line);
+            format_assert(this, cols[0] != NULL,
                           "Data started without raw data keyword:\n" + line);
             add_values_from_str(line, ',', cols, ncols);
         }
     }
-    format_assert(blk != NULL);
+    format_assert(this, blk != NULL);
 }
 
 } // namespace xylib

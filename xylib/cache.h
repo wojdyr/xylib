@@ -85,13 +85,15 @@ private:
     {
         std::string path_;
         std::string format_name_;
+        std::vector<std::string> options_;
         std::time_t read_time_;
         shared_ptr<const DataSet> dataset_;
 
         CachedFile(std::string const& path,
                    std::string const& format_name,
+                   std::vector<std::string> const& options,
                    shared_ptr<const DataSet> dataset)
-            : path_(path), format_name_(format_name),
+            : path_(path), format_name_(format_name), options_(options),
               read_time_(std::time(NULL)), dataset_(dataset) {}
     };
 

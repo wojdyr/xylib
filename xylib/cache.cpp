@@ -45,7 +45,7 @@ shared_ptr<const DataSet> Cache::load_file(string const& path,
     vector<CachedFile>::iterator iter;
     for (iter = cache_.begin(); iter < cache_.end(); ++iter) {
         if (path == iter->path_ && format_name == iter->format_name_
-                && options == iter->dataset_->options) {
+                && options == iter->options_) {
 #if 1
             time_t mtime = get_file_mtime(path);
             if (mtime != 0 && mtime < iter->read_time_)
@@ -65,7 +65,7 @@ shared_ptr<const DataSet> Cache::load_file(string const& path,
 
     if (cache_.size() >= n_cached_files_)
         cache_.erase(cache_.begin());
-    cache_.push_back(CachedFile(path, format_name, ds));
+    cache_.push_back(CachedFile(path, format_name, options, ds));
     return ds;
 }
 

@@ -164,8 +164,8 @@ void VamasDataSet::load_data(std::istream &f)
     // handle the blocks
     unsigned blk_cnt = read_line_int(f);
     for (unsigned i = 0; i < blk_cnt; ++i) {
-        Block *block = read_block(f);
-        blocks.push_back(block);
+        Block *blk = read_block(f);
+        add_block(blk);
     }
 }
 
@@ -366,7 +366,8 @@ Block* VamasDataSet::read_block(istream &f)
     skip_lines(f, 2 * cor_var);   // min & max ordinate
 
     StepColumn *xcol = new StepColumn(x_start, x_step);
-    block->add_column(xcol, x_name);
+    xcol->set_name(x_name);
+    block->add_column(xcol);
 
     VecColumn *ycol = new VecColumn;
     for (int i = 0; i < cur_blk_steps; ++i) {

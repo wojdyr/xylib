@@ -73,7 +73,7 @@ void CpiDataSet::load_data(std::istream &f)
         ycol->add_val(my_strtod(s));
 
     blk->add_column(ycol);
-    blocks.push_back(blk);
+    add_block(blk);
 }
 
 } // namespace xylib

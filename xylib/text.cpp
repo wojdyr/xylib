@@ -70,10 +70,10 @@ void use_title_line(string const& line,
     }
     if (words.size() == cols.size()) {
         for (size_t i = 0; i < words.size(); ++i)
-            cols[i]->name = words[i];
+            cols[i]->set_name(words[i]);
     }
     else
-        blk->name = line;
+        blk->set_name(line);
 }
 
 } // anonymous namespace
@@ -185,8 +185,8 @@ void TextDataSet::load_data(std::istream &f)
             cols[i]->add_val(row[i]);
     }
 
-    format_assert (cols.size() >= 1 && cols[0]->get_point_count() >= 2,
-                   "data not found in file.");
+    format_assert(this, cols.size() >= 1 && cols[0]->get_point_count() >= 2,
+                  "data not found in file.");
 
     Block* blk = new Block;
     for (unsigned i = 0; i < cols.size(); ++i)
@@ -197,7 +197,7 @@ void TextDataSet::load_data(std::istream &f)
     if (!last_line.empty())
         use_title_line(last_line, cols, blk);
 
-    blocks.push_back(blk);
+    add_block(blk);
 }
 
 } // end of namespace xylib

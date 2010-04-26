@@ -84,12 +84,38 @@ inline std::string S(char const k) { return std::string(1, k); }
 inline std::string S(std::string const &k) { return k; }
 inline std::string S() { return std::string(); }
 
+// split block if it has columns with different sizes
+std::vector<Block*> split_on_column_length(Block* block);
 
-// column uses vector<double> to represent the data
-class VecColumn : public Column
+
+// DataSet
+inline void format_assert(DataSet const* ds, bool condition,
+                          std::string const& comment = "")
+{
+    if (!condition)
+        throw FormatError("Unexpected format for filetype: " + ds->fi->name
+                          + (comment.empty() ? comment : "; " + comment));
+}
+
+class ColumnWithName : public Column
 {
 public:
-    VecColumn() : Column(0.) {}
+    ColumnWithName(double step) : step_(step) {}
+    virtual std::string const& get_name() const { return name_; }
+    void set_name(std::string const& name) { name_ = name; }
+    virtual double get_step() const { return step_; }
+    virtual void set_step(double step) { step_ = step; }
+
+private:
+    double step_;
+    std::string name_;
+};
+
+// column uses vector<double> to represent the data
+class VecColumn : public ColumnWithName
+{
+public:
+    VecColumn() : ColumnWithName(0.) {}
 
     // implementation of the base interface
     int get_point_count() const { return (int) data.size(); }
@@ -114,14 +140,14 @@ protected:
 
 
 // column of fixed-step data
-class StepColumn : public Column
+class StepColumn : public ColumnWithName
 {
 public:
     double start;
     int count; // -1 means unlimited...
 
     StepColumn(double start_, double step_, int count_ = -1)
-        : Column(step_), start(start_), count(count_)
+        : ColumnWithName(step_), start(start_), count(count_)
     {}
 
     int get_point_count() const { return count; }
@@ -129,7 +155,7 @@ public:
     {
         if (count != -1 && (n < 0 || n >= count))
             throw RunTimeError("point index out of range");
-        return start + step * n;
+        return start + get_step() * n;
     }
     double get_min() const { return start; }
     double get_max(int point_count=0) const

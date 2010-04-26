@@ -80,6 +80,7 @@ struct XYLIB_API FormatInfo
 
     std::string name;  /// short name, usually basename of .cpp/.h files
     std::string desc;  /// full format name (reasonably short)
+    //TODO replace vector with |-separated string
     std::vector<std::string> exts; // possible extensions
     bool binary; /// true if it's binary file
     bool multiblock; /// true if filetype supports multiple blocks
@@ -128,11 +129,10 @@ public:
 class XYLIB_API Column
 {
 public:
-    std::string name; /// Column can have a name (but usually it doesn't have)
-    double step; /// step, 0. means step is not fixed
-
-    Column(double step_) : step(step_) {}
     virtual ~Column() {}
+
+    /// Column can have a name (but usually it doesn't have)
+    virtual std::string const& get_name() const = 0;
 
     /// return number of points or -1 for "unlimited" number of points
     virtual int get_point_count() const = 0;
@@ -142,14 +142,19 @@ public:
 
     /// get minimum value in column
     virtual double get_min() const = 0;
+
     /// get maximum value in column;
     /// point_count must be specified if column has "unlimited" length, it is
     /// ignored otherwise
     virtual double get_max(int point_count=0) const = 0;
+
+    /// returns step in the case of fixed step, 0. otherwise
+    virtual double get_step() const = 0;
 };
 
 
 struct MetaDataImp; // implementation details
+struct BlockImp;
 
 /// Map that stores meta-data (additional data, that usually describe x-y data)
 /// for block or dataset. For example: date of the experiment, wavelength, ...
@@ -157,19 +162,19 @@ struct MetaDataImp; // implementation details
 class XYLIB_API MetaData
 {
 public:
-    // for use only in xylib
+    // use these functions to query meta data
+    bool has_key(std::string const& key) const;
+    std::string const& get(std::string const& key) const;
+    size_t size() const;
+    std::string const& get_key(size_t index) const;
+
+    // functions for use only in xylib
     MetaData();
     ~MetaData();
     void operator=(const MetaData& other);
     void clear();
     bool set(std::string const& key, std::string const& val);
     std::string& operator[] (const std::string& x);
-
-    // use these functions to query meta data
-    bool has_key(std::string const& key) const;
-    std::string const& get(std::string const& key) const;
-    size_t size() const;
-    std::string const& get_key(size_t index) const;
 
 private:
     MetaData(const MetaData&); // disallow
@@ -186,13 +191,15 @@ public:
     static Column* const index_column;
 
     MetaData meta; /// meta-data
-    std::string name; /// block can have a name (but usually it doesn't have)
 
-    Block() {}
+    Block();
     ~Block();
 
+    /// block can have a name (but usually it doesn't have)
+    std::string const& get_name() const;
+
     /// number of real columns, not including 0-th pseudo-column
-    int get_column_count() const { return (int) cols.size(); }
+    int get_column_count() const;
     /// get column, 0-th column is index of point
     const Column& get_column(int n) const;
 
@@ -201,15 +208,15 @@ public:
     /// number if the column is a generator)
     int get_point_count() const;
 
-    // add one column; for use in filetype implementations
-    void add_column(Column *c, std::string const& title="", bool append=true);
+    // functions for use in filetype implementations
+    void add_column(Column* c, bool append=true);
+    void del_column(int n);
+    void set_name(std::string const& name);
 
-    // TODO: move to utils
-    // split block if it has columns with different sizes
-    std::vector<Block*> split_on_column_length();
+private:
+    Block(const Block&); // disallow
 
-protected:
-    std::vector<Column*> cols;
+    BlockImp* imp_;
 };
 
 
@@ -220,8 +227,6 @@ class XYLIB_API DataSet
 public:
     // pointer to FormatInfo of a class derived from DataSet
     FormatInfo const* const fi;
-    // if load_data() supports options, set it before it's called
-    std::vector<std::string> options;
 
     MetaData meta; /// meta-data
 
@@ -229,7 +234,7 @@ public:
     virtual ~DataSet();
 
     /// number of blocks (usually 1)
-    int get_block_count() const { return (int) blocks.size(); }
+    int get_block_count() const;
 
     /// get block n (block 0 is first)
     Block const* get_block(int n) const;
@@ -242,22 +247,21 @@ public:
     void clear();
 
     /// check if options (first arg) contains given element (second arg)
-    bool has_option(std::string const& t)
-    {
-        return (std::find(options.begin(), options.end(), t) != options.end());
-    }
+    bool has_option(std::string const& t);
+
+    // functions for use in filetype implementations
+    void add_block(Block* block);
+    // if load_data() supports options, set it before it's called
+    void set_options(std::vector<std::string> const& options);
+    //TODO pass format_name and options as one space-separated string(!)
 
 protected:
-    std::vector<Block*> blocks;
-
     DataSet(FormatInfo const* fi_);
 
-    void format_assert(bool condition, std::string const& comment = "")
-    {
-        if (!condition)
-            throw FormatError("Unexpected format for filetype: " + fi->name
-                              + (comment.empty() ? comment : "; " + comment));
-    }
+private:
+    std::vector<Block*> blocks;
+
+    std::vector<std::string> options_;
 };
 
 

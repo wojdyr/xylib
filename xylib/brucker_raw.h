@@ -10,6 +10,9 @@
 //               corresponding ascii files start with ";RAW4.00",
 //               was contributed by Andreas Breslau, who analysed binary files
 //               and corresponding ascii files.
+//               Later it was improved based on section
+//               "A.1 DIFFRAC^plus V3 RAW File Structure" of the manual:
+//               "DIFFRAC^plus FILE EXCHANGE and XCH" Release 2002.
 
 #ifndef XYLIB_BRUCKER_RAW_H_
 #define XYLIB_BRUCKER_RAW_H_

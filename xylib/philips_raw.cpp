@@ -38,7 +38,7 @@ void PhilipsRawDataSet::load_data(std::istream &f)
     static const string focus_types[4] = {"BF", "NF", "FF", "LFF"};
 
     string version = read_string(f, 2);
-    format_assert(version == "V3" || version == "V5");
+    format_assert(this, version == "V3" || version == "V5");
 
     f.ignore(82);
     int dt_idx = static_cast<int>(read_char(f));
@@ -85,7 +85,7 @@ void PhilipsRawDataSet::load_data(std::istream &f)
     }
     blk->add_column(ycol);
 
-    blocks.push_back(blk);
+    add_block(blk);
 }
 
 } // end of namespace xylib

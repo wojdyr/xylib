@@ -42,7 +42,7 @@ DOWNLOAD
 
 **Binary packages**: 
 
-* MS Windows `DLL + xyconv.exe`_
+* MS Windows `DLL + xyconv.exe`_ (compiled with MSVC9)
 * Linux RPMs_ and DEBs_
 
 .. _`DLL + xyconv.exe`: http://
@@ -121,7 +121,7 @@ CREDITS
 HISTORY
 =======
 
-* 0.6 (2010-04-24)
+* 0.6 (2010-04-26)
 
   - fixed reading of Bruker v3 files
   - changes in API, added C API

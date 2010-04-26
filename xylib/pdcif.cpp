@@ -391,7 +391,7 @@ void t_on_block_start::operator()(IteratorT a, IteratorT b) const
 {
     assert(da.block == NULL);
     da.block = new Block;
-    da.block->name = string(a, b);
+    da.block->set_name(string(a, b));
 }
 
 template <typename IteratorT>
@@ -411,7 +411,8 @@ void t_on_block_finish::operator()(IteratorT, IteratorT) const
             double end = my_strtod(meta.get(t + "max"));
             int count = int ((end - start) / step + 0.5) + 1;
             StepColumn* c = new StepColumn(start, step, count);
-            da.block->add_column(c, t.substr(3, 11), false);
+            c->set_name(t.substr(3, 11));
+            da.block->add_column(c, false);
         }
     }
     if (da.block->get_column_count() > 0)
@@ -477,7 +478,7 @@ void t_on_loop_finish::operator()(IteratorT, IteratorT) const
                 col_kind = lv.kind;
             else if (col_kind != lv.kind)
                 throw FormatError("Mixed value types in loop for " + name
-                                  + " in block " + da.block->name);
+                                  + " in block " + da.block->get_name());
         }
 
         string col_title = name.substr(3); // skip "pd_"
@@ -487,7 +488,8 @@ void t_on_loop_finish::operator()(IteratorT, IteratorT) const
                 LoopValue const& lv = da.loop_values[j * ncol + i];
                 c->add_val(lv.kind == col_kind ? lv.val : 0.);
             }
-            da.block->add_column(c, col_title);
+            c->set_name(col_title);
+            da.block->add_column(c);
         }
 
         if (col_kind == v_numeric_with_err) {
@@ -496,7 +498,8 @@ void t_on_loop_finish::operator()(IteratorT, IteratorT) const
                 LoopValue const& lv = da.loop_values[j * ncol + i];
                 c->add_val(lv.kind == col_kind ? lv.err : 0.);
             }
-            da.block->add_column(c, col_title + "_err");
+            c->set_name(col_title + "_err");
+            da.block->add_column(c);
         }
     }
     da.loop_values.clear();
@@ -512,7 +515,7 @@ void PdCifDataSet::load_data(std::istream &f)
     vector<char> vec;
     std::copy(istream_iterator<char>(f), istream_iterator<char>(),
               std::back_inserter(vec));
-    format_assert(vec.size() > 5);
+    format_assert(this, vec.size() > 5);
     // some CIF files have 0x1A character at the end, let's ignore it
     while (vec.back() == 0x1A)
         vec.pop_back();
@@ -520,7 +523,7 @@ void PdCifDataSet::load_data(std::istream &f)
     CifGrammar<DatasetActions> p(actions);
     parse_info<vector<char>::const_iterator> info =
         parse(vec.begin(), vec.end(), p);
-    format_assert(info.full,
+    format_assert(this, info.full,
                   "Parse error at character " + S(info.stop - vec.begin()));
     int n = (int) actions.block_list.size();
     if (n == 0)
@@ -528,8 +531,9 @@ void PdCifDataSet::load_data(std::istream &f)
                            + S(actions.invalid_line_counter) + " invalid lines,"
                            " no data found");
     for (int i = 0; i < n; ++i) {
-        vector<Block*> sb = actions.block_list[i]->split_on_column_length();
-        blocks.insert(blocks.end(), sb.begin(), sb.end());
+        vector<Block*> sb = split_on_column_length(actions.block_list[i]);
+        for (vector<Block*>::iterator i = sb.begin(); i != sb.end(); ++i)
+            add_block(*i);
     }
 }
 
