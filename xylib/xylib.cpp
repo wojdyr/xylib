@@ -541,8 +541,8 @@ vector<FormatInfo const*> get_possible_filetypes(string const& filename)
     string ext = (pos == string::npos) ? string() : filename.substr(pos + 1);
 
     for (FormatInfo const **i = formats; *i != NULL; ++i) {
-        string lower_ext = str_tolower(ext);
-        if (has_word((*i)->exts, lower_ext))
+        string exts = (*i)->exts;
+        if (exts.empty() || has_word(exts, str_tolower(ext)))
             results.push_back(*i);
     }
     return results;
