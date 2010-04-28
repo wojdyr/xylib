@@ -188,6 +188,24 @@ std::string str_tolower(const std::string &str)
     return r;
 }
 
+// The `sentence' consists of space-separated words.
+// Returns true if it contains `word'.
+bool has_word(const string &sentence, const string& word)
+{
+    assert(!word.empty());
+    size_t pos = 0;
+    for (;;) {
+        size_t found = sentence.find(word);
+        if (found == string::npos)
+            return false;
+        size_t end = found + word.size();
+        if ((found == 0 || isspace(sentence[found-1])) &&
+            (end == sentence.size() || isspace(sentence[end])))
+            return true;
+        pos = end;
+    }
+}
+
 
 //      --------   line-oriented file reading functions   --------
 
@@ -292,6 +310,28 @@ Block* read_ssel_and_data(istream &f, int max_headers)
         return NULL;
     }
     return blk;
+}
+
+// returns the first not processed character
+const char* read_numbers(string const& s, vector<double>& row)
+{
+    row.clear();
+    const char *p = s.c_str();
+    while (*p != 0) {
+        char *endptr = NULL;
+        errno = 0; // to distinguish success/failure after call
+        double val = strtod(p, &endptr);
+        if (p == endptr) // no more numbers
+            break;
+        if (errno != 0)
+            throw FormatError("Numeric overflow or underflow in line:\n"
+                              + s);
+        row.push_back(val);
+        p = endptr;
+        while (isspace(*p) || *p == ',' || *p == ';' || *p == ':')
+            ++p;
+    }
+    return p;
 }
 
 vector<Block*> split_on_column_length(Block *block)

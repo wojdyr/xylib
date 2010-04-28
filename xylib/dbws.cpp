@@ -19,7 +19,7 @@ namespace xylib {
 const FormatInfo DbwsDataSet::fmt_info(
     "dbws",
     "DBWS data file",
-    vector_string("dbw", "rit", "neu"),
+    "dbw rit neu",
     false,                       // whether binary
     false,                       // whether has multi-blocks
     &DbwsDataSet::ctor,

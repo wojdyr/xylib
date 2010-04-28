@@ -27,8 +27,6 @@ namespace xylib {
     class TextDataSet : public DataSet
     {
         OBLIGATORY_DATASET_MEMBERS(TextDataSet)
-        static const char*  read_numbers(std::string const& s,
-                                         std::vector<double>& row);
     };
 
 } // namespace

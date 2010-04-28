@@ -1,41 +1,47 @@
-// Public API of xylib library.
-// Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
+/* Public API of xylib library.
+ * Licence: Lesser GNU Public License 2.1 (LGPL)
+ * $Id$
+ */
 
-/// xylib is a library for reading files that contain x-y data from powder
-/// diffraction, spectroscopy or other experimental methods.
-///
-/// It is recommended to set LC_NUMERIC="C" (or other locale with the same
-/// numeric format) before reading files.
-///
-/// Usually, we first call load_file() to read file from disk. It stores
-/// all data from the file in class DataSet.
-/// DataSet contains a list of Blocks, each Blocks contains a list of Columns,
-/// and each Column contains a list of values.
-///
-/// It may sound complex, but IMO it can't be made simpler.
-/// It's analogical to a spreadsheet. One OOCalc or Excel file (which
-/// corresponds to xylib::DataSet) contains a number of sheets (Blocks),
-/// but usually only one is used. We can view each sheet as a list of columns.
-///
-/// In xylib all columns in one block must have equal length.
-/// Several filetypes always contain only one Block with two Columns.
-/// In this case we can take coordinates of the 15th point as:
-///    double x = get_block(0)->get_column(1)->get_value(14);
-///    double y = get_block(0)->get_column(2)->get_value(14);
-/// Note that blocks and points are numbered from 0, but columns are numbered
-/// from 1, because the column 0 returns index of point.
-/// All values are stored as floating-point numbers, even if they are integers
-/// in the file.
-/// DataSet and Block contain also MetaData, which is a string to string map.
-///
-/// The API uses std::string. It may not be 
+/** xylib is a library for reading files that contain x-y data from powder
+ ** diffraction, spectroscopy or other experimental methods.
+ **
+ ** It is recommended to set LC_NUMERIC="C" (or other locale with the same
+ ** numeric format) before reading files.
+ **
+ ** Usually, we first call load_file() to read file from disk. It stores
+ ** all data from the file in class DataSet.
+ ** DataSet contains a list of Blocks, each Blocks contains a list of Columns,
+ ** and each Column contains a list of values.
+ **
+ ** It may sound complex, but IMO it can't be made simpler.
+ ** It's analogical to a spreadsheet. One OOCalc or Excel file (which
+ ** corresponds to xylib::DataSet) contains a number of sheets (Blocks),
+ ** but usually only one is used. Each sheet can be viewed as a list of columns.
+ **
+ ** In xylib all columns in one block must have equal length.
+ ** Several filetypes always contain only one Block with two Columns.
+ ** In this case we can take coordinates of the 15th point as:
+ **    double x = get_block(0)->get_column(1)->get_value(14);
+ **    double y = get_block(0)->get_column(2)->get_value(14);
+ ** Note that blocks and points are numbered from 0, but columns are numbered
+ ** from 1, because the column 0 returns index of point.
+ ** All values are stored as floating-point numbers, even if they are integers
+ ** in the file.
+ ** DataSet and Block contain also MetaData, which is a string to string map.
+ **
+ ** Note that C++ API uses std::string and exceptions, so it is recommended
+ ** to compile the library and programs that use it with the same compiler.
+ **
+ ** C++ API is defined in xylib namespace, C API use prefix xylib.
+ **/
 
 #ifndef XYLIB_XYLIB_H_
 #define XYLIB_XYLIB_H_
 
-// XYLIB_API is a mark for API classes and functions,
-// used to decorate classes and functions for Win32 DLL linking.
+/* XYLIB_API is a mark for API classes and functions,
+ * used to decorate classes and functions for Win32 DLL linking.
+ */
 #ifdef XYLIB_API
 # undef XYLIB_API
 #endif
@@ -48,67 +54,97 @@
 # define XYLIB_API
 #endif
 
+/* Library version. Use xylib_get_version() to get it as a string.
+ *  XYLIB_VERSION % 100 is the sub-minor version
+ *  XYLIB_VERSION / 100 % 100 is the minor version
+ *  XYLIB_VERSION / 10000 is the major version
+ */
+#define XYLIB_VERSION 600 /* 0.6.0 */
+
 #ifdef __cplusplus
 
 #include <string>
-#include <vector>
 #include <stdexcept>
 #include <fstream>
 #include <algorithm>
 
-/// Library version. Use get_version() to get it as a string.
-///  XYLIB_VERSION % 100 is the sub-minor version
-///  XYLIB_VERSION / 100 % 100 is the minor version
-///  XYLIB_VERSION / 10000 is the major version
+extern "C" {
+#endif /* __cplusplus */
 
-#define XYLIB_VERSION 600 // 0.6.0
+/** basic info about each format */
+struct XYLIB_API xylibFormat
+{
+    const char* name;  /** short name, usually basename of .cpp/.h files */
+    const char* desc;  /** full format name (reasonably short) */
+    const char* exts; /** possible extensions, separated by spaces */
+    int binary; /** 0 - ascii, 1 - binary */
+    int multiblock; /** 1 if filetype supports multiple blocks, 0 otherwise */
+};
 
+/* Three functions below are a part of C API which is useful also in C++.  */
+
+/* returns version of the library; see also XYLIB_VERSION */
+XYLIB_API const char* xylib_get_version();
+
+/* all supported filetypes can be iterated by calling this function
+ * with 0, 1, ... until NULL is returned.
+ */
+XYLIB_API const struct xylibFormat* xylib_get_format(int n);
+
+/* returns xylibFormat that has a name `name' */
+XYLIB_API const struct xylibFormat* xylib_get_format_by_name(const char* name);
+
+/* Minimal C API. Not recommended for use in other languages.
+ * Note that blocks and rows are indexed from 0, but columns are indexed from 1,
+ * because pseudo-column 0 contains indices of points.
+ */
+
+/* C equivalent of xylib::load_file */
+XYLIB_API void* xylib_load_file(const char* path, const char* format_name,
+                                const char* options);
+
+/* C equivalent of xylib::DataSet::get_block() */
+XYLIB_API void* xylib_get_block(void* dataset, int block);
+
+/* C equivalent of xylib::Block::get_column_count() */
+XYLIB_API int xylib_count_columns(void* block);
+
+/* C equivalent of xylib::Column::get_point_count() */
+XYLIB_API int xylib_count_rows(void* block, int column);
+
+/* C equivalent of xylib::Column::get_value() */
+XYLIB_API double xylib_get_data(void* block, int column, int row);
+
+/* C equivalent of xylib::MetaData::get() */
+XYLIB_API const char* xylib_dataset_metadata(void* dataset, const char* key);
+
+/* C equivalent of xylib::MetaData::get() */
+XYLIB_API const char* xylib_block_metadata(void* block, const char* key);
+
+/* destruct DataSet created by xylib_load_file() */
+XYLIB_API void xylib_free_dataset(void* dataset);
+
+#ifdef __cplusplus
+} // extern "C"
 
 namespace xylib
 {
 
-/// see also XYLIB_VERSION
-XYLIB_API const char* get_version();
-
 class DataSet;
 
 /// stores format related info
-struct XYLIB_API FormatInfo
+struct XYLIB_API FormatInfo : public xylibFormat
 {
     typedef bool (*t_checker)(std::istream&);
     typedef DataSet* (*t_ctor)();
 
-    std::string name;  /// short name, usually basename of .cpp/.h files
-    std::string desc;  /// full format name (reasonably short)
-    //TODO replace vector with |-separated string
-    std::vector<std::string> exts; // possible extensions
-    bool binary; /// true if it's binary file
-    bool multiblock; /// true if filetype supports multiple blocks
-
     t_ctor ctor; /// factory function
     t_checker checker; /// function used to check if a file has this format
 
-    FormatInfo(std::string const& name_,
-               std::string const& desc_,
-               std::vector<std::string> const& exts_,
-               bool binary_,
-               bool multiblock_,
-               t_ctor ctor_,
-               t_checker checker_)
-        : name(name_), desc(desc_), exts(exts_),
-          binary(binary_), multiblock(multiblock_),
-          ctor(ctor_), checker(checker_) {}
-
-    /// check if extension `ext' is in the list `exts'; case insensitive
-    bool has_extension(std::string const& ext) const;
-    /// check if file f can be of this format
-    bool check(std::istream& f) const { return !checker || (*checker)(f); }
+    FormatInfo(const char* name_, const char* desc_, const char* exts_,
+               bool binary_, bool multiblock_,
+               t_ctor ctor_, t_checker checker_);
 };
-
-/// all supported filetypes can be iterated by calling this function
-/// with 0, 1, ... until NULL is returned.
-XYLIB_API const FormatInfo* get_format(int n);
-
 
 /// unexpected format, unexpected EOF, etc
 class XYLIB_API FormatError : public std::runtime_error
@@ -153,8 +189,10 @@ public:
 };
 
 
-struct MetaDataImp; // implementation details
+// declare structs that contain implementation details
+struct MetaDataImp;
 struct BlockImp;
+struct DataSetImp;
 
 /// Map that stores meta-data (additional data, that usually describe x-y data)
 /// for block or dataset. For example: date of the experiment, wavelength, ...
@@ -215,13 +253,14 @@ public:
 
 private:
     Block(const Block&); // disallow
+    void operator=(const Block&); //disallow
 
     BlockImp* imp_;
 };
 
 
 /// DataSet represents data stored typically in one file.
-// may consist of one or more block(s) of X-Y data
+/// It may consist of one or more block(s) of X-Y data and of meta-data
 class XYLIB_API DataSet
 {
 public:
@@ -251,17 +290,17 @@ public:
 
     // functions for use in filetype implementations
     void add_block(Block* block);
+
     // if load_data() supports options, set it before it's called
-    void set_options(std::vector<std::string> const& options);
-    //TODO pass format_name and options as one space-separated string(!)
+    void set_options(std::string const& options);
 
 protected:
     DataSet(FormatInfo const* fi_);
 
 private:
-    std::vector<Block*> blocks;
-
-    std::vector<std::string> options_;
+    DataSetImp* imp_;
+    DataSet(const DataSet&); // disallow
+    void operator=(const DataSet&); //disallow
 };
 
 
@@ -269,47 +308,25 @@ private:
 /// return value: pointer to Dataset that contains all data read from file
 XYLIB_API DataSet* load_file(std::string const& path,
                              std::string const& format_name="",
-                             std::vector<std::string> const& options
-                                                = std::vector<std::string>());
+                             std::string const& options="");
 
 /// return value: pointer to Dataset that contains all data read from file
-XYLIB_API DataSet* load_stream(std::istream &is, FormatInfo const* fi,
-                               std::vector<std::string> const& options);
+XYLIB_API DataSet* load_stream(std::istream &is,
+                               std::string const& format_name,
+                               std::string const& options="");
 
 /// guess a format of the file; does NOT handle compressed files
 XYLIB_API FormatInfo const* guess_filetype(std::string const& path,
                                            std::istream &f);
 
-/// returns FormatInfo that has a name format_name
-XYLIB_API FormatInfo const* string_to_format(std::string const& format_name);
+/// check if file f can be of this format
+XYLIB_API bool check_format(FormatInfo const* fi, std::istream& f);
 
 /// return wildcard for file dialog in format:
 /// "ASCII X Y Files (*)|*|Sietronics Sieray CPI (*.cpi)|*.cpi"
 XYLIB_API std::string get_wildcards_string(std::string const& all_files="*");
 
 } // namespace xylib
-
-extern "C" {
-
-#endif // !__cplusplus
-
-/* Minimal C API.
- * Note that blocks and rows are indexed from 0, but columns are indexed from 1,
- * because pseudo-column 0 contains indices of points.
- **/
-XYLIB_API const char* xylib_get_version();
-XYLIB_API void* xylib_load_file(const char* path, const char* format_name);
-XYLIB_API void* xylib_get_block(void* dataset, int block);
-XYLIB_API int xylib_count_columns(void* block);
-XYLIB_API int xylib_count_rows(void* block, int column);
-XYLIB_API double xylib_get_data(void* block, int column, int row);
-XYLIB_API const char* xylib_dataset_metadata(void* dataset, const char* key);
-XYLIB_API const char* xylib_block_metadata(void* block, const char* key);
-XYLIB_API void xylib_free_dataset(void* dataset);
-
-#ifdef __cplusplus
-}
-#endif //__cplusplus
 
 // For internal use only.
 #ifdef BUILDING_XYLIB
@@ -321,7 +338,9 @@ XYLIB_API void xylib_free_dataset(void* dataset);
         static bool check(std::istream &f); \
         static DataSet* ctor() { return new class_name; } \
         static const FormatInfo fmt_info;
-#endif
+#endif // BUILDING_XYLIB
 
-#endif // XYLIB_XYLIB_H_
+#endif /* __cplusplus */
+
+#endif /* XYLIB_XYLIB_H_ */
 

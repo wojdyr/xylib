@@ -1,3 +1,6 @@
+* BUG:
+    =-> @+ <'out12.dat'
+    Error: Unexpected format for filetype: riet7
 * handle CR as a newline (and perhaps also others from 
   http://en.wikipedia.org/wiki/Newline)
 * a separate CSV format, that handles quoted strings properly,

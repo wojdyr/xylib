@@ -15,7 +15,7 @@ namespace xylib {
 const FormatInfo XfitXddDataSet::fmt_info(
     "xfit_xdd",
     "XFIT XDD",
-    vector_string("xdd"),
+    "xdd",
     false,                       // whether binary
     false,                       // whether has multi-blocks
     &XfitXddDataSet::ctor,

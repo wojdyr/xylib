@@ -15,7 +15,7 @@ namespace xylib {
 const FormatInfo CpiDataSet::fmt_info(
     "cpi",
     "Sietronics Sieray CPI",
-    vector_string("cpi"),
+    "cpi",
     false,                       // whether binary
     false,                       // whether has multi-blocks
     &CpiDataSet::ctor,

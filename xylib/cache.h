@@ -52,8 +52,8 @@
 namespace xylib
 {
 
-
 class DataSet;
+struct CacheImp;
 
 // singleton
 class XYLIB_API Cache
@@ -67,61 +67,30 @@ public:
     // but a const ref is returned instead of pointer.
     shared_ptr<const DataSet> load_file(std::string const& path,
                                         std::string const& format_name="",
-                                        std::vector<std::string> const& options
-                                                = std::vector<std::string>());
+                                        std::string const& options="");
 
     // set max. number of cached files, default=1
-    void set_number_of_cached_files(size_t n);
+    void set_max_size(size_t max_size);
     // get max. number of cached files
-    inline size_t get_number_of_cached_files() const { return n_cached_files_; }
+    inline size_t get_max_size() const;
 
     // clear cache
-    void clear_cache() { cache_.clear(); }
+    void clear_cache();
 
 private:
     static Cache *instance_; // for singleton pattern
-
-    struct CachedFile
-    {
-        std::string path_;
-        std::string format_name_;
-        std::vector<std::string> options_;
-        std::time_t read_time_;
-        shared_ptr<const DataSet> dataset_;
-
-        CachedFile(std::string const& path,
-                   std::string const& format_name,
-                   std::vector<std::string> const& options,
-                   shared_ptr<const DataSet> dataset)
-            : path_(path), format_name_(format_name), options_(options),
-              read_time_(std::time(NULL)), dataset_(dataset) {}
-    };
-
-    size_t n_cached_files_;
-    std::vector<CachedFile> cache_;
-
-    Cache() : n_cached_files_(1) {}
+    CacheImp* imp_;
+    Cache();
 };
 
 inline
 shared_ptr<const DataSet> cached_load_file(std::string const& path,
-                                        std::string const& format_name="",
-                                        std::vector<std::string> const& options
-                                                = std::vector<std::string>())
+                                           std::string const& format_name="",
+                                           std::string const& options="")
 {
     return Cache::Get()->load_file(path, format_name, options);
 }
 
-// format is passed as the first option
-inline
-shared_ptr<const DataSet> cached_load_file(std::string const& path,
-                                      std::vector<std::string> const& options)
-{
-    return options.empty() ? cached_load_file(path)
-                           : cached_load_file(path, options[0],
-                                   std::vector<std::string>(options.begin()+1,
-                                                            options.end()));
-}
 
 } // namespace xylib
 

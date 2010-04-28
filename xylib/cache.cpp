@@ -31,17 +31,47 @@ time_t get_file_mtime(string const& path)
     return sb.st_mtime;
 }
 
+struct CachedFile
+{
+    std::string path_;
+    std::string format_name_;
+    std::string options_;
+    std::time_t read_time_;
+    shared_ptr<const xylib::DataSet> dataset_;
+
+    CachedFile(std::string const& path,
+               std::string const& format_name,
+               std::string const& options,
+               shared_ptr<const xylib::DataSet> dataset)
+        : path_(path), format_name_(format_name), options_(options),
+          read_time_(std::time(NULL)), dataset_(dataset) {}
+};
+
 } // anonymous namespace
 
 namespace xylib {
 
+struct CacheImp
+{
+    size_t max_size_;
+    std::vector<CachedFile> cache_;
+};
+
 Cache* Cache::instance_ = NULL;
+
+
+Cache::Cache()
+    : imp_(new CacheImp)
+{
+    imp_->max_size_ = 1;
+}
 
 // not thread-safe
 shared_ptr<const DataSet> Cache::load_file(string const& path,
                                            string const& format_name,
-                                           vector<string> const& options)
+                                           string const& options)
 {
+    std::vector<CachedFile>& cache_ = imp_->cache_;
     vector<CachedFile>::iterator iter;
     for (iter = cache_.begin(); iter < cache_.end(); ++iter) {
         if (path == iter->path_ && format_name == iter->format_name_
@@ -63,17 +93,28 @@ shared_ptr<const DataSet> Cache::load_file(string const& path,
     // this can throw exception
     shared_ptr<const DataSet> ds(xylib::load_file(path, format_name, options));
 
-    if (cache_.size() >= n_cached_files_)
+    if (cache_.size() >= imp_->max_size_)
         cache_.erase(cache_.begin());
     cache_.push_back(CachedFile(path, format_name, options, ds));
     return ds;
 }
 
-void Cache::set_number_of_cached_files(size_t n)
+void Cache::set_max_size(size_t max_size)
 {
-    n_cached_files_ = n;
-    if (n > cache_.size())
-        cache_.erase(cache_.begin() + n, cache_.end());
+    std::vector<CachedFile>& cache_ = imp_->cache_;
+    imp_->max_size_ = max_size;
+    if (max_size > cache_.size())
+        cache_.erase(cache_.begin() + max_size, cache_.end());
+}
+
+size_t Cache::get_max_size() const
+{
+    return imp_->max_size_;
+}
+
+void Cache::clear_cache()
+{
+    imp_->cache_.clear();
 }
 
 } // namespace xylib

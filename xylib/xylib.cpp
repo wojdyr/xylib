@@ -6,6 +6,7 @@
 #include "xylib.h"
 
 #include <cassert>
+#include <cstring>
 #include <iomanip>
 #include <algorithm>
 
@@ -38,14 +39,14 @@
 #include "xfit_xdd.h"
 #include "riet7.h"
 
+#include <vector>
 #include <map>
 
 using namespace std;
+using namespace xylib;
 using namespace xylib::util;
 
-namespace xylib {
-
-XYLIB_API const FormatInfo *formats[] = {
+const FormatInfo *formats[] = {
     &CpiDataSet::fmt_info,
     &UxdDataSet::fmt_info,
     &RigakuDataSet::fmt_info,
@@ -64,21 +65,123 @@ XYLIB_API const FormatInfo *formats[] = {
     NULL // it must be a NULL-terminated array
 };
 
+// implementation of C API
+extern "C" {
 
-bool FormatInfo::has_extension(const std::string &ext) const
+const struct xylibFormat* xylib_get_format(int n)
 {
-    string lower_ext = str_tolower(ext);
-    return exts.empty()
-           || find(exts.begin(), exts.end(), lower_ext) != exts.end();
-}
-
-const FormatInfo* get_format(int n)
-{
-    if (n < 0 || (size_t) n > sizeof(formats) / sizeof(formats[0]))
-        throw RunTimeError("Format index out of range: " + S(n));
+    if (n < 0 || (size_t) n >= sizeof(formats) / sizeof(formats[0]))
+        return NULL;
     return formats[n];
 }
 
+const struct xylibFormat* xylib_get_format_by_name(const char* name)
+{
+    for (FormatInfo const **i = formats; *i != NULL; ++i)
+        if (strcmp(name, (*i)->name) == 0)
+            return *i;
+    return NULL;
+}
+
+/// see also XYLIB_VERSION
+const char* xylib_get_version()
+{
+    static bool initialized = false;
+    static char ver[16];
+    if (!initialized) {
+        sprintf(ver, "%d.%d.%d", XYLIB_VERSION / 10000,
+                                 XYLIB_VERSION / 100 % 100,
+                                 XYLIB_VERSION % 100);
+        initialized = true;
+    }
+    return ver;
+}
+
+void* xylib_load_file(const char* path, const char* format_name,
+                      const char* options)
+{
+    try {
+        return (void*) load_file(path, format_name != NULL ? format_name : "",
+                                       options != NULL ? options : "");
+    }
+    catch (std::exception&) {
+        return NULL;
+    }
+}
+
+void* xylib_get_block(void* dataset, int block)
+{
+    try {
+        return (void*) ((DataSet*) dataset)->get_block(block);
+    }
+    catch (RunTimeError&) {
+        return NULL;
+    }
+}
+
+int xylib_count_columns(void* block)
+{
+    return ((Block*) block)->get_column_count();
+}
+
+int xylib_count_rows(void* block, int column)
+{
+    if (column < 0 || column > xylib_count_columns(block))
+        return 0;
+    return ((Block*) block)->get_column(column).get_point_count();
+}
+
+double xylib_get_data(void* block, int column, int row)
+{
+    return ((Block*) block)->get_column(column).get_value(row);
+}
+
+const char* xylib_dataset_metadata(void* dataset, const char* key)
+{
+    try {
+        return ((DataSet*) dataset)->meta.get(key).c_str();
+    }
+    catch (RunTimeError&) {
+        return NULL;
+    }
+}
+
+const char* xylib_block_metadata(void* block, const char* key)
+{
+    try {
+        return ((Block*) block)->meta.get(key).c_str();
+    }
+    catch (RunTimeError&) {
+        return NULL;
+    }
+}
+
+void xylib_free_dataset(void* dataset)
+{
+    delete (DataSet*) dataset;
+}
+
+} // extern "C"
+
+namespace xylib {
+
+FormatInfo::FormatInfo(const char* name_, const char* desc_, const char* exts_,
+                       bool binary_, bool multiblock_,
+                       t_ctor ctor_, t_checker checker_)
+{
+        name = name_;
+        desc = desc_;
+        exts = exts_;
+        binary = (int) binary_;
+        multiblock = (int) multiblock_;
+        ctor = ctor_;
+        checker = checker_;
+}
+
+bool check_format(FormatInfo const* fi, std::istream& f)
+{
+    return !fi->checker || (*fi->checker)(f);
+}
 
 struct MetaDataImp : public map<string, string>
 {
@@ -126,7 +229,7 @@ size_t MetaData::size() const
 string const& MetaData::get_key(size_t index) const
 {
     map<string,string>::const_iterator it = imp_->begin();
-    for (int i = 0; i < index; ++i)
+    for (size_t i = 0; i < index; ++i)
         ++it;
     return it->first;
 }
@@ -210,51 +313,76 @@ int Block::get_point_count() const
     return min_n;
 }
 
+struct DataSetImp
+{
+    std::vector<Block*> blocks;
+    std::string options;
+};
 
 DataSet::DataSet(FormatInfo const* fi_)
-    : fi(fi_)
-{}
+    : fi(fi_), imp_(new DataSetImp)
+{
+}
 
 DataSet::~DataSet()
 {
-    for (vector<Block*>::iterator i = blocks.begin(); i != blocks.end(); ++i)
-        delete *i;
+    clear();
+    delete imp_;
 }
 
 int DataSet::get_block_count() const
 {
-    return (int) blocks.size();
+    return (int) imp_->blocks.size();
 }
 
 const Block* DataSet::get_block(int n) const
 {
-    if (n < 0 || (size_t)n >= blocks.size())
+    if (n < 0 || (size_t)n >= imp_->blocks.size())
         throw RunTimeError("no block #" + S(n) + " in this file.");
-    return blocks[n];
+    return imp_->blocks[n];
 }
 
 // clear all the data of this dataset
 void DataSet::clear()
 {
-    this->~DataSet();
-    blocks.clear();
+    for (vector<Block*>::iterator i = imp_->blocks.begin();
+            i != imp_->blocks.end(); ++i)
+        delete *i;
+    imp_->blocks.clear();
     meta.clear();
 }
 
-bool DataSet::has_option(std::string const& t)
+bool DataSet::has_option(string const& t)
 {
-    return (std::find(options_.begin(), options_.end(), t) != options_.end());
+    return has_word(imp_->options, t);
 }
 
 void DataSet::add_block(Block* block)
 {
-    blocks.push_back(block);
+    imp_->blocks.push_back(block);
 }
 
-void DataSet::set_options(vector<string> const& options)
+void DataSet::set_options(string const& options)
 {
-    options_ = options;
+    imp_->options = options;
 }
+
+
+DataSet* load_stream_of_format(istream &is, FormatInfo const* fi,
+                               string const& options)
+{
+    assert(fi != NULL);
+    // check if the file is not empty
+    is.peek();
+    if (is.eof())
+        throw FormatError("The file is empty.");
+
+    DataSet *ds = (*fi->ctor)();
+    ds->set_options(options);
+    ds->load_data(is);
+    return ds;
+}
+
 
 // One pass input streambuf. It reads and decompress whole file in ctor.
 struct decompressing_istreambuf : public std::streambuf
@@ -294,7 +422,7 @@ struct gzip_istreambuf : public decompressing_istreambuf
 {
     gzip_istreambuf(gzFile gz)
     {
-        while (1) {
+        for (;;) {
             int n = gzread(gz, writeptr_, bufavail_);
             writeptr_ += n;
             if (n != bufavail_)
@@ -311,7 +439,7 @@ struct bzip2_istreambuf : public decompressing_istreambuf
 {
     bzip2_istreambuf(BZFILE* bz2)
     {
-        while (1) {
+        for (;;) {
             int n = BZ2_bzread(bz2, writeptr_, bufavail_);//the only difference
             writeptr_ += n;
             if (n != bufavail_)
@@ -327,7 +455,7 @@ struct bzip2_istreambuf : public decompressing_istreambuf
 DataSet* guess_and_load_stream(istream &is,
                                string const& path, // only used for guessing
                                string const& format_name,
-                               vector<string> const& options)
+                               string const& options)
 {
     FormatInfo const* fi = NULL;
     if (format_name.empty()) {
@@ -338,18 +466,18 @@ DataSet* guess_and_load_stream(istream &is,
         is.clear();
     }
     else {
-        fi = string_to_format(format_name);
+        fi = (FormatInfo const*) xylib_get_format_by_name(format_name.c_str());
         if (!fi)
             throw RunTimeError("Unsupported (misspelled?) data format: "
                                 + format_name);
     }
 
-    return load_stream(is, fi, options);
+    return load_stream_of_format(is, fi, options);
 }
 
 
 DataSet* load_file(string const& path, string const& format_name,
-                   vector<string> const& options)
+                   string const& options)
 {
     DataSet *ret = NULL;
     // open stream
@@ -394,20 +522,14 @@ DataSet* load_file(string const& path, string const& format_name,
 }
 
 
-DataSet* load_stream(istream &is, FormatInfo const* fi,
-                     vector<string> const& options)
+DataSet* load_stream(istream &is, string const& format_name,
+                     string const& options)
 {
-    assert(fi != NULL);
-    // check if the file is not empty
-    is.peek();
-    if (is.eof())
-        throw FormatError("The file is empty.");
-
-    DataSet *ds = (*fi->ctor)();
-    ds->set_options(options);
-    ds->load_data(is);
-    return ds;
+    xylibFormat const* xf = xylib_get_format_by_name(format_name.c_str());
+    FormatInfo const* fi = static_cast<FormatInfo const*>(xf);
+    return load_stream_of_format(is, fi, options);
 }
+
 
 // filename: path, filename or only extension with dot
 vector<FormatInfo const*> get_possible_filetypes(string const& filename)
@@ -419,7 +541,8 @@ vector<FormatInfo const*> get_possible_filetypes(string const& filename)
     string ext = (pos == string::npos) ? string() : filename.substr(pos + 1);
 
     for (FormatInfo const **i = formats; *i != NULL; ++i) {
-        if ((*i)->has_extension(ext))
+        string lower_ext = str_tolower(ext);
+        if (has_word((*i)->exts, lower_ext))
             results.push_back(*i);
     }
     return results;
@@ -428,31 +551,16 @@ vector<FormatInfo const*> get_possible_filetypes(string const& filename)
 FormatInfo const* guess_filetype(const string &path, istream &f)
 {
     vector<FormatInfo const*> possible = get_possible_filetypes(path);
-    if (possible.empty())
-        return NULL;
-    if (possible.size() == 1)
-        return possible[0]->check(f) ? possible[0] : NULL;
-    else {
-        for (vector<FormatInfo const*>::const_iterator i = possible.begin();
-                                                    i != possible.end(); ++i) {
-            if ((*i)->check(f))
-                return *i;
-            f.seekg(0);
-            f.clear();
-        }
-
-        return NULL;
-    }
-}
-
-
-FormatInfo const* string_to_format(string const& format_name)
-{
-    for (FormatInfo const **i = formats; *i != NULL; ++i)
-        if (format_name == (*i)->name)
+    for (vector<FormatInfo const*>::const_iterator i = possible.begin();
+                                                i != possible.end(); ++i) {
+        if (check_format(*i, f))
             return *i;
+        f.seekg(0);
+        f.clear();
+    }
     return NULL;
 }
+
 
 // all_files is a string used to show all file ("*" or "*.*")
 string get_wildcards_string(string const& all_files)
@@ -462,118 +570,43 @@ string get_wildcards_string(string const& all_files)
         if (!r.empty())
             r += "|";
         string ext_list;
-        if ((*i)->exts.empty())
+        const char* exts = (*i)->exts;
+        int len = strlen(exts);
+
+        if (len == 0)
             ext_list = all_files;
         else {
-            for (size_t j = 0; j < (*i)->exts.size(); ++j) {
-                if (j != 0)
+            const char* start = exts;
+            for (;;) {
+                if (start != exts)
                     ext_list += ";";
-                ext_list += "*." + (*i)->exts[j];
+                const char* end = strchr(exts, ' ');
+                if (end == NULL)
+                    end = exts + len;
+                string ext(start, end);
+                ext_list += "*." + ext;
 #ifdef HAVE_ZLIB
-                ext_list += ";*." + (*i)->exts[j] + ".gz";
+                ext_list += ";*." + ext + ".gz";
 #endif
 #ifdef HAVE_BZLIB
-                ext_list += ";*." + (*i)->exts[j] + ".bz2";
+                ext_list += ";*." + ext + ".bz2";
 #endif
+                while (isspace(*end))
+                    ++end;
+                if (*end == '\0')
+                    break;
+                start = end;
             }
         }
         string up = ext_list;
         transform(up.begin(), up.end(), up.begin(), (int(*)(int)) toupper);
-        r += (*i)->desc + " (" + ext_list + ")|" + ext_list;
+        r += string((*i)->desc) + " (" + ext_list + ")|" + ext_list;
         if (up != ext_list) // if it contains only (*.*) it won't be appended
             r += ";" + up;
     }
     return r;
 }
 
-/// see also XYLIB_VERSION
-const char* get_version()
-{
-    static bool initialized = false;
-    static char ver[16];
-    if (!initialized) {
-        sprintf(ver, "%d.%d.%d", XYLIB_VERSION / 10000,
-                                 XYLIB_VERSION / 100 % 100,
-                                 XYLIB_VERSION % 100);
-        initialized = true;
-    }
-    return ver;
-}
-
 } // namespace xylib
-
-// implementation of C API
-extern "C" {
-
-using namespace xylib;
-
-const char* xylib_get_version()
-{
-    return get_version();
-}
-
-void* xylib_load_file(const char* path, const char* format_name)
-{
-    try {
-        return (void*) load_file(path, format_name != NULL ? format_name : "");
-    }
-    catch (std::exception&) {
-        return NULL;
-    }
-}
-
-void* xylib_get_block(void* dataset, int block)
-{
-    try {
-        return (void*) ((DataSet*) dataset)->get_block(block);
-    }
-    catch (RunTimeError&) {
-        return NULL;
-    }
-}
-
-int xylib_count_columns(void* block)
-{
-    return ((Block*) block)->get_column_count();
-}
-
-int xylib_count_rows(void* block, int column)
-{
-    if (column < 0 || column > xylib_count_columns(block))
-        return 0;
-    return ((Block*) block)->get_column(column).get_point_count();
-}
-
-double xylib_get_data(void* block, int column, int row)
-{
-    return ((Block*) block)->get_column(column).get_value(row);
-}
-
-const char* xylib_dataset_metadata(void* dataset, const char* key)
-{
-    try {
-        return ((DataSet*) dataset)->meta.get(key).c_str();
-    }
-    catch (RunTimeError&) {
-        return NULL;
-    }
-}
-
-const char* xylib_block_metadata(void* block, const char* key)
-{
-    try {
-        return ((Block*) block)->meta.get(key).c_str();
-    }
-    catch (RunTimeError&) {
-        return NULL;
-    }
-}
-
-void xylib_free_dataset(void* dataset)
-{
-    delete (DataSet*) dataset;
-}
-
-} // extern "C"
 
 

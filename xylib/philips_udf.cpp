@@ -14,7 +14,7 @@ namespace xylib {
 const FormatInfo UdfDataSet::fmt_info(
     "philips_udf",
     "Philips UDF",
-    vector<string>(1, "udf"),
+    "udf",
     false,                       // whether binary
     false,                       // whether has multi-blocks
     &UdfDataSet::ctor,

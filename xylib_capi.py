@@ -38,6 +38,9 @@ if __name__ == '__main__':
 
     filename = (len(sys.argv) > 1 and sys.argv[1] or "BT86.raw")
     dataset = load_file(filename, None)
+    if not dataset:
+        print "File not found:", filename
+        sys.exit(1)
     block = get_block(dataset, 0)
 
     ncol = count_columns(block)

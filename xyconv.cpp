@@ -43,8 +43,8 @@ void print_version()
 
 void list_supported_formats()
 {
-    const xylib::FormatInfo* format = NULL;
-    for (int i = 0; (format = xylib::get_format(i)) != NULL; ++i)
+    const xylibFormat* format = NULL;
+    for (int i = 0; (format = xylib_get_format(i)) != NULL; ++i)
         cout << setw(20) << left << format->name << ": "
              << format->desc << endl;
 }
@@ -71,16 +71,13 @@ int print_guessed_filetype(string const& path)
 
 void print_filetype_info(string const& filetype)
 {
-        xylib::FormatInfo const* fi = xylib::string_to_format(filetype);
+        xylibFormat const* fi = xylib_get_format_by_name(filetype.c_str());
         if (fi) {
             cout << "Name: " << fi->name << endl;
             cout << "Description: " << fi->desc << endl;
-            cout << "Possible extensions:";
-            for (size_t i = 0; i != fi->exts.size(); ++i)
-                cout << " " << fi->exts[i];
-            if (fi->exts.empty())
-                cout << " (not specified)";
-            cout << endl;
+            bool has_exts = (strlen(fi->exts) != 0);
+            cout << "Possible extensions: "
+                 << (has_exts ? fi->exts : "(not specified)") << endl;
             cout << "Other flags: "
                 << (fi->binary ? "binary-file" : "text-file") << " "
                 << (fi->multiblock ? "multi-block" : "single-block") << endl;

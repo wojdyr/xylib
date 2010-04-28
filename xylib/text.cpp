@@ -18,7 +18,7 @@ namespace xylib {
 const FormatInfo TextDataSet::fmt_info(
     "text",
     "ascii text / CSV / TSV",
-    vector<string>(),//vector_string("txt", "dat", "asc", "csv"),
+    "", // "txt dat asc csv",
     false,                       // whether binary
     false,                       // whether has multi-blocks
     &TextDataSet::ctor,
@@ -28,28 +28,6 @@ const FormatInfo TextDataSet::fmt_info(
 bool TextDataSet::check(istream & /*f*/)
 {
     return true;
-}
-
-// returns the first not processed character
-const char* TextDataSet::read_numbers(string const& s, vector<double>& row)
-{
-    row.clear();
-    const char *p = s.c_str();
-    while (*p != 0) {
-        char *endptr = NULL;
-        errno = 0; // to distinguish success/failure after call
-        double val = strtod(p, &endptr);
-        if (p == endptr) // no more numbers
-            break;
-        if (errno != 0)
-            throw FormatError("Numeric overflow or underflow in line:\n"
-                              + s);
-        row.push_back(val);
-        p = endptr;
-        while (isspace(*p) || *p == ',' || *p == ';' || *p == ':')
-            ++p;
-    }
-    return p;
 }
 
 namespace {

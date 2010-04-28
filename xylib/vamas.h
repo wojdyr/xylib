@@ -23,7 +23,7 @@ namespace xylib {
     protected:
         // a complete block contains 40 parts.
         // include[i] indicates if the i-th part (0-based) is included
-        std::vector<bool> include;
+        bool include[40];
 
         int blk_fue;            // number of future upgrade experiment entries
         int exp_fue;            // number of future upgrade block entries

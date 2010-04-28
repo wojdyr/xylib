@@ -22,7 +22,7 @@ namespace xylib {
 const FormatInfo CanberraMcaDataSet::fmt_info(
     "canberra_mca",
     "Canberra MCA",
-    vector_string("mca"),
+    "mca",
     true,                       // whether binary
     false,                      // whether has multi-blocks
     &CanberraMcaDataSet::ctor,

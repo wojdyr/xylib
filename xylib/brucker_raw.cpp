@@ -14,7 +14,7 @@ namespace xylib {
 const FormatInfo BruckerRawDataSet::fmt_info(
     "bruker_raw",
     "Siemens/Bruker RAW",
-    vector<string>(1, "raw"),
+    "raw",
     true,                       // whether binary
     true,                       // whether has multi-blocks
     &BruckerRawDataSet::ctor,
