@@ -19,7 +19,7 @@ void print_usage()
 "\txyconv [-t FILETYPE] INPUT_FILE OUTPUT_FILE\n"
 "\txyconv [-t FILETYPE] -m INPUT_FILE1 ...\n"
 "\txyconv -i FILETYPE\n"
-"\txyconv -g INPUT_FILE\n"
+"\txyconv -g INPUT_FILE ...\n"
 "\txyconv [-l|-v|-h]\n"
 "  Converts INPUT_FILE to ascii OUTPUT_FILE\n"
 "  -t     specify filetype of input file\n"
@@ -49,24 +49,30 @@ void list_supported_formats()
              << format->desc << endl;
 }
 
-int print_guessed_filetype(string const& path)
+int print_guessed_filetype(int n, char** paths)
 {
-    try {
-        ifstream is(path.c_str());
-        if (!is) {
-            cerr << "Error: can't open input file: " << path;
-            return -1;
+    bool ok = true;
+    for (int i = 0; i < n; ++i) {
+        const char* path = paths[i];
+        if (n > 1)
+            cout << path << ": ";
+        try {
+            ifstream is(path);
+            if (!is) {
+                cout << "Error: can't open input file: " << path;
+                ok = false;
+            }
+            xylib::FormatInfo const* fi = xylib::guess_filetype(path, is);
+            if (fi)
+                cout << fi->name << ": " << fi->desc << endl;
+            else
+                cout << "Format of the file was not detected\n";
+        } catch (runtime_error const& e) {
+            cout << "Error: " << e.what() << endl;
+            ok = false;
         }
-        xylib::FormatInfo const* fi = xylib::guess_filetype(path, is);
-        if (fi)
-            cout << fi->name << ": " << fi->desc << endl;
-        else
-            cout << "Format of the file was not detected";
-        return 0;
-    } catch (runtime_error const& e) {
-        cerr << "Error: " << e.what() << endl;
-        return -1;
     }
+    return ok ? 0 : -1;
 }
 
 void print_filetype_info(string const& filetype)
@@ -190,8 +196,8 @@ int main(int argc, char **argv)
         print_filetype_info(argv[2]);
         return 0;
     }
-    else if (argc == 3 && strcmp(argv[1], "-g") == 0)
-        return print_guessed_filetype(argv[2]);
+    else if (argc >= 3 && strcmp(argv[1], "-g") == 0)
+        return print_guessed_filetype(argc - 2, argv + 2);
     else if (argc < 3) {
         print_usage();
         return -1;
