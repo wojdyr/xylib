@@ -580,10 +580,10 @@ string get_wildcards_string(string const& all_files)
             for (;;) {
                 if (start != exts)
                     ext_list += ";";
-                const char* end = strchr(exts, ' ');
-                if (end == NULL)
-                    end = exts + len;
-                string ext(start, end);
+                const char* end = strchr(start, ' ');
+                int ext_len = (end == NULL ? len - (start - exts)
+                                           : end - start);
+                string ext(start, ext_len);
                 ext_list += "*." + ext;
 #ifdef HAVE_ZLIB
                 ext_list += ";*." + ext + ".gz";
@@ -591,11 +591,10 @@ string get_wildcards_string(string const& all_files)
 #ifdef HAVE_BZLIB
                 ext_list += ";*." + ext + ".bz2";
 #endif
-                while (isspace(*end))
-                    ++end;
-                if (*end == '\0')
+                if (end == NULL)
                     break;
-                start = end;
+                start = end + 1;
+                assert(isalnum(*start));
             }
         }
         string up = ext_list;
