@@ -542,7 +542,7 @@ vector<FormatInfo const*> get_possible_filetypes(string const& filename)
 
     for (FormatInfo const **i = formats; *i != NULL; ++i) {
         string exts = (*i)->exts;
-        if (exts.empty() || has_word(exts, str_tolower(ext)))
+        if (exts.empty() || (!ext.empty() && has_word(exts, str_tolower(ext))))
             results.push_back(*i);
     }
     return results;

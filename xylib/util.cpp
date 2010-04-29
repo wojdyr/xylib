@@ -195,7 +195,7 @@ bool has_word(const string &sentence, const string& word)
     assert(!word.empty());
     size_t pos = 0;
     for (;;) {
-        size_t found = sentence.find(word);
+        size_t found = sentence.find(word, pos);
         if (found == string::npos)
             return false;
         size_t end = found + word.size();

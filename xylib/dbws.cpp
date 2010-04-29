@@ -63,7 +63,7 @@ void DbwsDataSet::load_data(std::istream &f)
     string s;
     getline(f, s); // first line
     format_assert(this, s.size() >= 3*8);
-    blk->set_name(s.substr(24));
+    blk->set_name(str_trim(s.substr(24)));
     double start = my_strtod(s.substr(0, 8));
     double step = my_strtod(s.substr(8, 8));
     StepColumn *xcol = new StepColumn(start, step);
