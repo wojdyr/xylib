@@ -59,8 +59,9 @@ int print_guessed_filetype(int n, char** paths)
         try {
             ifstream is(path);
             if (!is) {
-                cout << "Error: can't open input file: " << path;
+                cout << "Error: can't open input file: " << path << endl;
                 ok = false;
+                continue;
             }
             xylib::FormatInfo const* fi = xylib::guess_filetype(path, is);
             if (fi)
