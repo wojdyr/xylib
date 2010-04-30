@@ -6,7 +6,7 @@ ctypes-based Python interface to C API of xylib
 
 from ctypes import cdll, c_char_p, c_double
 
-xylib = cdll.LoadLibrary("libxy.so.1")
+xylib = cdll.LoadLibrary("libxy.so.3")
 
 get_version = xylib.xylib_get_version
 get_version.restype = c_char_p

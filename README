@@ -45,16 +45,16 @@ DOWNLOAD
 * MS Windows `DLL + xyconv.exe`_ (compiled with MSVC9)
 * Linux RPMs_ and DEBs_
 
-.. _`DLL + xyconv.exe`: http://
+.. _`DLL + xyconv.exe`: http://downloads.sourceforge.net/xylib/xylib_win-0.6.zip
 .. _RPMs: http://download.opensuse.org/repositories/home://wojdyr/
-.. _DEBs: http://
+.. _DEBs: https://launchpad.net/~wojdyr/+archive/fityk
 
 **Source**:
 
 * `tarball`_ 
 * Subversion repository_. 
 
-.. _`tarball`: http://downloads.sourceforge.net/xylib/xylib-0.5.tar.bz2
+.. _`tarball`: http://downloads.sourceforge.net/xylib/xylib-0.6.tar.bz2
 .. _repository: https://xylib.svn.sourceforge.net/svnroot/xylib/trunk/
 
 To build from source, you need:
@@ -83,6 +83,10 @@ Documentation for programmers who want to extend xylib is
 in the file `README.dev`__.
 
 __ https://xylib.svn.sourceforge.net/svnroot/xylib/trunk/README.dev
+
+freshmeat__ provides new version notifications.
+
+__ http://freshmeat.net/projects/xylib/
 
 xylib is used by:
 
@@ -121,7 +125,7 @@ CREDITS
 HISTORY
 =======
 
-* 0.6 (2010-04-26)
+* 0.6 (2010-04-29)
 
   - fixed reading of Bruker v3 files
   - changes in API, added C API
