@@ -37,7 +37,7 @@ if __name__ == '__main__':
     print "xylib version:", get_version()
 
     filename = (len(sys.argv) > 1 and sys.argv[1] or "BT86.raw")
-    dataset = load_file(filename, None)
+    dataset = load_file(filename, None, None)
     if not dataset:
         print "File not found:", filename
         sys.exit(1)
