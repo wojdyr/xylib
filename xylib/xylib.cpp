@@ -571,7 +571,7 @@ string get_wildcards_string(string const& all_files)
             r += "|";
         string ext_list;
         const char* exts = (*i)->exts;
-        int len = strlen(exts);
+        size_t len = strlen(exts);
 
         if (len == 0)
             ext_list = all_files;

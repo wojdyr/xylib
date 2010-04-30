@@ -25,7 +25,7 @@ const FormatInfo Riet7DataSet::fmt_info(
 static
 int count_numbers(const char* p)
 {
-    int n;
+    int n = 0;
     while (*p != 0) {
         char *endptr;
         strtod(p, &endptr);
