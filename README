@@ -121,6 +121,7 @@ CREDITS
    project started). 
 -  Andreas Breslau added Bruker V3 (RAW1.01) support.
 -  Bjørn Tore Lønstad provided Bruker RAW V3 format specification and samples.
+-  Hector Zhao patched VAMAS code.
 
 HISTORY
 =======

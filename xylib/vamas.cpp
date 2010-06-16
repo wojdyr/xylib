@@ -177,6 +177,7 @@ Block* VamasDataSet::read_block(istream &f)
     string x_name;
 
     int cor_var = 0;    // # of corresponding variables
+    vector<VecColumn*> ycols;
 
     block->meta["block id"] = read_line_trim(f);
     block->meta["sample identifier"] = read_line_trim(f);
@@ -321,7 +322,12 @@ Block* VamasDataSet::read_block(istream &f)
 
     if (include[31]) {
         cor_var = read_line_int(f);
-        skip_lines(f, 2 * cor_var);   // 2 lines per corresponding_var
+        // columns initialization
+        for (int i = 0; i != cor_var; ++i) {
+            ycols.push_back(new VecColumn);
+            ycols[i]->set_name(read_line_trim(f)); // corresponding variable label
+            skip_lines(f, 1);                      // corresponding variable unit
+        }
     }
 
     if (include[32])
@@ -368,12 +374,14 @@ Block* VamasDataSet::read_block(istream &f)
     xcol->set_name(x_name);
     block->add_column(xcol);
 
-    VecColumn *ycol = new VecColumn;
+    int col = 0;
     for (int i = 0; i < cur_blk_steps; ++i) {
         double y = my_strtod(read_line_trim(f));
-        ycol->add_val(y);
+        ycols[col]->add_val(y);
+        col = (col + 1) % cor_var;
     }
-    block->add_column(ycol);
+    for (int i = 0; i < cor_var; ++i)
+        block->add_column(ycols[i]);
     return block;
 }
 
