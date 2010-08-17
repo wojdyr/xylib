@@ -65,11 +65,6 @@ if [ $arg -eq 3 ]; then
     echo copy files xylib.dll and xyconv.exe to `pwd`/xylib_win-$VERSION
     echo and do:  zip -r xylib_win-$VERSION.zip xylib_win-$VERSION/
 
-    #rm -rf mingw32
-    #mkdir mingw32
-    #cd mingw32
-    #../configure --host=i586-mingw32msvc --enable-shared --disable-static CPPFLAGS="-I$HOME/local/src/boost_1_42_0/" --prefix=`pwd`/install || exit 1
-    #make install || exit 1
 fi
 
 # 4. prepare RPMs in OBS
@@ -100,5 +95,18 @@ if [ $arg -eq 8 ]; then
     grep -5 "\* $VERSION" README | tail -6
     echo
     echo http://freshmeat.net/projects/xylib/releases/new
+fi
+
+# 102. make Windows static lib for linking with fityk
+if [ $arg -eq 102 ]; then
+    rm -rf mingw32
+    mkdir mingw32
+    cd mingw32
+    MDIR=$HOME/local/mingw32msvc
+    ../configure --host=i586-mingw32msvc --enable-static --disable-shared \
+	         CPPFLAGS="-I$HOME/local/src/boost_1_42_0/ -I$MDIR/include/" \
+		 CXXFLAGS="-O3" LDFLAGS="-s -L$MDIR/lib" --without-bzlib \
+		 --prefix=$MDIR && \
+    make install
 fi
 

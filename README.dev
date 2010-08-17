@@ -5,19 +5,15 @@ HOW TO ADD A NEW FORMAT
 Each .cpp/.h file pair in xylib/ (excluding xylib.*, cache.* and util.*)
 corresponds to one supported filetype.
 
-Each of these .cpp files contains basic info about the format
-in constructor of struct FormatInfo. Each header file includes
-a note what the implementation is based on (i.e. what documentation
-was available to developers). In some cases the format is described
-in .cpp file.
-
-To add a new filetype:
+To add new filetype foo:
 
 -  go to xylib/ subdirectory
--  write new_format.cpp and .h files
--  #include new_format.h in xylib.cpp
+-  write foo.cpp and foo.h files (or copy and modify existing files) 
+-  in foo.h write what your implementation is based on,
+   i.e., what documentation is available to you.
+-  #include foo.h in xylib.cpp
 -  add an entry to formats[] array in xylib.cpp
--  add new_format.cpp and .h files to xylib/Makefile.am
+-  add foo.cpp and foo.h files to xylib/Makefile.am
 
 You may contact us before you start, to avoid duplication of work.
 

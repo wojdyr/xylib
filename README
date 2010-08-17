@@ -65,7 +65,7 @@ To build from source, you need:
 .. _Boost: http://www.boost.org/
 
 On Unix, just type ``./configure && make``.
-If you downloaded the source from svn, run ``autoreconf -i`` first.
+If you download the source from svn, run ``autoreconf -i`` first.
 
 MISC NOTES
 ==========
@@ -125,6 +125,10 @@ CREDITS
 
 HISTORY
 =======
+
+* 0.7 (2010-  -  )
+
+  - fixed bug in reading VAMAS files with transmission data (Hector Zhao)
 
 * 0.6 (2010-04-29)
 
