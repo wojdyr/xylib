@@ -1,6 +1,6 @@
 // Implementation of Public API of xylib library.
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id: xylib.cpp 459 2009-04-15 23:14:50Z wojdyr $
+// $Id$
 
 #define BUILDING_XYLIB
 #include "cache.h"

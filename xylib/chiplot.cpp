@@ -1,6 +1,6 @@
 // chiplot text format - 4 line of headers followed by x y data lines
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id: $
+// $Id$
 
 #define BUILDING_XYLIB
 #include "chiplot.h"
