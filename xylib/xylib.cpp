@@ -38,6 +38,7 @@
 #include "canberra_mca.h"
 #include "xfit_xdd.h"
 #include "riet7.h"
+#include "chiplot.h"
 
 #include <vector>
 #include <map>
@@ -61,6 +62,7 @@ const FormatInfo *formats[] = {
     &XfitXddDataSet::fmt_info,
     &Riet7DataSet::fmt_info,
     &DbwsDataSet::fmt_info,
+    &ChiPlotDataSet::fmt_info,
     &TextDataSet::fmt_info,
     NULL // it must be a NULL-terminated array
 };

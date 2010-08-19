@@ -12,7 +12,7 @@ To add new filetype foo:
 -  in foo.h write what your implementation is based on,
    i.e., what documentation is available to you.
 -  #include foo.h in xylib.cpp
--  add an entry to formats[] array in xylib.cpp
+-  add an entry to formats[] array in xylib.cpp (but not after textTextDataSet)
 -  add foo.cpp and foo.h files to xylib/Makefile.am
 
 You may contact us before you start, to avoid duplication of work.

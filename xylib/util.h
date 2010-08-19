@@ -64,6 +64,15 @@ inline std::string S(char const k) { return std::string(1, k); }
 inline std::string S(std::string const &k) { return k; }
 inline std::string S() { return std::string(); }
 
+/// delete all objects handled by pointers and clear vector
+template<typename T>
+void purge_all_elements(std::vector<T*> &vec)
+{
+    for (typename std::vector<T*>::iterator i=vec.begin(); i!=vec.end(); ++i)
+        delete *i;
+    vec.clear();
+}
+
 /// Read numbers from the string.
 /// returns the first not processed character (from s.c_str())
 const char* read_numbers(std::string const& s,

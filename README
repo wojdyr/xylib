@@ -25,6 +25,9 @@ Supported formats:
    only REGULAR scan_mode is supported)*
 -  Princeton Instruments WinSpec SPE
    *(only 1-D data is supported)*
+- χPLOT CHI_
+
+.. _CHI: http://www.esrf.eu/computing/scientific/FIT2D/FIT2D_REF/node115.html#SECTION0001851500000000000000
 
 The library is written in C++, but it comes with C and Python bindings.
 
@@ -128,6 +131,7 @@ HISTORY
 
 * 0.7 (2010-  -  )
 
+  - added χPLOT (CHIPLOT) format (extension .chi)
   - fixed bug in reading VAMAS files with transmission data (Hector Zhao)
 
 * 0.6 (2010-04-29)

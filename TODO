@@ -5,15 +5,12 @@ TO BE CHANGED
   http://en.wikipedia.org/wiki/Newline)
 * is Rigaku RIG just another common extension for rigaku_dat? If yes, add it.
 * text format: handle other numeric formats (e.g. ',' as a decimal separator)
-* (?) support URIs (using libcurl, libfetch or boost:asio)
 
 
 FORMATS TO BE ADDED
 ===================
-* CHIPLOT format:
-  http://www.esrf.eu/computing/scientific/FIT2D/FIT2D_REF/node115.html
 * Certified Scientific Software's spec format:
-  http://www.certif.com/spec.html
+  http://www.certif.com/spec.html http://www.certif.com/goodies.html
   http://www.mathworks.com/matlabcentral/fileexchange/6271
 * PANalytical XRDML
 * JCAMP format (Standard NMR Data Format)
