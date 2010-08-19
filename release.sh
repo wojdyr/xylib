@@ -1,5 +1,5 @@
 
-VERSION=0.6
+VERSION=0.7
 
 if [ $# -eq 0 ]; then
     echo Usage: $0 step
@@ -21,11 +21,16 @@ arg=$1
 # 0. check version numbers and soname
 if [ $arg -eq 0 ]; then
     echo version: $VERSION
+    echo in xylib/xylib.h:
     grep 'define XYLIB_VERSION' xylib/xylib.h
+    echo in README:
     grep '.tar.bz2' README
     grep '.zip' README
+    echo in xylib/Makefile.am:
     grep 'version-info' xylib/Makefile.am
+    echo in xylib_capi.py:
     grep LoadLibrary xylib_capi.py
+    echo in README:
     grep "\* $VERSION" README
     echo svnversion: `svnversion`
 fi

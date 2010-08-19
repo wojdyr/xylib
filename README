@@ -48,7 +48,7 @@ DOWNLOAD
 * MS Windows `DLL + xyconv.exe`_ (compiled with MSVC9)
 * Linux RPMs_ and DEBs_
 
-.. _`DLL + xyconv.exe`: http://downloads.sourceforge.net/xylib/xylib_win-0.6.zip
+.. _`DLL + xyconv.exe`: http://downloads.sourceforge.net/xylib/xylib_win-0.7.zip
 .. _RPMs: http://download.opensuse.org/repositories/home://wojdyr/
 .. _DEBs: https://launchpad.net/~wojdyr/+archive/fityk
 
@@ -57,7 +57,7 @@ DOWNLOAD
 * `tarball`_ 
 * Subversion repository_. 
 
-.. _`tarball`: http://downloads.sourceforge.net/xylib/xylib-0.6.tar.bz2
+.. _`tarball`: http://downloads.sourceforge.net/xylib/xylib-0.7.tar.bz2
 .. _repository: https://xylib.svn.sourceforge.net/svnroot/xylib/trunk/
 
 To build from source, you need:

@@ -2,7 +2,7 @@
 
 lib_LTLIBRARIES = libxy.la
 
-libxy_la_LDFLAGS = -no-undefined -version-info 3:0:0
+libxy_la_LDFLAGS = -no-undefined -version-info 3:1:0
 libxy_la_LIBADD = $(XYLIB_ADDLIB)
 
 libxy_la_SOURCES = xylib.cpp cache.cpp brucker_raw.cpp \
