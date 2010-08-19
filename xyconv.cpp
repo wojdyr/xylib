@@ -93,19 +93,20 @@ void print_filetype_info(string const& filetype)
             cout << "Unknown file format." << endl;
 }
 
-void export_metadata(ostream &of, xylib::MetaData const& meta)
+void export_metadata(FILE *f, xylib::MetaData const& meta)
 {
     for (size_t i = 0; i != meta.size(); ++i) {
         const string& key = meta.get_key(i);
         const string& value = meta.get(key);
-        of << "# " << key << ": ";
-        // value can be multiline
-        for (string::const_iterator j = value.begin(); j != value.end(); ++j) {
-            of << *j;
-            if (*j == '\n')
-                of << "# " << key << ": ";
+        string::size_type pos = 0;
+        for (;;) {
+            string::size_type new_pos = value.find('\n', pos);
+            string vline = value.substr(pos, new_pos-pos);
+            fprintf(f, "# %s: %s\n", key.c_str(), vline.c_str());
+            if (new_pos == string::npos)
+                break;
+            pos = new_pos + 1;
         }
-        of << endl;
     }
 }
 
@@ -113,51 +114,56 @@ void export_plain_text(xylib::DataSet const *d, string const &fname,
                        bool with_metadata)
 {
     int range_num = d->get_block_count();
-    ofstream of(fname.c_str());
-    if (!of)
-        throw xylib::RunTimeError("can't create file: " + fname);
+    FILE *f;
+    if (fname == "-")
+        f = stdout;
+    else {
+        f = fopen(fname.c_str(), "w");
+        if (!f)
+            throw xylib::RunTimeError("can't create file: " + fname);
+    }
 
     // output the file-level meta-info
-    of << "# exported by xylib from a " << d->fi->name << " file" << endl;
-    if (with_metadata) {
-        export_metadata(of, d->meta);
-        of << endl;
+    fprintf(f, "# exported by xylib from a %s file\n", d->fi->name);
+    if (with_metadata && d->meta.size() != 0) {
+        export_metadata(f, d->meta);
+        fprintf(f, "\n");
     }
 
     for (int i = 0; i < range_num; ++i) {
         const xylib::Block *block = d->get_block(i);
         if (range_num > 1 || !block->get_name().empty())
-            of << "\n### block #" << i << " " << block->get_name() << endl;
+            fprintf(f, "\n### block #%d %s\n", i, block->get_name().c_str());
         if (with_metadata)
-            export_metadata(of, block->meta);
+            export_metadata(f, block->meta);
 
         int ncol = block->get_column_count();
-        of << "# ";
+        fprintf(f, "# ");
         // column 0 is pseudo-column with point indices, we skip it
         for (int k = 1; k <= ncol; ++k) {
             string const& name = block->get_column(k).get_name();
             if (k > 1)
-                of << "\t";
+                fprintf(f, "\t");
             if (name.empty())
-                of << "column_" << k;
+                fprintf(f, "column_%d", k);
             else
-                of << name;
+                fprintf(f, "%s", name.c_str());
         }
-        of << endl;
+        fprintf(f, "\n");
 
         int nrow = block->get_point_count();
 
         for (int j = 0; j < nrow; ++j) {
             for (int k = 1; k <= ncol; ++k) {
                 if (k > 1)
-                    of << "\t";
-                of << setfill(' ') << setiosflags(ios::fixed)
-                    << setprecision(6) << setw(8)
-                    << block->get_column(k).get_value(j);
+                    fprintf(f, "\t");
+                fprintf(f, "%.6f", block->get_column(k).get_value(j));
             }
-            of << endl;
+            fprintf(f, "\n");
         }
     }
+    if (fname != "-")
+        fclose(f);
 }
 
 
