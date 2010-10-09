@@ -4,7 +4,7 @@ xylib
 =====
 
 xylib is a portable library for reading files that contain x-y data from
-powder diffraction, spectroscopy or other experimental methods.
+powder diffraction, spectroscopy and other experimental methods.
 
 Supported formats:
 
@@ -106,7 +106,7 @@ CONTACT
 =======
 
 Feel free to send e-mail to the authors, or to the
-`fityk-devel mailing list <https://lists.sourceforge.net/lists/listinfo/fityk-devel>`_.
+`fityk-dev mailing list <http://groups.google.com/group/fityk-dev>`_.
 
 CREDITS
 =======
@@ -129,7 +129,7 @@ CREDITS
 HISTORY
 =======
 
-* 0.7 (2010-  -  )
+* 0.7 (2010-10-09)
 
   - added χPLOT (CHIPLOT) format (extension .chi)
   - fixed bug in reading VAMAS files with transmission data (Hector Zhao)

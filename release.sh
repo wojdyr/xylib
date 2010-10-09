@@ -85,8 +85,7 @@ fi
 # 6. SourceForge file release
 if [ $arg -eq 6 ]; then
 scp xylib-$VERSION.tar.bz2 xylib_win-$VERSION.zip `whoami`,xylib@frs.sourceforge.net:/home/frs/project/x/xy/xylib/
-echo add new release:
-echo https://sourceforge.net/project/admin/explorer.php?group_id=204287
+echo verify the release: https://sourceforge.net/downloads/xylib/
 fi
 
 # 7. update webpage
