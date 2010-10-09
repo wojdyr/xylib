@@ -35,8 +35,7 @@ namespace {
 // the title-line is either a name of block or contains names of columns
 // we assume that it's the latter if the number of words is the same
 // as number of columns
-void use_title_line(string const& line,
-                    vector<VecColumn*> &cols, Block* blk)
+void use_title_line(string const& line, vector<VecColumn*> &cols, Block* blk)
 {
     const char* delim = " \t";
     vector<string> words;
@@ -93,7 +92,7 @@ void TextDataSet::load_data(std::istream &f)
         // If there is only one number in first line, skip it if there
         // is a text after the number.
         if (row.size() > 1 ||
-                (row.size() == 1 && (strict || *p == 0 || *p == '#'))) {
+                (row.size() == 1 && (strict || *p == '\0' || *p == '#'))) {
             // columns initialization
             for (size_t i = 0; i != row.size(); ++i) {
                 cols.push_back(new VecColumn);
@@ -116,11 +115,11 @@ void TextDataSet::load_data(std::istream &f)
         if (row.empty())
             continue;
 
-        // Some non-data lines may start with numbers. The example is
-        // LAMMPS log file. The exceptions below are made to allow plotting
-        // such a file. In strict mode, no exceptions are made.
-        if (!strict) {
-            if (row.size() < cols.size()) {
+        if (row.size() < cols.size()) {
+            // Some non-data lines may start with numbers. The example is
+            // LAMMPS log file. The exceptions below are made to allow plotting
+            // such a file. In strict mode, no exceptions are made.
+            if (!strict) {
                 // if it's the last line, we ignore the line
                 if (f.eof())
                     break;
@@ -149,14 +148,24 @@ void TextDataSet::load_data(std::istream &f)
                 row = row2;
             }
 
-        }
-
-        if (row.size() < cols.size()) {
             // decrease the number of columns to the new minimum of numbers
             // in line
             for (size_t i = row.size(); i != cols.size(); ++i)
                 delete cols[i];
             cols.resize(row.size());
+        }
+
+        else if (row.size() > cols.size()) {
+            // Generally, we ignore extra columns. But if this is the second
+            // data line, we ignore the first line instead.
+            // Rationale: some data files have one or two numbers in the first
+            // line, that can mean number of points or number of colums, and 
+            // the real data starts from the next line.
+            if (cols[0]->get_point_count() == 1) {
+                purge_all_elements(cols);
+                for (size_t i = 0; i != row.size(); ++i)
+                    cols.push_back(new VecColumn);
+            }
         }
 
         for (size_t i = 0; i != cols.size(); ++i)
