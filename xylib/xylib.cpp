@@ -572,21 +572,25 @@ string get_wildcards_string(string const& all_files)
         if (!r.empty())
             r += "|";
         string ext_list;
+        string short_ext_list;
         const char* exts = (*i)->exts;
         size_t len = strlen(exts);
 
         if (len == 0)
-            ext_list = all_files;
+            short_ext_list = ext_list = all_files;
         else {
             const char* start = exts;
             for (;;) {
-                if (start != exts)
+                if (start != exts) {
                     ext_list += ";";
+                    short_ext_list += " ";
+                }
                 const char* end = strchr(start, ' ');
                 int ext_len = (end == NULL ? len - (start - exts)
                                            : end - start);
                 string ext(start, ext_len);
                 ext_list += "*." + ext;
+                short_ext_list += "." + ext;
 #ifdef HAVE_ZLIB
                 ext_list += ";*." + ext + ".gz";
 #endif
@@ -601,7 +605,7 @@ string get_wildcards_string(string const& all_files)
         }
         string up = ext_list;
         transform(up.begin(), up.end(), up.begin(), (int(*)(int)) toupper);
-        r += string((*i)->desc) + " (" + ext_list + ")|" + ext_list;
+        r += string((*i)->desc) + " (" + short_ext_list + ")|" + ext_list;
         if (up != ext_list) // if it contains only (*.*) it won't be appended
             r += ";" + up;
     }
