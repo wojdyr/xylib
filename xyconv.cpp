@@ -113,7 +113,6 @@ void export_metadata(FILE *f, xylib::MetaData const& meta)
 void export_plain_text(xylib::DataSet const *d, string const &fname,
                        bool with_metadata)
 {
-    int range_num = d->get_block_count();
     FILE *f;
     if (fname == "-")
         f = stdout;
@@ -130,9 +129,11 @@ void export_plain_text(xylib::DataSet const *d, string const &fname,
         fprintf(f, "\n");
     }
 
-    for (int i = 0; i < range_num; ++i) {
+    int nb = d->get_block_count();
+    //printf("%d block(s).\n", nb);
+    for (int i = 0; i < nb; ++i) {
         const xylib::Block *block = d->get_block(i);
-        if (range_num > 1 || !block->get_name().empty())
+        if (nb > 1 || !block->get_name().empty())
             fprintf(f, "\n### block #%d %s\n", i, block->get_name().c_str());
         if (with_metadata)
             export_metadata(f, block->meta);

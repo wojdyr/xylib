@@ -1,5 +1,5 @@
 
-VERSION=0.7
+VERSION=0.8
 
 if [ $# -eq 0 ]; then
     echo Usage: $0 step
@@ -8,11 +8,12 @@ if [ $# -eq 0 ]; then
     echo 1. test compilation
     echo 2. make tarball
     echo 3. make Windows binaries
-    echo 4. prepare RPMs in OBS
+    echo 4. RPMs: https://build.opensuse.org/project/show?project=home%3Awojdyr
     echo 5. prepare DEBs in Launchpad
     echo 6. SourceForge file release
     echo 7. update webpage
     echo 8. announce at FreshMeat
+    echo 9. make Windows static lib for linking with fityk
     exit
 fi
 
@@ -69,17 +70,20 @@ if [ $arg -eq 3 ]; then
     cp index.html README.dev TODO COPYING sample-urls xylib_win-$VERSION/docs
     echo copy files xylib.dll and xyconv.exe to `pwd`/xylib_win-$VERSION
     echo and do:  zip -r xylib_win-$VERSION.zip xylib_win-$VERSION/
-
-fi
-
-# 4. prepare RPMs in OBS
-if [ $arg -eq 4 ]; then
-    echo TODO
 fi
 
 # 5. prepare DEBs in Launchpad
 if [ $arg -eq 5 ]; then
-    echo TODO
+    echo go to directory with old debs, or: apt-get source xylib
+    echo cd xylib-oldversion
+    echo uupdate `pwd`/xylib-$VERSION.tar.bz2
+    echo cd ../xylib-$VERSION
+    echo sed -i 's/0ubuntu1/1~lucid1/' debian/changelog
+    echo debuild # test building
+    echo debuild -S -sa # build source package
+    echo dput ppa:`whoami`/fityk ../xylib_$VERSION-1~lucid1_source.changes
+    echo sed -i 's/lucid/maverick/' debian/changelog
+    echo etc.
 fi
 
 # 6. SourceForge file release
@@ -101,8 +105,8 @@ if [ $arg -eq 8 ]; then
     echo http://freshmeat.net/projects/xylib/releases/new
 fi
 
-# 102. make Windows static lib for linking with fityk
-if [ $arg -eq 102 ]; then
+# 9. make Windows static lib for linking with fityk
+if [ $arg -eq 9 ]; then
     rm -rf mingw32
     mkdir mingw32
     cd mingw32

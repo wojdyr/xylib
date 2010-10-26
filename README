@@ -129,6 +129,10 @@ CREDITS
 HISTORY
 =======
 
+* 0.8 (not released yet)
+
+  - fixed a couple of bugs in pdCIF implementation
+
 * 0.7 (2010-10-09)
 
   - added χPLOT (CHIPLOT) format (extension .chi)
