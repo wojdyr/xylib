@@ -262,9 +262,7 @@ Block::Block()
 
 Block::~Block()
 {
-    for (vector<Column*>::iterator it = imp_->cols.begin();
-                                                it != imp_->cols.end(); ++it)
-        delete *it;
+    purge_all_elements(imp_->cols);
     delete imp_;
 }
 
@@ -298,9 +296,11 @@ void Block::add_column(Column* c, bool append)
     imp_->cols.insert((append ? imp_->cols.end() : imp_->cols.begin()), c);
 }
 
-void Block::del_column(int n)
+Column* Block::del_column(int n)
 {
+    Column *c = imp_->cols[n];
     imp_->cols.erase(imp_->cols.begin() + n);
+    return c;
 }
 
 int Block::get_point_count() const
@@ -347,10 +347,7 @@ const Block* DataSet::get_block(int n) const
 // clear all the data of this dataset
 void DataSet::clear()
 {
-    for (vector<Block*>::iterator i = imp_->blocks.begin();
-            i != imp_->blocks.end(); ++i)
-        delete *i;
-    imp_->blocks.clear();
+    purge_all_elements(imp_->blocks);
     meta.clear();
 }
 

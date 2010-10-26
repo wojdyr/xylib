@@ -248,7 +248,7 @@ public:
 
     // functions for use in filetype implementations
     void add_column(Column* c, bool append=true);
-    void del_column(int n);
+    Column* del_column(int n); // removes and returns column
     void set_name(std::string const& name);
 
 private:

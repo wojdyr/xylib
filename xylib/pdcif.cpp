@@ -532,8 +532,8 @@ void PdCifDataSet::load_data(std::istream &f)
                            " no data found");
     for (int i = 0; i < n; ++i) {
         vector<Block*> sb = split_on_column_length(actions.block_list[i]);
-        for (vector<Block*>::iterator i = sb.begin(); i != sb.end(); ++i)
-            add_block(*i);
+        for (vector<Block*>::iterator j = sb.begin(); j != sb.end(); ++j)
+            add_block(*j);
     }
 }
 

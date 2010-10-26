@@ -334,40 +334,35 @@ const char* read_numbers(string const& s, vector<double>& row)
     return p;
 }
 
+// This function is used by pdCif code. In pdCif one block may contain
+// columns of different lengths. In xylib all columns in one block must have
+// the same length, so this function splits blocks when necessary.
+// Columns are removed from `block', to prevent deleting it twice.
 vector<Block*> split_on_column_length(Block *block)
 {
     vector<Block*> result;
-    int ncol = block->get_column_count();
-    if (ncol == 0)
-        return result;
-    result.push_back(block);
-    const int n1 = block->get_column(0).get_point_count();
-    for (int i = 1; i < ncol; /*nothing*/) {
-        Column const& col = block->get_column(i);
-        const int n = col.get_point_count();
-        if (n == n1)
-            ++i;
-        else {
-            int new_b_idx = -1;
-            for (size_t j = 1; j < result.size(); ++j) {
+    while (block->get_column_count() > 0) {
+        const int n = block->get_column(0).get_point_count();
+        int r_idx = -1;
+        if (n == -1)
+            r_idx = (int) result.size() - 1;
+        else
+            for (size_t j = 0; j < result.size(); ++j) {
                 if (result[j]->get_point_count() == n) {
-                    new_b_idx = (int) j;
+                    r_idx = (int) j;
                     break;
                 }
             }
-            if (new_b_idx == -1) {
-                new_b_idx = (int) result.size();
-                Block* new_block = new Block;
-                new_block->meta = block->meta;
-                new_block->set_name(block->get_name() + "_" + S(n));
-                result.push_back(new_block);
-            }
-            // we don't want to add to much functions to class Column,
-            // because this class is a part of public API, so we rather
-            // use const_cast here.
-            result[new_b_idx]->add_column(const_cast<Column*>(&col));
-            block->del_column(i);
+        if (r_idx == -1) {
+            r_idx = (int) result.size();
+            Block* new_block = new Block;
+            new_block->meta = block->meta;
+            new_block->set_name(block->get_name() + (r_idx == 0 ? S()
+                                                           : " " + S(r_idx)));
+            result.push_back(new_block);
         }
+        Column *col = block->del_column(0);
+        result[r_idx]->add_column(col);
     }
     return result;
 }
