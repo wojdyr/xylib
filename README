@@ -38,7 +38,7 @@ For API description, see `xylib/xylib.h`__ file.
 
 __ http://xylib.svn.sourceforge.net/viewvc/xylib/trunk/xylib/xylib.h?view=markup
 
-Licence: `LGPL <http://www.opensource.org/licenses/lgpl-2.1.php>`_
+Licence: `LGPL <http://creativecommons.org/licenses/LGPL/2.1/>`_
 
 DOWNLOAD
 ========
@@ -48,7 +48,7 @@ DOWNLOAD
 * MS Windows `DLL + xyconv.exe`_ (compiled with MSVC9)
 * Linux RPMs_ and DEBs_
 
-.. _`DLL + xyconv.exe`: http://downloads.sourceforge.net/xylib/xylib_win-0.7.zip
+.. _`DLL + xyconv.exe`: http://downloads.sourceforge.net/xylib/xylib_win-0.8.zip
 .. _RPMs: http://download.opensuse.org/repositories/home://wojdyr/
 .. _DEBs: https://launchpad.net/~wojdyr/+archive/fityk
 
@@ -57,7 +57,7 @@ DOWNLOAD
 * `tarball`_ 
 * Subversion repository_. 
 
-.. _`tarball`: http://downloads.sourceforge.net/xylib/xylib-0.7.tar.bz2
+.. _`tarball`: http://downloads.sourceforge.net/xylib/xylib-0.8.tar.bz2
 .. _repository: https://xylib.svn.sourceforge.net/svnroot/xylib/trunk/
 
 To build from source, you need:
@@ -129,7 +129,7 @@ CREDITS
 HISTORY
 =======
 
-* 0.8 (not released yet)
+* 0.8 (2011-01-18)
 
   - fixed a couple of bugs in pdCIF implementation
 

@@ -46,11 +46,9 @@ h1.title {
     border: none;
     background-color: #11303d;
     color: white;
-    /*
-    background-image:url("img/xyconvert48.png");
+    background-image: url('lgpl.png');
     background-repeat: no-repeat;
     background-position: 5% 50%;
-    */
 }
 
 a {
