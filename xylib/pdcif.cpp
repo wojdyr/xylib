@@ -6,11 +6,24 @@
 #include "pdcif.h"
 
 #include <map>
-
 //#define BOOST_SPIRIT_DEBUG
+#include <boost/version.hpp>
+
+#if BOOST_VERSION >= 103800
+
+#include <boost/spirit/include/classic_core.hpp>
+#include <boost/spirit/include/classic_chset.hpp>
+#include <boost/spirit/include/classic_increment_actor.hpp>
+using namespace boost::spirit::classic;
+
+#else
+
 #include <boost/spirit/core.hpp>
 #include <boost/spirit/utility/chset.hpp>
 #include <boost/spirit/actor/increment_actor.hpp>
+using namespace boost::spirit;
+
+#endif
 
 #include "util.h"
 
@@ -19,7 +32,6 @@
 #endif
 
 using namespace std;
-using namespace boost::spirit;
 using namespace xylib::util;
 
 namespace xylib {
