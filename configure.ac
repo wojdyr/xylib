@@ -2,12 +2,12 @@
 # after changing, run "autoreconf --install --verbose"
 
 AC_PREREQ(2.59)
-AC_INIT([xylib], [0.8], [])
+AC_INIT([xylib], [0.9], [])
 AC_CONFIG_AUX_DIR([.])
 AC_CONFIG_SRCDIR([xylib/xylib.cpp])
 AC_CONFIG_HEADER([config.h])
 
-AM_INIT_AUTOMAKE([1.9 dist-bzip2 foreign])
+AM_INIT_AUTOMAKE([1.11 foreign silent-rules -Wall])
 
 # optional zlib and bzlib libraries
 AC_ARG_WITH(zlib,

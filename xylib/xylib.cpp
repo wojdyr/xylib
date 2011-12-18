@@ -36,6 +36,7 @@
 #include "cpi.h"
 #include "dbws.h"
 #include "canberra_mca.h"
+#include "canberra_cnf.h"
 #include "xfit_xdd.h"
 #include "riet7.h"
 #include "chiplot.h"
@@ -59,6 +60,7 @@ const FormatInfo *formats[] = {
     &PhilipsRawDataSet::fmt_info,
     //&GsasDataSet::fmt_info,
     &CanberraMcaDataSet::fmt_info,
+    &CanberraCnfDataSet::fmt_info,
     &XfitXddDataSet::fmt_info,
     &Riet7DataSet::fmt_info,
     &DbwsDataSet::fmt_info,

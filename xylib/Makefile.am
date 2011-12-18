@@ -9,11 +9,12 @@ libxy_la_SOURCES = xylib.cpp cache.cpp brucker_raw.cpp \
 		   gsas.cpp pdcif.cpp philips_raw.cpp \
 		   philips_udf.cpp rigaku_dat.cpp text.cpp \
 		   uxd.cpp vamas.cpp winspec_spe.cpp cpi.cpp dbws.cpp \
-		   canberra_mca.cpp xfit_xdd.cpp riet7.cpp chiplot.cpp \
-                   util.cpp util.h
+		   canberra_mca.cpp canberra_cnf.cpp xfit_xdd.cpp riet7.cpp \
+		   chiplot.cpp util.cpp util.h
 
 pkginclude_HEADERS = xylib.h cache.h brucker_raw.h \
   		     gsas.h pdcif.h philips_raw.h philips_udf.h \
 		     rigaku_dat.h text.h uxd.h vamas.h winspec_spe.h \
-		     cpi.h dbws.h canberra_mca.h xfit_xdd.h riet7.h chiplot.h
+		     cpi.h dbws.h canberra_mca.h canberra_cnf.h \
+		     xfit_xdd.h riet7.h chiplot.h
 
