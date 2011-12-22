@@ -17,6 +17,7 @@ Supported formats:
 -  Rigaku DAT
 -  Sietronics Sieray CPI
 -  DBWS/DMPLOT data file
+-  Canberra CNF (from Genie-2000 software; aka CAM format)
 -  Canberra MCA *(only one of Canberra MCA formats?)*
 -  XFIT/Koalariet XDD
 -  RIET7/LHPM/CSRIET/ILL\_D1A5/PSI\_DMC DAT
@@ -125,9 +126,17 @@ CREDITS
 -  Andreas Breslau added Bruker V3 (RAW1.01) support.
 -  Bjørn Tore Lønstad provided Bruker RAW V3 format specification and samples.
 -  Hector Zhao patched VAMAS code.
+-  Jim Fitzgerald (author of FitzPeaks_) provided code for reading
+   Canberra (Genie) CNF files.
+
+.. _FitzPeaks: http://www.jimfitz.demon.co.uk/fitzpeak.htm
 
 HISTORY
 =======
+
+* 0.9 (2012-  -  )
+
+  - added Canberra CNF format
 
 * 0.8 (2011-01-18)
 
