@@ -144,6 +144,25 @@ string read_string(istream &f, unsigned len)
     return string(buf);
 }
 
+// function that converts single precision 32-bit floating point in DEC PDP-11
+// format to double
+double from_pdp11(const char* p)
+{
+    int sign = (p[1] & 0x80) == 0 ? 1 : -1;
+    int unbiased = ((p[1] & 0x7F) << 1) + ((p[0] & 0x80) >> 7) - 128;
+    if (unbiased == -128)
+        return 0;
+    double h = (p[2] & 0x7F) / 256. / 256. / 256.
+               + (p[3] & 0x7F) / 256. / 256.
+               + (128 + (p[0] & 0x7F)) / 256.;
+#if 0
+    return ldexp(sign*h, unbiased);
+#else
+    return sign * h * pow(2., unbiased);
+#endif
+}
+
+
 //    ----------       string utilities       -----------
 
 // Return a copy of the string str with leading and trailing whitespace removed

@@ -60,9 +60,9 @@ void CanberraMcaDataSet::load_data(std::istream &f)
         throw FormatError("Unexpected end of file.");
     }
 
-    double energy_offset = pdp11_f (all_data + 108);
-    double energy_slope = pdp11_f (all_data + 112);
-    double energy_quadr = pdp11_f (all_data + 116);
+    double energy_offset = from_pdp11(all_data + 108);
+    double energy_slope = from_pdp11(all_data + 112);
+    double energy_quadr = from_pdp11(all_data + 116);
 
     Block* blk = new Block;
 
@@ -96,23 +96,6 @@ void CanberraMcaDataSet::load_data(std::istream &f)
 
     add_block(blk);
 }
-
-// function that converts:
-//   single precision 32-bit floating point DEC PDP-11 format
-//   to double
-double CanberraMcaDataSet::pdp11_f (char* p)
-
-{
-    int sign = (p[1] & 0x80) == 0 ? 1 : -1;
-    int unbiased = ((p[1] & 0x7F) << 1) + ((p[0] & 0x80) >> 7) - 128;
-    if (unbiased == -128)
-        return 0;
-    double h = (p[2] & 0x7F) / 256. / 256. / 256.
-               + (p[3] & 0x7F) / 256. / 256.
-               + (128 + (p[0] & 0x7F)) / 256.;
-    return sign * h * pow(2., unbiased);
-}
-
 
 
 } // namespace xylib

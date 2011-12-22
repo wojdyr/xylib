@@ -29,6 +29,16 @@ double read_dbl_le(std::istream &f);
 char read_char(std::istream &f);
 std::string read_string(std::istream &f, unsigned len);
 
+template<typename T>
+T from_le(const char* p)
+{
+    T val = *reinterpret_cast<const T*>(p);
+    le_to_host(&val, sizeof(val));
+    return val;
+}
+
+double from_pdp11(const char* p);
+
 std::string str_trim(std::string const& str);
 void str_split(std::string const& line, std::string const& sep,
                std::string &key, std::string &val);
@@ -53,6 +63,15 @@ inline bool is_numeric(int c)
 inline int iround(double d) { return static_cast<int>(floor(d+0.5)); }
 
 /// S() converts any type to string
+template <typename T, int N>
+std::string format1(const char* fmt, T t)
+{
+    char buffer[N];
+    snprintf(buffer, N, fmt, t);
+    buffer[N-1] = '\0';
+    return std::string(buffer);
+}
+
 template <typename T>
 inline std::string S(T k) {
     return static_cast<std::ostringstream&>(std::ostringstream() << k).str();
@@ -158,6 +177,35 @@ public:
         int n = (count == -1 ? point_count : count);
         return get_value(n-1);
     }
+};
+
+// column that yields ax^2+bx+c (useful for energy calibration in MCA)
+class QuadraticColumn : public ColumnWithName
+{
+public:
+    QuadraticColumn(double c_, double b_, double a_)
+        : ColumnWithName(0.), a(a_), b(b_), c(c_) {}
+
+    int get_point_count() const { return -1; }
+    double get_value(int n) const { return a * n * n + b * n + c; }
+    double get_min() const
+    {
+        int point_count = 256; // XXX TODO
+        if (a > 0 && b > -2*a*(point_count-1) && b < 0)
+            return get_value(-b/(2*a));
+        else
+            return std::min(c, get_value(point_count-1));
+    }
+    double get_max(int point_count=0) const
+    {
+        assert(point_count != 0);
+        if (a < 0 && b > 0 && b < -2*a*(point_count-1))
+            return get_value(-b/(2*a));
+        else
+            return std::max(c, get_value(point_count-1));
+    }
+private:
+    double a, b, c;
 };
 
 } } // namespace xylib::util
