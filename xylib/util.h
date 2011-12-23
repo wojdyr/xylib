@@ -128,7 +128,7 @@ private:
 class VecColumn : public ColumnWithName
 {
 public:
-    VecColumn() : ColumnWithName(0.) {}
+    VecColumn() : ColumnWithName(0.), last_minmax_length(-1) {}
 
     // implementation of the base interface
     int get_point_count() const { return (int) data.size(); }
@@ -147,6 +147,7 @@ public:
 protected:
     std::vector<double> data;
     mutable double min_val, max_val;
+    mutable int last_minmax_length;
 
     void calculate_min_max() const;
 };

@@ -425,11 +425,10 @@ double VecColumn::get_max(int /*point_count*/) const
 
 void VecColumn::calculate_min_max() const
 {
-    static bool has_min_max = false;
-    static size_t previous_length = 0;
     // public api of VecColumn don't allow changing data, only appending
-    if (has_min_max && data.size() == previous_length)
+    if ((int) data.size() == last_minmax_length)
         return;
+
     if (data.empty()) {
         min_val = max_val = 0.;
         return;
@@ -442,6 +441,7 @@ void VecColumn::calculate_min_max() const
         if (*i > max_val)
             max_val = *i;
     }
+    last_minmax_length = data.size();
 }
 
 
