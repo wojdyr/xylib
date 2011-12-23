@@ -180,26 +180,6 @@ public:
     }
 };
 
-// column that yields ax^2+bx+c (useful for energy calibration in MCA)
-class QuadraticColumn : public ColumnWithName
-{
-public:
-    QuadraticColumn(double c_, double b_, double a_)
-        : ColumnWithName(0.), a(a_), b(b_), c(c_) {}
-
-    int get_point_count() const { return -1; }
-    double get_value(int n) const { return a * n * n + b * n + c; }
-    // in QuadraticColumn always call get_max(n) before get_min()
-    // because get_min() sets n that is used by get_min()
-    // (it's complicated, we do not want to change API)
-    double get_min() const;
-    double get_max(int point_count=0) const;
-    void set_point_count(int n_) { n = n_; } // needed for get_min()
-private:
-    double a, b, c;
-    mutable int n; // number of points, set by get_max()
-};
-
 } } // namespace xylib::util
 
 #endif // XYLIB_UTIL_H_
