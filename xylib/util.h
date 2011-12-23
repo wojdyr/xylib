@@ -159,6 +159,7 @@ public:
     double start;
     int count; // -1 means unlimited...
 
+    // get_min() and get_max() work properly only if step_ >= 0
     StepColumn(double start_, double step_, int count_ = -1)
         : ColumnWithName(step_), start(start_), count(count_)
     {}
@@ -188,24 +189,15 @@ public:
 
     int get_point_count() const { return -1; }
     double get_value(int n) const { return a * n * n + b * n + c; }
-    double get_min() const
-    {
-        int point_count = 256; // XXX TODO
-        if (a > 0 && b > -2*a*(point_count-1) && b < 0)
-            return get_value(-b/(2*a));
-        else
-            return std::min(c, get_value(point_count-1));
-    }
-    double get_max(int point_count=0) const
-    {
-        assert(point_count != 0);
-        if (a < 0 && b > 0 && b < -2*a*(point_count-1))
-            return get_value(-b/(2*a));
-        else
-            return std::max(c, get_value(point_count-1));
-    }
+    // in QuadraticColumn always call get_max(n) before get_min()
+    // because get_min() sets n that is used by get_min()
+    // (it's complicated, we do not want to change API)
+    double get_min() const;
+    double get_max(int point_count=0) const;
+    void set_point_count(int n_) { n = n_; } // needed for get_min()
 private:
     double a, b, c;
+    mutable int n; // number of points, set by get_max()
 };
 
 } } // namespace xylib::util

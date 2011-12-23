@@ -444,6 +444,26 @@ void VecColumn::calculate_min_max() const
     }
 }
 
+double QuadraticColumn::get_min() const
+{
+    if (n == 0)
+        return c;
+    if (a > 0 && b > -2*a*(n-1) && b < 0)
+        return get_value(-b/(2*a));
+    else
+        return min(c, get_value(n-1));
+}
+
+double QuadraticColumn::get_max(int point_count) const
+{
+    assert(point_count != 0);
+    n = point_count;
+    if (a < 0 && b > 0 && b < -2*a*(n-1))
+        return get_value(-b/(2*a));
+    else
+        return max(c, get_value(n-1));
+}
+
 
 } } // namespace xylib::util
 

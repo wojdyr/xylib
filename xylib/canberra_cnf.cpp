@@ -57,7 +57,7 @@ bool CanberraCnfDataSet::check(istream &f)
 }
 
 static
-Column* read_energy_callibration(const char* p, Block *blk)
+Column* read_energy_callibration(const char* p, Block *blk, int n_channels)
 {
     // energy calibration
     p += 2*4+28;
@@ -68,9 +68,15 @@ Column* read_energy_callibration(const char* p, Block *blk)
         return NULL;
     for (int i = 0; i != 3; ++i)
         blk->meta["energy calib " + S(i)] = S(coef[i]);
-    //coef[0] += coef[1] + coef[2]; // set value from CH1 to CH0
-    if (coef[2] != 0.) // quadr term
-        return new QuadraticColumn(coef[0], coef[1], coef[2]);
+    if (coef[2] != 0.) { // quadr term
+        VecColumn *vc = new VecColumn;
+        // FIXME should it be from 0 or from 1?
+        for (int i = 0; i < n_channels; i++) {
+            double x = coef[0] + coef[1] * i + coef[2] * i * i;
+            vc->add_val(x);
+        }
+        return vc;
+    }
     else
         return new StepColumn(coef[0], coef[1]);
 }
@@ -203,11 +209,14 @@ void CanberraCnfDataSet::load_data(std::istream &f)
 
     format_assert(this, beg + enc_offset+48+32 + offset1 < end);
     Column *xcol = read_energy_callibration(beg + enc_offset+48+32 + offset1,
-                                            blk.get());
+                                            blk.get(), n_channels);
     if (xcol == NULL)
-        xcol = read_energy_callibration(beg + enc_offset+48+32, blk.get());
-    if (xcol == NULL)
+        xcol = read_energy_callibration(beg + enc_offset+48+32,
+                                        blk.get(), n_channels);
+    if (xcol == NULL) {
         fprintf(stderr, "Warning. Energy Calibration not found.\n");
+        xcol = new StepColumn(1, 1);
+    }
 
     // code from JF is also reading detector name, but it's not needed here
     // detector name was 232 bytes after energy calibration
