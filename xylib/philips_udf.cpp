@@ -4,6 +4,7 @@
 
 #define BUILDING_XYLIB
 #include "philips_udf.h"
+#include <sstream>
 #include "util.h"
 
 using namespace std;

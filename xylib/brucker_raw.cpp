@@ -4,6 +4,7 @@
 
 #define BUILDING_XYLIB
 #include "brucker_raw.h"
+#include <sstream>
 #include "util.h"
 
 using namespace std;

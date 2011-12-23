@@ -83,49 +83,21 @@ void le_to_host(void *ptr, int size)
 void le_to_host(void *, int) {}
 #endif
 
-// read a 32-bit, little-endian form int from f,
-// return equivalent int in host endianess
-unsigned int read_uint32_le(istream &f)
+// read little-endian number from f and return equivalent in host endianess
+template<typename T>
+T read_le(istream &f)
 {
-    uint32_t val;
+    T val;
     my_read(f, reinterpret_cast<char*>(&val), sizeof(val));
     le_to_host(&val, sizeof(val));
     return val;
 }
 
-unsigned int read_uint16_le(istream &f)
-{
-    uint16_t val;
-    my_read(f, reinterpret_cast<char*>(&val), sizeof(val));
-    le_to_host(&val, sizeof(val));
-    return val;
-}
-
-int read_int16_le(istream &f)
-{
-    int16_t val;
-    my_read(f, reinterpret_cast<char*>(&val), sizeof(val));
-    le_to_host(&val, sizeof(val));
-    return val;
-}
-
-// the same as above, but read a float
-float read_flt_le(istream &f)
-{
-    float val;
-    my_read(f, reinterpret_cast<char*>(&val), sizeof(val));
-    le_to_host(&val, sizeof(val));
-    return val;
-}
-
-// the same as above, but read a float
-double read_dbl_le(istream &f)
-{
-    double val;
-    my_read(f, reinterpret_cast<char*>(&val), sizeof(val));
-    le_to_host(&val, sizeof(val));
-    return val;
-}
+unsigned int read_uint32_le(istream &f) { return read_le<uint32_t>(f); }
+unsigned int read_uint16_le(istream &f) { return read_le<uint16_t>(f); }
+int read_int16_le(istream &f) { return read_le<int16_t>(f); }
+float read_flt_le(istream &f) { return read_le<float>(f); }
+double read_dbl_le(istream &f) { return read_le<double>(f); }
 
 char read_char(istream &f)
 {
@@ -376,7 +348,7 @@ vector<Block*> split_on_column_length(Block *block)
             r_idx = (int) result.size();
             Block* new_block = new Block;
             new_block->meta = block->meta;
-            new_block->set_name(block->get_name() + (r_idx == 0 ? S()
+            new_block->set_name(block->get_name() + (r_idx == 0 ? string()
                                                            : " " + S(r_idx)));
             result.push_back(new_block);
         }

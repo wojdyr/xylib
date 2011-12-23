@@ -8,9 +8,7 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
-#include <sstream>
 #include <fstream>
-#include <iomanip>
 #include <cassert>
 #include <cmath>
 
@@ -72,16 +70,15 @@ std::string format1(const char* fmt, T t)
     return std::string(buffer);
 }
 
-template <typename T>
-inline std::string S(T k) {
-    return static_cast<std::ostringstream&>(std::ostringstream() << k).str();
-}
 inline std::string S(bool b) { return b ? "true" : "false"; }
-inline std::string S(char const *k) { return std::string(k); }
-inline std::string S(char *k) { return std::string(k); }
-inline std::string S(char const k) { return std::string(1, k); }
-inline std::string S(std::string const &k) { return k; }
-inline std::string S() { return std::string(); }
+inline std::string S(const char *k) { return std::string(k); }
+inline std::string S(const char k) { return std::string(1, k); }
+inline std::string S(int n) { return format1<int, 16>("%d", n); }
+inline std::string S(long n) { return format1<long, 21>("%ld", n); }
+inline std::string S(unsigned n) { return format1<unsigned, 16>("%u", n); }
+inline std::string S(size_t n)
+        { return format1<size_t, 21>("%lu", (unsigned long) n); }
+inline std::string S(double d) { return format1<double, 16>("%g", d); }
 
 /// delete all objects handled by pointers and clear vector
 template<typename T>
