@@ -66,7 +66,7 @@ void BruckerRawDataSet::load_version1(std::istream &f)
 
         blk->meta["MEASUREMENT_TIME_PER_STEP"] = S(read_flt_le(f));
         float x_step = read_flt_le(f);
-        blk->meta["SCAN_MODE"] = S(read_uint32_le(f));
+        blk->meta["SCAN_MODE"] = Su(read_uint32_le(f));
         f.ignore(4);
         float x_start = read_flt_le(f);
 
@@ -138,7 +138,7 @@ void BruckerRawDataSet::load_version2(std::istream &f)
         blk->add_column(xcol);
 
         f.ignore(26);
-        blk->meta["TEMP_IN_K"] = S(read_uint16_le(f));
+        blk->meta["TEMP_IN_K"] = Su(read_uint16_le(f));
 
         f.ignore(cur_header_len - 48);  // move ptr to the data_start
         VecColumn *ycol = new VecColumn;
@@ -259,8 +259,8 @@ void BruckerRawDataSet::load_version1_01(std::istream &f)
         f.ignore(4);                            // address 212
         f.ignore(4);                            // address 216
         f.ignore(4);                            // address 220
-        blk->meta["GENERATOR_VOLTAGE"] = S(read_uint32_le(f)); // 224
-        blk->meta["GENERATOR_CURRENT"] = S(read_uint32_le(f)); // 228
+        blk->meta["GENERATOR_VOLTAGE"] = Su(read_uint32_le(f)); // 224
+        blk->meta["GENERATOR_CURRENT"] = Su(read_uint32_le(f)); // 228
         f.ignore(4);                            // address 232
         f.ignore(4); // unused                  // address 236
         blk->meta["USED_LAMBDA"] = S(read_dbl_le(f)); // 240

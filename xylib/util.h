@@ -75,7 +75,8 @@ inline std::string S(const char *k) { return std::string(k); }
 inline std::string S(const char k) { return std::string(1, k); }
 inline std::string S(int n) { return format1<int, 16>("%d", n); }
 inline std::string S(long n) { return format1<long, 21>("%ld", n); }
-inline std::string S(unsigned n) { return format1<unsigned, 16>("%u", n); }
+// unsigned and size_t can be the same as type (e.g. MinGW on Windows)
+inline std::string Su(unsigned n) { return format1<unsigned, 16>("%u", n); }
 inline std::string S(size_t n)
         { return format1<size_t, 21>("%lu", (unsigned long) n); }
 inline std::string S(double d) { return format1<double, 16>("%g", d); }
@@ -140,6 +141,7 @@ public:
     void add_values_from_str(std::string const& str, char sep=' ');
     double get_min() const;
     double get_max(int point_count=0) const;
+    void reserve(size_t n) { data.reserve(n); }
 
 protected:
     std::vector<double> data;
