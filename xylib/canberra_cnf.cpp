@@ -230,7 +230,7 @@ void CanberraCnfDataSet::load_data(std::istream &f)
     // the two first channels sometimes contain live and real time
     for (int i = 0; i < 2; ++i) {
         uint32_t y = from_le<uint32_t>(chan_ptr+512+4*i);
-        if (y == iround(real_time) || y == iround(live_time))
+        if ((int) y == iround(real_time) || (int) y == iround(live_time))
             y = 0;
         ycol->add_val(y);
     }
