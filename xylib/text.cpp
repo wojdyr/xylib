@@ -17,8 +17,8 @@ namespace xylib {
 
 const FormatInfo TextDataSet::fmt_info(
     "text",
-    "ascii text / CSV / TSV",
-    "", // "txt dat asc csv",
+    "ascii text",
+    "", // "txt dat asc",
     false,                       // whether binary
     false,                       // whether has multi-blocks
     &TextDataSet::ctor,

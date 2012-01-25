@@ -8,7 +8,7 @@ powder diffraction, spectroscopy and other experimental methods.
 
 Supported formats:
 
--  plain text (CSV or TSV or space-separated-values)
+-  plain text, delimiter-separated values (e.g. CSV)
 -  Crystallographic Information File for Powder Diffraction (pdCIF)
 -  Siemens/Bruker UXD
 -  Siemens/Bruker RAW ver. 1/2/3/4
@@ -136,6 +136,8 @@ HISTORY
 
 * 0.9 (2012-  -  )
 
+  - added CSV (and in general delimiter-separated values) format.
+    Plain-text reads some CSV files incorrectly, e.g. files with quoted fields.
   - added Canberra CNF format
 
 * 0.8 (2011-01-18)

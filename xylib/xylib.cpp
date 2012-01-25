@@ -26,6 +26,7 @@
 #include "brucker_raw.h"
 #include "rigaku_dat.h"
 #include "text.h"
+#include "csv.h"
 #include "uxd.h"
 #include "vamas.h"
 #include "philips_udf.h"
@@ -65,6 +66,7 @@ const FormatInfo *formats[] = {
     &Riet7DataSet::fmt_info,
     &DbwsDataSet::fmt_info,
     &ChiPlotDataSet::fmt_info,
+    &CsvDataSet::fmt_info,
     &TextDataSet::fmt_info,
     NULL // it must be a NULL-terminated array
 };
