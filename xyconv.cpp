@@ -30,7 +30,8 @@ void print_usage()
 "  -h     show this help message and exit\n"
 "  -i     show information about filetype\n"
 "  -s     do not output metadata\n"
-"  -g     guess filetype of file \n";
+"  -g     guess filetype of file \n"
+"  To write the results to standard output use `-' as OUTPUT_FILE\n";
 }
 
 // Print version of the library. This program is too small to have own version.
