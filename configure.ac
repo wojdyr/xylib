@@ -3,7 +3,7 @@
 
 AC_PREREQ(2.59)
 AC_INIT([xylib], [0.9], [])
-AC_CONFIG_AUX_DIR([.])
+AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_SRCDIR([xylib/xylib.cpp])
 AC_CONFIG_HEADER([config.h])
 
