@@ -70,15 +70,17 @@ Column* read_energy_callibration(const char* p, Block *blk, int n_channels)
         blk->meta["energy calib " + S(i)] = S(coef[i]);
     if (coef[2] != 0.) { // quadr term
         VecColumn *vc = new VecColumn;
-        // FIXME should it be from 0 or from 1?
-        for (int i = 0; i < n_channels; i++) {
+        // Comparing results with FitzPeaks and and Cambio 4.0
+        // the first channel should have number 1 (not 0).
+        for (int i = 1; i <= n_channels; i++) {
             double x = coef[0] + coef[1] * i + coef[2] * i * i;
             vc->add_val(x);
         }
         return vc;
     }
     else
-        return new StepColumn(coef[0], coef[1]);
+        // since we start from ch1, the first value is coef[0] + coef[1]
+        return new StepColumn(coef[0]+coef[1], coef[1]);
 }
 
 static
