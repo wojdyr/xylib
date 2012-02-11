@@ -1,10 +1,9 @@
 
-* check if MCA and CNF formats handle energy calibration correctly -- is the
-  first channel 0 or 1 in the quadratic formula?
 * handle CR as a newline (and perhaps also others from 
   http://en.wikipedia.org/wiki/Newline)
 * is Rigaku RIG just another common extension for rigaku_dat? If yes, add it.
 * text format: handle other numeric formats (e.g. ',' as a decimal separator)
+* when showing format error, write what filetype is assumed (it can be wrong)
 
 
 FORMATS TO BE ADDED
@@ -15,8 +14,3 @@ FORMATS TO BE ADDED
 * PANalytical XRDML
 * JCAMP format (Standard NMR Data Format)
 * GSAS format (see gsas.cpp for comments) 
-* CSV format (separate from text format).
-  Should handle quoted strings properly.
-  Can be based on boost.tokenizer:
-  http://stackoverflow.com/questions/1120140/csv-parser-in-c
-  Non-numeric fields should be read as NaNs. Options: first-line-header.

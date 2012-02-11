@@ -1,4 +1,4 @@
-// one of Canberra MCA output formats
+// Canberra AccuSpec MCA
 // Licence: Lesser GNU Public License 2.1 (LGPL)
 // $Id$
 
@@ -11,6 +11,8 @@
 // This format is (was?) used in two synchrotron stations in Hamburg.
 // Data is produced by Canberra multi-channel analyser (MCA).
 // NOTE: .mca is not a canonical extension.
+// Update: In Cambio software from sandia.gov this format is called
+//         Canberra Accuspec (*.dat). In ver. 0.9 .dat extension was added.
 
 
 #ifndef XYLIB_CANBERRA_MCA_H_

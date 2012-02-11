@@ -18,7 +18,7 @@ Supported formats:
 -  Sietronics Sieray CPI
 -  DBWS/DMPLOT data file
 -  Canberra CNF (from Genie-2000 software; aka CAM format)
--  Canberra MCA *(only one of Canberra MCA formats?)*
+-  Canberra AccuSpec MCA
 -  XFIT/Koalariet XDD
 -  RIET7/LHPM/CSRIET/ILL\_D1A5/PSI\_DMC DAT
 -  Vamas ISO14976

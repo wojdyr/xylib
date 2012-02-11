@@ -1,4 +1,4 @@
-// one of Canberra MCA output formats
+// Canberra AccuSpec MCA
 // Licence: Lesser GNU Public License 2.1 (LGPL)
 // $Id$
 
@@ -22,7 +22,7 @@ namespace xylib {
 const FormatInfo CanberraMcaDataSet::fmt_info(
     "canberra_mca",
     "Canberra MCA",
-    "mca",
+    "mca dat",
     true,                       // whether binary
     false,                      // whether has multi-blocks
     &CanberraMcaDataSet::ctor,
