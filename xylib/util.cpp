@@ -15,7 +15,7 @@
 #include <boost/cstdint.hpp>
 
 #if !defined(BOOST_LITTLE_ENDIAN) && !defined(BOOST_BIG_ENDIAN)
-#error "Unknown endianess"
+#error "Unknown endianness"
 #endif
 
 using namespace std;
