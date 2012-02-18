@@ -11,6 +11,7 @@
 // 
 // In this implementation continuation lines are not supported.
 // Escape character is supported. Quoting is supported.
+// Empty and blank lines are ignored.
 // All non-numeric fields are read as NaNs.
 // If the first line has more NaNs than 3rd and 4th lines
 // it is assumed that this line is a header. Header is used for column titles.

@@ -61,22 +61,38 @@ void read_numbers_from_line(const string& line, char sep, vector<double> *out)
 }
 
 static
+bool is_space(const char* str)
+{
+    while (*str) {
+        if (!isspace(*str))
+            return false;
+        ++str;
+    }
+    return true;
+}
+
+static
 char read_4lines(istream &f, bool decimal_comma,
                          vector<vector<double> > *out,
                          vector<string> *column_names)
 {
     char buffer[1600]; // more than enough for one line
     string lines[4];
-    for (int i = 0; i != 4; ++i) {
+    buffer[1600-1]=0;
+    for (int all_lines = 0, nonempty_lines=0;
+            nonempty_lines < 4; ++all_lines) {
         // it can be a large file without new lines, limit line length
         f.getline(buffer, 1600);
-        if (!f || f.gcount()+1 >= 1600)
-            throw FormatError("read the first 4 lines failed.");
-        if (decimal_comma)
-            for (char* p = buffer; *p != '\0'; ++p)
-                if (*p == ',')
-                    *p = '.';
-        lines[i] = buffer;
+        if (!f || buffer[1600-1] != 0)
+            throw FormatError("reading line " + S(all_lines) + " failed.");
+        if (!is_space(buffer)) {
+            if (decimal_comma)
+                for (char* p = buffer; *p != '\0'; ++p)
+                    if (*p == ',')
+                        *p = '.';
+            lines[nonempty_lines] = buffer;
+            ++nonempty_lines;
+        }
     }
     // The first line can be header. Second line should not be a header,
     // but just in case, let's check lines 3 and 4.
@@ -147,6 +163,8 @@ void CsvDataSet::load_data(istream &f)
     char sep = read_4lines(f, decimal_comma, &data, &column_names);
     size_t n_col = data[0].size();
     while (getline(f, line)) {
+        if (is_space(line.c_str()))
+            continue;
         if (decimal_comma)
             for (string::iterator p = line.begin(); p != line.end(); ++p)
                 if (*p == ',')
