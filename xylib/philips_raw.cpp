@@ -15,8 +15,8 @@ const FormatInfo PhilipsRawDataSet::fmt_info(
     "philips_rd",
     "Philips RD Raw Scan V3",
     "rd sd",
-    true,                        // whether binary
-    false,                       // whether has multi-blocks
+    true,                       // whether binary
+    false,                      // whether has multi-blocks
     &PhilipsRawDataSet::ctor,
     &PhilipsRawDataSet::check
 );

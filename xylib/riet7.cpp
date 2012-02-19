@@ -16,8 +16,8 @@ const FormatInfo Riet7DataSet::fmt_info(
     "riet7",
     "RIET7/ILL_D1A5/PSI_DMC DAT",
     "dat",
-    false,                       // whether binary
-    false,                       // whether has multi-blocks
+    false,                      // whether binary
+    false,                      // whether has multi-blocks
     &Riet7DataSet::ctor,
     &Riet7DataSet::check
 );

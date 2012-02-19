@@ -16,8 +16,8 @@ const FormatInfo CpiDataSet::fmt_info(
     "cpi",
     "Sietronics Sieray CPI",
     "cpi",
-    false,                       // whether binary
-    false,                       // whether has multi-blocks
+    false,                      // whether binary
+    false,                      // whether has multi-blocks
     &CpiDataSet::ctor,
     &CpiDataSet::check
 );

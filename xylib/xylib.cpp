@@ -175,13 +175,13 @@ FormatInfo::FormatInfo(const char* name_, const char* desc_, const char* exts_,
                        bool binary_, bool multiblock_,
                        t_ctor ctor_, t_checker checker_)
 {
-        name = name_;
-        desc = desc_;
-        exts = exts_;
-        binary = (int) binary_;
-        multiblock = (int) multiblock_;
-        ctor = ctor_;
-        checker = checker_;
+    name = name_;
+    desc = desc_;
+    exts = exts_;
+    binary = (int) binary_;
+    multiblock = (int) multiblock_;
+    ctor = ctor_;
+    checker = checker_;
 }
 
 bool check_format(FormatInfo const* fi, std::istream& f)
@@ -357,6 +357,8 @@ void DataSet::clear()
 
 bool DataSet::has_option(string const& t)
 {
+    if (!is_valid_option(t))
+        throw RunTimeError("invalid option for format "+S(fi->name)+": "+t);
     return has_word(imp_->options, t);
 }
 

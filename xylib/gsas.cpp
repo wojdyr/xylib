@@ -17,9 +17,9 @@ namespace xylib {
 const FormatInfo GsasDataSet::fmt_info(
     "gsas",
     "GSAS Standard Powder Data File",
-    "gss", // also .gsa, .gsas?, .dat?
-    false,                       // whether binary
-    false,                       // whether has multi-blocks
+    "gss", // also gsa, gsas?, dat?
+    false,                      // whether binary
+    false,                      // whether has multi-blocks
     &GsasDataSet::ctor,
     &GsasDataSet::check
 );

@@ -16,8 +16,8 @@ const FormatInfo UdfDataSet::fmt_info(
     "philips_udf",
     "Philips UDF",
     "udf",
-    false,                       // whether binary
-    false,                       // whether has multi-blocks
+    false,                      // whether binary
+    false,                      // whether has multi-blocks
     &UdfDataSet::ctor,
     &UdfDataSet::check
 );

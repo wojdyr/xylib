@@ -18,8 +18,8 @@ const FormatInfo UxdDataSet::fmt_info(
     "uxd",
     "Siemens/Bruker Diffrac-AT UXD",
     "uxd",
-    false,                       // whether binary
-    true,                        // whether has multi-blocks
+    false,                      // whether binary
+    true,                       // whether has multi-blocks
     &UxdDataSet::ctor,
     &UxdDataSet::check
 );

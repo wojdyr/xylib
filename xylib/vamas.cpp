@@ -18,8 +18,8 @@ const FormatInfo VamasDataSet::fmt_info(
     "vamas",
     "VAMAS (ISO-14976)",
     "vms",
-    false,                       // whether binary
-    true,                        // whether has multi-blocks
+    false,                      // whether binary
+    true,                       // whether has multi-blocks
     &VamasDataSet::ctor,
     &VamasDataSet::check
 );

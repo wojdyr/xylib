@@ -15,8 +15,8 @@ const FormatInfo RigakuDataSet::fmt_info(
     "rigaku_dat",
     "Rigaku DAT",
     "dat",
-    false,                       // whether binary
-    true,                        // whether has multi-blocks
+    false,                      // whether binary
+    true,                       // whether has multi-blocks
     &RigakuDataSet::ctor,
     &RigakuDataSet::check
 );

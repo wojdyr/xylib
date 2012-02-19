@@ -285,7 +285,7 @@ public:
     /// call load_data() more than once)
     void clear();
 
-    /// check if options (first arg) contains given element (second arg)
+    /// check if options string has this word; t must be valid option
     bool has_option(std::string const& t);
 
     // functions for use in filetype implementations
@@ -293,6 +293,9 @@ public:
 
     // if load_data() supports options, set it before it's called
     void set_options(std::string const& options);
+
+    /// true if this option is handled for this format
+    virtual bool is_valid_option(std::string const&) { return false; }
 
 protected:
     DataSet(FormatInfo const* fi_);

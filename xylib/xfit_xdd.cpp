@@ -16,8 +16,8 @@ const FormatInfo XfitXddDataSet::fmt_info(
     "xfit_xdd",
     "XFIT XDD",
     "xdd",
-    false,                       // whether binary
-    false,                       // whether has multi-blocks
+    false,                      // whether binary
+    false,                      // whether has multi-blocks
     &XfitXddDataSet::ctor,
     &XfitXddDataSet::check
 );
