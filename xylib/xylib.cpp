@@ -384,7 +384,12 @@ DataSet* load_stream_of_format(istream &is, FormatInfo const* fi,
 
     DataSet *ds = (*fi->ctor)();
     ds->set_options(options);
-    ds->load_data(is);
+    try {
+        ds->load_data(is);
+    }
+    catch (FormatError &e) {
+        throw FormatError(string(e.what()) + " [filetype: " + fi->name + "]");
+    }
     return ds;
 }
 
