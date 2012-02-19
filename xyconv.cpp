@@ -16,13 +16,14 @@ void print_usage()
 {
     cout <<
 "Usage:\n"
-"\txyconv [-t FILETYPE] INPUT_FILE OUTPUT_FILE\n"
-"\txyconv [-t FILETYPE] -m INPUT_FILE1 ...\n"
+"\txyconv [-t FILETYPE] [-x OPTION] INPUT_FILE OUTPUT_FILE\n"
+"\txyconv [-t FILETYPE] [-x OPTION] -m INPUT_FILE1 ...\n"
 "\txyconv -i FILETYPE\n"
 "\txyconv -g INPUT_FILE ...\n"
 "\txyconv [-l|-v|-h]\n"
 "  Converts INPUT_FILE to ascii OUTPUT_FILE\n"
 "  -t     specify filetype of input file\n"
+"  -x     specify option for filetype (can be used more than once)\n"
 "  -m     convert one or multiple files; output files have the same name\n"
 "         as input, but with extension changed to .xy\n"
 "  -l     list all supported file types\n"
@@ -170,10 +171,25 @@ void export_plain_text(xylib::DataSet const *d, string const &fname,
 
 
 int convert_file(string const& input, string const& output,
-                 string const& filetype, bool with_metadata)
+                 string const& filetype, string const& options,
+                 bool with_metadata)
 {
     try {
-        xylib::DataSet *d = xylib::load_file(input, filetype);
+        xylib::DataSet *d = xylib::load_file(input, filetype, options);
+        // validate options
+        for (const char *p = options.c_str(); *p != '\0'; ) {
+            while (isspace(*p))
+                ++p;
+            const char* end = p;
+            while (*end != '\0' && !isspace(*end))
+                ++end;
+            string opt(p, end);
+            if (!d->is_valid_option(opt))
+                printf("WARNING: Invalid option %s for format %s.\n",
+                        opt.c_str(), d->fi->name);
+            p = end;
+        }
+
         export_plain_text(d, output, with_metadata);
         delete d;
     } catch (runtime_error const& e) {
@@ -213,6 +229,7 @@ int main(int argc, char **argv)
     }
 
     string filetype;
+    string options;
     bool option_m = false;
     bool option_s = false;
     int n = 1;
@@ -227,6 +244,10 @@ int main(int argc, char **argv)
         }
         else if (strcmp(argv[n], "-t") == 0 && n+1 < argc - 1) {
             filetype = argv[n+1];
+            n += 2;
+        }
+        else if (strcmp(argv[n], "-x") == 0 && n+1 < argc - 1) {
+            options += string(" ") + argv[n+1];
             n += 2;
         }
         else
@@ -244,11 +265,12 @@ int main(int argc, char **argv)
                 out.erase(p);
             out += ".xy";
             cout << "converting " << argv[n] << " to " << out << endl;
-            convert_file(argv[n], out, filetype, !option_s);
+            convert_file(argv[n], out, filetype, options, !option_s);
         }
         return 0;
     }
     else
-        return convert_file(argv[argc-2], argv[argc-1], filetype, !option_s);
+        return convert_file(argv[argc-2], argv[argc-1], filetype, options,
+                            !option_s);
 }
 
