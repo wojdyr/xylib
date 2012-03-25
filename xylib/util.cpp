@@ -205,7 +205,7 @@ string read_line(istream& is)
 {
     string line;
     if (!getline(is, line))
-        throw xylib::FormatError("unexpected end of file");
+        throw FormatError("unexpected end of file");
     return line;
 }
 
@@ -314,9 +314,8 @@ const char* read_numbers(string const& s, vector<double>& row)
         double val = strtod(p, &endptr);
         if (p == endptr) // no more numbers
             break;
-        if (errno != 0)
-            throw FormatError("Numeric overflow or underflow in line:\n"
-                              + s);
+        if (errno == ERANGE && (val == HUGE_VAL || val == -HUGE_VAL))
+            throw FormatError("Numeric overflow in line:\n" + s);
         row.push_back(val);
         p = endptr;
         while (isspace(*p) || *p == ',' || *p == ';' || *p == ':')
@@ -372,10 +371,9 @@ void VecColumn::add_values_from_str(string const& str, char sep)
         errno = 0; // To distinguish success/failure after call
         double val = strtod(p, &endptr);
         if (p == endptr)
-            throw(xylib::FormatError("Number not found in line:\n" + str));
-        if (errno != 0)
-            throw(xylib::FormatError("Numeric overflow or underflow in line:\n"
-                                     + str));
+            throw FormatError("Number not found in line:\n" + str);
+        if (errno == ERANGE && (val == HUGE_VAL || val == -HUGE_VAL))
+            throw FormatError("Numeric overflow in line:\n" + str);
         add_val(val);
         p = endptr;
         while (isspace(*p) || *p == sep)
