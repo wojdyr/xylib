@@ -19,20 +19,7 @@
 #include <ctime>
 #include <string>
 #include <vector>
-
-// XYLIB_API is a mark for API classes and functions,
-// used to decorate classes and functions for Win32 DLL linking.
-#ifdef XYLIB_API
-# undef XYLIB_API
-#endif
-#if defined(_WIN32) && defined(BUILDING_XYLIB) && \
-        (defined(XYLIB_DLL) || defined(DLL_EXPORT))
-# define XYLIB_API  __declspec(dllexport)
-#elif defined(_WIN32) && defined(XYLIB_DLL)
-# define XYLIB_API  __declspec(dllimport)
-#else
-# define XYLIB_API
-#endif
+#include "xylib.h"
 
 // MSVC has shared_ptr in <memory>, but let's use boost
 #ifndef _MSC_VER
@@ -52,7 +39,6 @@
 namespace xylib
 {
 
-class DataSet;
 struct CacheImp;
 
 // singleton
