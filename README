@@ -33,7 +33,7 @@ Supported formats:
 The library is written in C++, but it comes with C and Python bindings.
 
 It also comes with a tiny program **xyconv**, which converts
-supported formats to TSV.
+supported formats to text with tab-separated values.
 
 For API description, see `xylib/xylib.h`__ file.
 

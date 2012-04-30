@@ -42,14 +42,13 @@
 /* XYLIB_API is a mark for API classes and functions,
  * used to decorate classes and functions for Win32 DLL linking.
  */
-#ifdef XYLIB_API
-# undef XYLIB_API
-#endif
-#if defined(_WIN32) && defined(BUILDING_XYLIB) && \
-        (defined(XYLIB_DLL) || defined(DLL_EXPORT))
-# define XYLIB_API  __declspec(dllexport)
-#elif defined(_WIN32) && defined(XYLIB_DLL)
-# define XYLIB_API  __declspec(dllimport)
+#undef XYLIB_API
+#if defined(_WIN32) && (defined(XYLIB_DLL) || defined(DLL_EXPORT))
+# if defined(BUILDING_XYLIB)
+#  define XYLIB_API  __declspec(dllexport)
+# else
+#  define XYLIB_API  __declspec(dllimport)
+# endif
 #else
 # define XYLIB_API
 #endif
@@ -150,14 +149,14 @@ struct XYLIB_API FormatInfo : public xylibFormat
 class XYLIB_API FormatError : public std::runtime_error
 {
 public:
-    FormatError(std::string const& msg) : std::runtime_error(msg) {};
+    explicit FormatError(std::string const& msg) : std::runtime_error(msg) {}
 };
 
 /// all errors other than format error
 class XYLIB_API RunTimeError : public std::runtime_error
 {
 public:
-    RunTimeError(std::string const& msg) : std::runtime_error(msg) {};
+    explicit RunTimeError(std::string const& msg) : std::runtime_error(msg) {}
 };
 
 
@@ -298,7 +297,7 @@ public:
     virtual bool is_valid_option(std::string const&) { return false; }
 
 protected:
-    DataSet(FormatInfo const* fi_);
+    explicit DataSet(FormatInfo const* fi_);
 
 private:
     DataSetImp* imp_;

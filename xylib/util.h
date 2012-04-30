@@ -111,7 +111,7 @@ inline void format_assert(DataSet const* ds, bool condition,
 class ColumnWithName : public Column
 {
 public:
-    ColumnWithName(double step) : step_(step) {}
+    explicit ColumnWithName(double step) : step_(step) {}
     virtual std::string const& get_name() const { return name_; }
     void set_name(std::string const& name) { name_ = name; }
     virtual double get_step() const { return step_; }

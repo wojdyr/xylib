@@ -36,12 +36,12 @@ bool ChiPlotDataSet::check(istream &f)
     // check 5. line
     getline(f, line);
     const char* p = line.c_str();
-    double dummy = strtod(p, &endptr);
+    strtod(p, &endptr); // return value ignored intentionally
     if (endptr == p)
         return false;
     while (isspace(*p) || *p == ',')
         ++p;
-    dummy = strtod(p, &endptr);
+    strtod(p, &endptr); // return value ignored intentionally
     if (endptr == p)
         return false;
     return true;
