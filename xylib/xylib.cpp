@@ -49,6 +49,8 @@ using namespace std;
 using namespace xylib;
 using namespace xylib::util;
 
+// Formats are checked in that order and the first format that matches
+// is picked. Put formats with more specific file extension and check() first.
 const FormatInfo *formats[] = {
     &CpiDataSet::fmt_info,
     &UxdDataSet::fmt_info,
@@ -67,6 +69,7 @@ const FormatInfo *formats[] = {
     &DbwsDataSet::fmt_info,
     &ChiPlotDataSet::fmt_info,
     &CsvDataSet::fmt_info,
+    // TextDataSet should be at the end because it can use any extension.
     &TextDataSet::fmt_info,
     NULL // it must be a NULL-terminated array
 };
