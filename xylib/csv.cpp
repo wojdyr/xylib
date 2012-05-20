@@ -7,7 +7,13 @@
 #include "util.h"
 #include <limits>
 #include <boost/tokenizer.hpp>
+
+#include <boost/version.hpp>
+#if BOOST_VERSION >= 103500
 #include <boost/math/special_functions/fpclassify.hpp>
+#else
+namespace boost { namespace math { bool isnan(double f) { return f != f; } }}
+#endif
 
 using namespace std;
 using namespace xylib::util;
