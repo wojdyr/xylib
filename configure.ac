@@ -52,6 +52,8 @@ AC_CHECK_HEADERS([boost/cstdint.hpp boost/detail/endian.hpp], [],
                  [AC_MSG_ERROR([Could not find necessary Boost headers])])
 AC_CHECK_HEADERS([boost/spirit/core.hpp], [],
                  [AC_MSG_ERROR([Boost::Spirit headers were not found.])])
+AC_CHECK_HEADERS([boost/tokenizer.hpp], [],
+                 [AC_MSG_ERROR([Boost Tokenizer header not found.])])
 AC_CHECK_HEADERS([sys/types.h sys/stat.h], [],
                  [AC_MSG_ERROR([Headers containg POSIX stat() are not found
 		  Please inform xylib maintainer about this problem,
