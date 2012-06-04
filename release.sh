@@ -44,20 +44,16 @@ if [ $arg -eq 1 ]; then
     svn co https://xylib.svn.sourceforge.net/svnroot/xylib/trunk xylib
     cd xylib
     autoreconf -i || exit 1
-    ./configure --prefix=`pwd`/install_dir --disable-static || exit 1
-    make dist-bzip2 || exit 1
-    make || exit 1
-    mkdir install_dir
-    make install || exit
+    ./configure --disable-static && make distcheck || exit 1
+    ./configure --prefix=`pwd`/install_dir --disable-shared && make install \
+        || exit 1
     install_dir/bin/xyconv -v || exit 1
-    cd .. # svn_copy
-    tar xjf xylib/xylib-*.tar.bz2
-    cd xylib-*
-    ./configure --disable-shared && make || exit
 fi
 
 # 2. make tarball
 if [ $arg -eq 2 ]; then
+    gunzip svn_copy/xylib/xylib-*.tar.gz
+    bzip2 svn_copy/xylib/xylib-*.tar
     mv svn_copy/xylib/xylib-*.tar.bz2 . && echo OK
     #make dist-bzip2
 fi
@@ -66,7 +62,8 @@ fi
 if [ $arg -eq 3 ]; then
     mkdir -p xylib_win-$VERSION/docs
     cp -r svn_copy/xylib/install_dir/include/xylib/ xylib_win-$VERSION
-    make index.html
+    #make index.html
+    rst2html --stylesheet-path=web.css README index.html
     cp index.html README.dev TODO COPYING sample-urls xylib_win-$VERSION/docs
     echo copy files xylib.dll and xyconv.exe to `pwd`/xylib_win-$VERSION
     echo and do:  zip -r xylib_win-$VERSION.zip xylib_win-$VERSION/

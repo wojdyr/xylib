@@ -137,8 +137,8 @@ HISTORY
 * 0.9 (2012-05-20)
 
   - added CSV format, or more acurately: delimiter-separated values format.
-    Supports popular delimiters (\t,;|:/ ), quoting (")
-    and escape character (\). Non-numeric fields are read as NaNs.
+    Supports popular delimiters (``TAB ,;|:/``), quoting (``"``)
+    and escape character (``\``). Non-numeric fields are read as NaNs.
   - added Canberra CNF format
 
 * 0.8 (2011-01-18)
