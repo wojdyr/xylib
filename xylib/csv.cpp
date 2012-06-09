@@ -32,15 +32,20 @@ const FormatInfo CsvDataSet::fmt_info(
     &CsvDataSet::check
 );
 
+// The field should contain only a number with optional leading/trailing
+// white-spaces. For different input NaN is returned.
 static
 double read_field(const char* field)
 {
     char* endptr;
     double d = strtod(field, &endptr);
-    if (endptr != field && *endptr == '\0')
-        return d;
-    else
-        return numeric_limits<double>::quiet_NaN();
+    if (endptr != field) {
+        while (isspace(*endptr))
+            ++endptr;
+        if (*endptr == '\0')
+            return d;
+    }
+    return numeric_limits<double>::quiet_NaN();
 }
 
 static
@@ -100,6 +105,8 @@ char read_4lines(istream &f, bool decimal_comma,
             ++nonempty_lines;
         }
     }
+
+    // Determine separator.
     // The first line can be header. Second line should not be a header,
     // but just in case, let's check lines 3 and 4.
     int max_number_count = 0;
@@ -121,6 +128,8 @@ char read_4lines(istream &f, bool decimal_comma,
             sep = *isep;
         }
     }
+
+    // if the first row has labels (not numbers) read them as column names
     int num0;
     int fields0 = count_numbers(lines[0], sep, &num0);
     if (fields0 != max_field_count)
@@ -133,6 +142,8 @@ char read_4lines(istream &f, bool decimal_comma,
         for (Tokenizer::iterator i = t.begin(); i != t.end(); ++i)
             column_names->push_back(*i);
     }
+
+    // add numbers from the first 4 lines to `out`
     if (out != NULL) {
         if (!has_header) {
             out->resize(out->size() + 1);
@@ -143,6 +154,7 @@ char read_4lines(istream &f, bool decimal_comma,
             read_numbers_from_line(lines[i], sep, &out->back());
         }
     }
+
     return sep;
 }
 
