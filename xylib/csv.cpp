@@ -171,7 +171,7 @@ bool CsvDataSet::check(istream &f)
 
 void CsvDataSet::load_data(istream &f)
 {
-    bool decimal_comma = has_option("decimal_comma");
+    bool decimal_comma = has_option("decimal-comma");
 
     vector<vector<double> > data;
     vector<string> column_names;

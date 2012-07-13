@@ -15,10 +15,10 @@
 // All non-numeric fields are read as NaNs.
 // If the first line has more NaNs than 3rd and 4th lines
 // it is assumed that this line is a header. Header is used for column titles.
-// Default decimal point is '.'. If option 'decimal_comma' is set both '.'
+// Default decimal point is '.'. If option 'decimal-comma' is set both '.'
 // and ',' are regarded decimal point.
 // Separator is determined automatically by reading the first 3 lines,
-// trying 7 separators: "\t,;|:/ ". (If 'decimal_comma' is given, comma
+// trying 7 separators: "\t,;|:/ ". (If 'decimal-comma' is given, comma
 // is not tried as separator.)
 // The separator that gives most numbers in lines 3 and 4 is selected.
 
@@ -32,7 +32,7 @@ namespace xylib {
     {
         OBLIGATORY_DATASET_MEMBERS(CsvDataSet)
         virtual bool is_valid_option(std::string const& t)
-            { return t == "decimal_comma"; }
+            { return t == "decimal-comma"; }
     };
 
 }
