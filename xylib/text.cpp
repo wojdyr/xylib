@@ -22,6 +22,14 @@ const FormatInfo TextDataSet::fmt_info(
     &TextDataSet::check
 );
 
+bool TextDataSet::is_valid_option(std::string const& t)
+{
+    return t == "strict" ||
+           t == "first-line-header" ||
+           t == "last-line-header" ||
+           t == "decimal-comma";
+}
+
 bool TextDataSet::check(istream & /*f*/)
 {
     return true;
@@ -50,6 +58,13 @@ void use_title_line(string const& line, vector<VecColumn*> &cols, Block* blk)
         blk->set_name(line);
 }
 
+void replace_commas_with_dots(string &s)
+{
+    for (string::iterator p = s.begin(); p != s.end(); ++p)
+        if (*p == ',')
+            *p = '.';
+}
+
 } // anonymous namespace
 
 void TextDataSet::load_data(std::istream &f)
@@ -63,6 +78,7 @@ void TextDataSet::load_data(std::istream &f)
     bool first_line_header = has_option("first-line-header");
     // header is in last comment line - the line before the first data line
     bool last_line_header = has_option("last-line-header");
+    bool decimal_comma = has_option("decimal-comma");
 
     if (first_line_header) {
         title_line = str_trim(read_line(f));
@@ -84,6 +100,8 @@ void TextDataSet::load_data(std::istream &f)
             last_line_header = true;
             continue;
         }
+        if (decimal_comma)
+            replace_commas_with_dots(s);
         const char *p = read_numbers(s, row);
         // We skip lines with no data.
         // If there is only one number in first line, skip it if there
@@ -106,6 +124,8 @@ void TextDataSet::load_data(std::istream &f)
 
     // read all the next data lines (the first data line was read above)
     while (getline(f, s)) {
+        if (decimal_comma)
+            replace_commas_with_dots(s);
         read_numbers(s, row);
 
         // We silently skip lines with no data.
@@ -128,6 +148,8 @@ void TextDataSet::load_data(std::istream &f)
                 // if it's the single line with smaller length, we ignore it
                 vector<double> row2;
                 getline(f, s);
+                if (decimal_comma)
+                    replace_commas_with_dots(s);
                 read_numbers(s, row2);
                 if (row2.size() <= 1)
                     continue;
