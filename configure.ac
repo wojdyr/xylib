@@ -1,7 +1,7 @@
 # $Id$
 # after changing, run "autoreconf --install --verbose"
 
-AC_INIT(xylib, 0.9)
+AC_INIT(xylib, 1.0)
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_MACRO_DIR(build-aux)
 AC_CONFIG_SRCDIR(xylib/xylib.cpp)
