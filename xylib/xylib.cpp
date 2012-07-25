@@ -14,11 +14,11 @@
 #  include <config.h>
 #endif
 
-#ifdef HAVE_ZLIB
+#ifdef HAVE_LIBZ
 #  include <zlib.h>
 #endif
 
-#ifdef HAVE_BZLIB
+#ifdef HAVE_LIBBZ2
 #  include <bzlib.h>
 #endif
 
@@ -430,7 +430,7 @@ protected:
     char* writeptr_;
 };
 
-#ifdef HAVE_ZLIB
+#ifdef HAVE_LIBZ
 struct gzip_istreambuf : public decompressing_istreambuf
 {
     gzip_istreambuf(gzFile gz)
@@ -447,7 +447,7 @@ struct gzip_istreambuf : public decompressing_istreambuf
 };
 #endif
 
-#ifdef HAVE_BZLIB
+#ifdef HAVE_LIBBZ2
 struct bzip2_istreambuf : public decompressing_istreambuf
 {
     bzip2_istreambuf(BZFILE* bz2)
@@ -498,7 +498,7 @@ DataSet* load_file(string const& path, string const& format_name,
     bool gzipped = (len > 3 && path.substr(len-3) == ".gz");
     bool bz2ed = (len > 4 && path.substr(len-4) == ".bz2");
     if (gzipped) {
-#ifdef HAVE_ZLIB
+#ifdef HAVE_LIBZ
         gzFile gz_stream = gzopen(path.c_str(), "rb");
         if (!gz_stream) {
             throw RunTimeError("can't open .gz input file: " + path);
@@ -509,10 +509,10 @@ DataSet* load_file(string const& path, string const& format_name,
                                     format_name, options);
 #else
         throw RunTimeError("Program is compiled with disabled zlib support.");
-#endif //HAVE_ZLIB
+#endif //HAVE_LIBZ
     }
     else if (bz2ed) {
-#ifdef HAVE_BZLIB
+#ifdef HAVE_LIBBZ2
         BZFILE* bz_stream = BZ2_bzopen(path.c_str(), "rb");
         if (!bz_stream) {
             throw RunTimeError("can't open .bz2 input file: " + path);
@@ -523,7 +523,7 @@ DataSet* load_file(string const& path, string const& format_name,
                                     format_name, options);
 #else
         throw RunTimeError("Program is compiled with disabled bzlib support.");
-#endif //HAVE_BZLIB
+#endif //HAVE_LIBBZ2
     }
     else {
         ifstream is(path.c_str(), ios::in | ios::binary);
@@ -602,10 +602,10 @@ string get_wildcards_string(string const& all_files)
                 string ext(start, ext_len);
                 ext_list += "*." + ext;
                 short_ext_list += "." + ext;
-#ifdef HAVE_ZLIB
+#ifdef HAVE_LIBZ
                 ext_list += ";*." + ext + ".gz";
 #endif
-#ifdef HAVE_BZLIB
+#ifdef HAVE_LIBBZ2
                 ext_list += ";*." + ext + ".bz2";
 #endif
                 if (end == NULL)
