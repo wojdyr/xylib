@@ -134,7 +134,11 @@ CREDITS
 HISTORY
 =======
 
+* 1.1 (    -  -  )
+  - fixed bug in reading energy callibration from Canberra formats
+
 * 1.0 (2012-07-25)
+
   - added option ``decimal-comma`` for text format
   - fixed bug in CSV format
 

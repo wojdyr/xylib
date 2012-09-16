@@ -1,6 +1,6 @@
 
-FORMATS TO BE ADDED
-===================
+REQUESTED FORMATS
+=================
 
 * Certified Scientific Software's spec format:
   http://www.certif.com/spec.html http://www.certif.com/goodies.html
@@ -8,5 +8,8 @@ FORMATS TO BE ADDED
 * PANalytical XRDML
 * JCAMP format (Standard NMR Data Format)
 * GSAS format (see gsas.cpp for comments) 
+* Thermo GRAMS/32 SPC
 
-note: these formats have been requested, but so far nobody is working on it
+note: These formats wait for volunteers. Or at least for a code that
+      could be adapted and included in this library.
+

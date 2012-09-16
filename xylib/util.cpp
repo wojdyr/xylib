@@ -8,6 +8,7 @@
 
 #include <cmath>
 #include <climits>
+#include <limits>
 #include <algorithm>
 #include <cassert>
 #include <cerrno>
@@ -118,19 +119,27 @@ string read_string(istream &f, unsigned len)
 
 // function that converts single precision 32-bit floating point in DEC PDP-11
 // format to double
-double from_pdp11(const char* p)
+// good description of the format is at:
+// http://home.kpn.nl/jhm.bonten/computers/bitsandbytes/wordsizes/hidbit.htm
+double from_pdp11(const unsigned char* p)
 {
     int sign = (p[1] & 0x80) == 0 ? 1 : -1;
-    int unbiased = ((p[1] & 0x7F) << 1) + ((p[0] & 0x80) >> 7) - 128;
-    if (unbiased == -128)
-        return 0;
-    double h = (p[2] & 0x7F) / 256. / 256. / 256.
-               + (p[3] & 0x7F) / 256. / 256.
+    int exb = ((p[1] & 0x7F) << 1) + ((p[0] & 0x80) >> 7);
+    if (exb == 0) {
+        if (sign == -1)
+            // DEC calls it Undefined
+            return numeric_limits<double>::quiet_NaN();
+        else
+            // either clean-zero or dirty-zero
+            return 0.;
+    }
+    double h = p[2] / 256. / 256. / 256.
+               + p[3] / 256. / 256.
                + (128 + (p[0] & 0x7F)) / 256.;
 #if 0
-    return ldexp(sign*h, unbiased);
+    return ldexp(sign*h, exb-128);
 #else
-    return sign * h * pow(2., unbiased);
+    return sign * h * pow(2., exb-128);
 #endif
 }
 

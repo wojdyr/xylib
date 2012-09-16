@@ -63,11 +63,11 @@ Column* read_energy_callibration(const char* p, Block *blk, int n_channels)
     p += 2*4+28;
     double coef[3];
     for (int i = 0; i != 3; ++i)
-        coef[i] = from_pdp11(p + 4*i);
+        coef[i] = from_pdp11((unsigned char*) p + 4*i);
     if (coef[1] == 0.)
         return NULL;
     for (int i = 0; i != 3; ++i)
-        blk->meta["energy calib " + S(i)] = S(coef[i]);
+        blk->meta["energy calib "+S(i)] = format1<double,16>("%.7g", coef[i]);
     if (coef[2] != 0.) { // quadr term
         VecColumn *vc = new VecColumn;
         // Comparing results with FitzPeaks and and Cambio 4.0

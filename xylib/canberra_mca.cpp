@@ -60,9 +60,9 @@ void CanberraMcaDataSet::load_data(std::istream &f)
         throw FormatError("Unexpected end of file.");
     }
 
-    double energy_offset = from_pdp11(all_data + 108);
-    double energy_slope = from_pdp11(all_data + 112);
-    double energy_quadr = from_pdp11(all_data + 116);
+    double energy_offset = from_pdp11((unsigned char*) all_data + 108);
+    double energy_slope = from_pdp11((unsigned char*) all_data + 112);
+    double energy_quadr = from_pdp11((unsigned char*) all_data + 116);
 
     Block* blk = new Block;
 
