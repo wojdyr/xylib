@@ -11,7 +11,9 @@
 #include "xylib.h"
 #include "util.h"
 
-using namespace std;
+//no "using namespace std;" to avoid ambiguous symbol shared_ptr
+using std::string;
+using std::vector;
 
 namespace {
 

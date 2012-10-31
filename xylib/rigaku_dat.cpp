@@ -80,6 +80,7 @@ void RigakuDataSet::load_data(std::istream &f)
                 blk = new Block;
             }
             else if (str_startwith(line, "*END")) { // block ends
+                format_assert(this, blk != NULL, "*END without *BEGIN");
                 format_assert(this, count == ycol->get_point_count(),
                               "count of x and y differ");
                 StepColumn *xcol = new StepColumn(start, step, count);
@@ -112,6 +113,7 @@ void RigakuDataSet::load_data(std::istream &f)
             }
         }
         else { // should be a line of values
+            format_assert(this, ycol != NULL, "values without *BEGIN");
             format_assert(this, is_numeric(line[0]));
             ycol->add_values_from_str(line, ',');
         }

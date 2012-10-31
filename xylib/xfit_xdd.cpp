@@ -49,8 +49,9 @@ bool XfitXddDataSet::check(istream &f)
 {
     skip_c_style_comments(f);
     Column *c = read_start_step_end_line(f);
+    bool ok = (c != NULL);
     delete c;
-    return c != NULL;
+    return ok;
 }
 
 void XfitXddDataSet::load_data(std::istream &f)

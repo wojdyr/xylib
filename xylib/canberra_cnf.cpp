@@ -101,7 +101,7 @@ string convert_date(const char* p)
     uint64_t d;
     memcpy(&d, p, sizeof(d));
     le_to_host(&d, sizeof(d));
-    time_t t = d / 1e7 - 3506716800u; // time since the Epoch
+    time_t t = d / 10000000 - 3506716800u; // time since the Epoch
     char s[64];
     int r = strftime(s, sizeof(s), "%a, %Y-%m-%d %H:%M:%S", gmtime(&t));
     if (r == 0)

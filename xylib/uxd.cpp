@@ -113,6 +113,7 @@ void UxdDataSet::load_data(std::istream &f)
         }
         else if (str_startwith(line, "_COUNT") ||
                  str_startwith(line, "_CPS")) {
+            format_assert(this, blk != NULL, "missing _DRIVE");
             ncols = 1;
             StepColumn* xcol = new StepColumn(start, step);
             blk->add_column(xcol);
@@ -126,6 +127,7 @@ void UxdDataSet::load_data(std::istream &f)
         else if (str_startwith(line, "_2THETACOUNTS") ||
                  str_startwith(line, "_2THETACPS") ||
                  str_startwith(line, "_2THETACOUNTSTIME")) { // data starts
+            format_assert(this, blk != NULL, "missing _DRIVE");
             VecColumn* xcol = new VecColumn;
             blk->add_column(xcol);
             VecColumn* ycol = new VecColumn;
