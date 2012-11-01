@@ -128,6 +128,9 @@ char read_4lines(istream &f, bool decimal_comma,
             sep = *isep;
         }
     }
+    // If there is one field, it's probably not CSV
+    if (max_field_count == 1)
+        sep = 0;
 
     // if the first row has labels (not numbers) read them as column names
     int num0;
