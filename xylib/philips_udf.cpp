@@ -23,7 +23,7 @@ const FormatInfo UdfDataSet::fmt_info(
 );
 
 
-bool UdfDataSet::check (istream &f)
+bool UdfDataSet::check (istream &f, string*)
 {
     string head = read_string(f, 11);
     return head == "SampleIdent";

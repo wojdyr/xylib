@@ -46,7 +46,7 @@ const FormatInfo PdCifDataSet::fmt_info(
     &PdCifDataSet::check
 );
 
-bool PdCifDataSet::check(istream &f)
+bool PdCifDataSet::check(istream &f, string*)
 {
     string line;
     // the 1st line (that is not a comment) must start with "data_"

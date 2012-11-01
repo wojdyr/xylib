@@ -134,11 +134,14 @@ class DataSet;
 /// stores format related info
 struct XYLIB_API FormatInfo : public xylibFormat
 {
-    typedef bool (*t_checker)(std::istream&);
+    typedef bool (*t_checker)(std::istream&, std::string*);
     typedef DataSet* (*t_ctor)();
 
-    t_ctor ctor; /// factory function
-    t_checker checker; /// function used to check if a file has this format
+    /// factory function
+    t_ctor ctor;
+    /// function used to check if a file has this format,
+    /// optionally returns details (like format version) as string
+    t_checker checker;
 
     FormatInfo(const char* name_, const char* desc_, const char* exts_,
                bool binary_, bool multiblock_,
@@ -319,10 +322,12 @@ XYLIB_API DataSet* load_stream(std::istream &is,
 
 /// guess a format of the file; does NOT handle compressed files
 XYLIB_API FormatInfo const* guess_filetype(std::string const& path,
-                                           std::istream &f);
+                                           std::istream &f,
+                                           std::string* details);
 
 /// check if file f can be of this format
-XYLIB_API bool check_format(FormatInfo const* fi, std::istream& f);
+XYLIB_API bool check_format(FormatInfo const* fi, std::istream& f,
+                            std::string* details);
 
 /// return wildcard for file dialog in format:
 /// "ASCII X Y Files (*)|*|Sietronics Sieray CPI (*.cpi)|*.cpi"
@@ -337,7 +342,7 @@ XYLIB_API std::string get_wildcards_string(std::string const& all_files="*");
     public: \
         class_name() : DataSet(&fmt_info) {} \
         void load_data(std::istream &f); \
-        static bool check(std::istream &f); \
+        static bool check(std::istream &f, std::string *details); \
         static DataSet* ctor() { return new class_name; } \
         static const FormatInfo fmt_info;
 #endif // BUILDING_XYLIB

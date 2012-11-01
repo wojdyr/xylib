@@ -45,7 +45,7 @@ void skip_c_style_comments(istream& f)
 
 } // anonymous namespace
 
-bool XfitXddDataSet::check(istream &f)
+bool XfitXddDataSet::check(istream &f, string*)
 {
     skip_c_style_comments(f);
     Column *c = read_start_step_end_line(f);

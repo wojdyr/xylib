@@ -22,7 +22,7 @@ const FormatInfo ChiPlotDataSet::fmt_info(
     &ChiPlotDataSet::check
 );
 
-bool ChiPlotDataSet::check(istream &f)
+bool ChiPlotDataSet::check(istream &f, string*)
 {
     string line;
     for (int i = 0; i != 4; ++i)

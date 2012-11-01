@@ -63,7 +63,7 @@ struct spe_calib {
 };
 
 
-bool WinspecSpeDataSet::check(istream &f) {
+bool WinspecSpeDataSet::check(istream &f, string*) {
     // make sure file size > 4100 (data begins after a 4100-byte header)
     f.seekg(-1, ios_base::end);
     long file_sz = f.tellg();

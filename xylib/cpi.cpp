@@ -22,7 +22,7 @@ const FormatInfo CpiDataSet::fmt_info(
     &CpiDataSet::check
 );
 
-bool CpiDataSet::check(istream &f)
+bool CpiDataSet::check(istream &f, string*)
 {
     string line;
     getline(f, line);

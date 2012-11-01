@@ -29,7 +29,7 @@ const FormatInfo CanberraMcaDataSet::fmt_info(
     &CanberraMcaDataSet::check
 );
 
-bool CanberraMcaDataSet::check(istream &f)
+bool CanberraMcaDataSet::check(istream &f, string*)
 {
     const int file_size = 2*512+2048*4;
     char *all_data = new char[file_size];

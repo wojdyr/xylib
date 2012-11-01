@@ -187,9 +187,9 @@ FormatInfo::FormatInfo(const char* name_, const char* desc_, const char* exts_,
     checker = checker_;
 }
 
-bool check_format(FormatInfo const* fi, std::istream& f)
+bool check_format(FormatInfo const* fi, std::istream& f, string* details)
 {
-    return !fi->checker || (*fi->checker)(f);
+    return !fi->checker || (*fi->checker)(f, details);
 }
 
 struct MetaDataImp : public map<string, string>
@@ -472,7 +472,7 @@ DataSet* guess_and_load_stream(istream &is,
 {
     FormatInfo const* fi = NULL;
     if (format_name.empty()) {
-        fi = guess_filetype(path, is);
+        fi = guess_filetype(path, is, NULL);
         if (!fi)
             throw RunTimeError ("Format of the file can not be guessed");
         is.seekg(0);
@@ -561,12 +561,13 @@ vector<FormatInfo const*> get_possible_filetypes(string const& filename)
     return results;
 }
 
-FormatInfo const* guess_filetype(const string &path, istream &f)
+FormatInfo const* guess_filetype(const string &path, istream &f,
+                                 string* details)
 {
     vector<FormatInfo const*> possible = get_possible_filetypes(path);
     for (vector<FormatInfo const*>::const_iterator i = possible.begin();
                                                 i != possible.end(); ++i) {
-        if (check_format(*i, f))
+        if (check_format(*i, f, details))
             return *i;
         f.seekg(0);
         f.clear();

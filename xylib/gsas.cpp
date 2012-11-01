@@ -24,7 +24,7 @@ const FormatInfo GsasDataSet::fmt_info(
     &GsasDataSet::check
 );
 
-bool GsasDataSet::check(istream &f) {
+bool GsasDataSet::check(istream &f, string*) {
     string line;
     getline(f, line); // first line is title
     getline(f, line);

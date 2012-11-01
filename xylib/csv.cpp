@@ -158,10 +158,14 @@ char read_4lines(istream &f, bool decimal_comma,
     return sep;
 }
 
-bool CsvDataSet::check(istream &f)
+bool CsvDataSet::check(istream &f, string* details)
 {
     try {
-        return read_4lines(f, false, NULL, NULL) != 0;
+        char sep = read_4lines(f, false, NULL, NULL);
+        if (sep != 0 && details)
+            *details = "separator: " +
+                       (sep == '\t' ? S("TAB") : "'" + S(sep) + "'");
+        return sep != 0;
     }
     catch (FormatError &) {
         return false;

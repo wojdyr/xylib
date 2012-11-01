@@ -16,7 +16,7 @@ namespace xylib {
 
 const FormatInfo VamasDataSet::fmt_info(
     "vamas",
-    "VAMAS (ISO-14976)",
+    "VAMAS ISO-14976",
     "vms",
     false,                      // whether binary
     true,                       // whether has multi-blocks
@@ -84,7 +84,7 @@ void skip_lines(istream &f, int count)
 namespace xylib {
 
 
-bool VamasDataSet::check(istream &f)
+bool VamasDataSet::check(istream &f, string*)
 {
     static const string magic =
      "VAMAS Surface Chemical Analysis Standard Data Transfer Format 1988 May 4";

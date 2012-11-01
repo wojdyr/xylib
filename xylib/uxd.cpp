@@ -24,7 +24,7 @@ const FormatInfo UxdDataSet::fmt_info(
     &UxdDataSet::check
 );
 
-bool UxdDataSet::check(istream &f)
+bool UxdDataSet::check(istream &f, string*)
 {
     string line;
     while (getline(f, line)) {

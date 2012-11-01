@@ -32,7 +32,7 @@ const FormatInfo CanberraCnfDataSet::fmt_info(
     &CanberraCnfDataSet::check
 );
 
-bool CanberraCnfDataSet::check(istream &f)
+bool CanberraCnfDataSet::check(istream &f, string*)
 {
     int chan_offset = 0;
     f.ignore(112);

@@ -30,7 +30,7 @@ bool TextDataSet::is_valid_option(std::string const& t)
            t == "decimal-comma";
 }
 
-bool TextDataSet::check(istream & /*f*/)
+bool TextDataSet::check(istream & /*f*/, string*)
 {
     return true;
 }

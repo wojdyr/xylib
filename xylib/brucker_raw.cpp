@@ -23,12 +23,26 @@ const FormatInfo BruckerRawDataSet::fmt_info(
 );
 
 
-bool BruckerRawDataSet::check(istream &f)
+bool BruckerRawDataSet::check(istream &f, string* details)
 {
     string head = read_string(f, 4);
-    return head == "RAW " // ver. 1
-           || head == "RAW2" // ver. 2
-           || (head == "RAW1" && read_string(f, 3) == ".01"); // ver. 3
+    if (head == "RAW ") {
+        if (details)
+            *details = "ver. 1";
+        return true;
+    }
+    else if (head == "RAW2") {
+        if (details)
+            *details = "ver. 2";
+        return true;
+    }
+    else if (head == "RAW1" && read_string(f, 3) == ".01") {
+        if (details)
+            *details = "ver. 3";
+        return true;
+    }
+    else
+        return false;
 }
 
 

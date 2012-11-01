@@ -26,7 +26,7 @@ const FormatInfo DbwsDataSet::fmt_info(
     &DbwsDataSet::check
 );
 
-bool DbwsDataSet::check(istream &f)
+bool DbwsDataSet::check(istream &f, string*)
 {
     string line;
     getline(f, line);

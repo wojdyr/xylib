@@ -46,7 +46,7 @@ int count_numbers(const char* p)
 //    n = (end - start) / step is an integer,
 // - the start-step-end line and the next line must have different format
 //   (if they have the same format, it's more likely xy format)
-bool Riet7DataSet::check(istream &f)
+bool Riet7DataSet::check(istream &f, string*)
 {
     char line[256];
     for (int i = 0; i < 6; ++i) {

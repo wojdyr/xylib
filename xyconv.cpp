@@ -65,11 +65,17 @@ int print_guessed_filetype(int n, char** paths)
                 ok = false;
                 continue;
             }
-            xylib::FormatInfo const* fi = xylib::guess_filetype(path, is);
-            if (fi)
-                cout << fi->name << ": " << fi->desc << endl;
+            string details;
+            xylib::FormatInfo const* fi = xylib::guess_filetype(path, is,
+                                                                &details);
+            if (fi) {
+                cout << fi->name << ": " << fi->desc;
+                if (!details.empty())
+                    cout << " (" << details << ")";
+            }
             else
-                cout << "Format of the file was not detected\n";
+                cout << "Format of the file was not detected.";
+            cout << endl;
         } catch (runtime_error const& e) {
             cout << "Error: " << e.what() << endl;
             ok = false;
@@ -92,7 +98,8 @@ void print_filetype_info(string const& filetype)
                 << (fi->multiblock ? "multi-block" : "single-block") << endl;
         }
         else
-            cout << "Unknown file format." << endl;
+            cout << "Unknown file format. "
+                    "(To guess format of a file use option -g)." << endl;
 }
 
 void export_metadata(FILE *f, xylib::MetaData const& meta)

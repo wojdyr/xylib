@@ -23,7 +23,7 @@ const FormatInfo RigakuDataSet::fmt_info(
 
 
 // return true if is this type, false otherwise
-bool RigakuDataSet::check(istream &f)
+bool RigakuDataSet::check(istream &f, string*)
 {
     string head = read_string(f, 5);
     return head == "*TYPE";

@@ -22,7 +22,7 @@ const FormatInfo PhilipsRawDataSet::fmt_info(
 );
 
 
-bool PhilipsRawDataSet::check(istream &f)
+bool PhilipsRawDataSet::check(istream &f, string*)
 {
     string head = read_string(f, 4);
     return head == "V3RD" || head == "V5RD";
