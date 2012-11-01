@@ -119,3 +119,5 @@ http://www.unipress.waw.pl/fityk/xylib_samples/D1A5.dat
 # http://dx.doi.org/10.1016/S0925-8388(02)00797-1
 http://www.unipress.waw.pl/fityk/xylib_samples/PSI_DMC.dat
 
+# Spectra Omicron XPS data example
+https://raw.github.com/Yohko/xylibformats/c499304a57f8de77e7a8222cd7f6db72ab9016a7/examples/spectra_example.1

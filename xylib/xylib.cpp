@@ -41,6 +41,7 @@
 #include "xfit_xdd.h"
 #include "riet7.h"
 #include "chiplot.h"
+#include "spectra.h"
 
 #include <vector>
 #include <map>
@@ -69,6 +70,7 @@ const FormatInfo *formats[] = {
     &DbwsDataSet::fmt_info,
     &ChiPlotDataSet::fmt_info,
     &CsvDataSet::fmt_info,
+    &SpectraDataSet::fmt_info,
     // TextDataSet should be at the end because it can use any extension.
     &TextDataSet::fmt_info,
     NULL // it must be a NULL-terminated array
