@@ -1,5 +1,5 @@
 
-VERSION=1.0
+VERSION=1.1
 
 if [ $# -eq 0 ]; then
     echo Usage: $0 step
