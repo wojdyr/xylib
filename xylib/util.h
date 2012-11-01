@@ -105,6 +105,9 @@ const char* read_numbers(std::string const& s,
 // split block if it has columns with different sizes
 std::vector<Block*> split_on_column_length(Block* block);
 
+/// count whitespace-separated numbers in string
+int count_numbers(const char* p);
+
 
 // DataSet
 inline void format_assert(DataSet const* ds, bool condition,

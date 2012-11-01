@@ -367,6 +367,20 @@ vector<Block*> split_on_column_length(Block *block)
 }
 
 
+int count_numbers(const char* p)
+{
+    int n = 0;
+    while (*p != '\0') {
+        char *endptr;
+        strtod(p, &endptr);
+        if (p == endptr) // no more numbers
+            break;
+        ++n;
+        p = endptr;
+    }
+    return n;
+}
+
 
 // get all numbers in the first legal line
 // sep is _optional_ separator that can be used in addition to white space

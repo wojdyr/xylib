@@ -22,21 +22,6 @@ const FormatInfo Riet7DataSet::fmt_info(
     &Riet7DataSet::check
 );
 
-static
-int count_numbers(const char* p)
-{
-    int n = 0;
-    while (*p != 0) {
-        char *endptr;
-        strtod(p, &endptr);
-        if (p == endptr) // no more numbers
-            break;
-        ++n;
-        p = endptr;
-    }
-    return n;
-}
-
 // .dat is popular extension for data, we want to avoid false positives.
 // This format has line starting with three numbers: start step end
 // somewhere in the first few lines, and it has intensities (in any format)

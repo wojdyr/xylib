@@ -49,7 +49,7 @@ double read_field(const char* field)
 }
 
 static
-int count_numbers(const string& line, char sep, int *number_count)
+int count_csv_numbers(const string& line, char sep, int *number_count)
 {
     int field_count = 0;
     *number_count = 0;
@@ -115,9 +115,9 @@ char read_4lines(istream &f, bool decimal_comma,
     const char* separators = "\t,;|:/ ";
     for (const char* isep = separators; *isep != '\0'; ++isep) {
         int num2;
-        int fields1 = count_numbers(lines[2], *isep, &num2);
+        int fields1 = count_csv_numbers(lines[2], *isep, &num2);
         int num3;
-        int fields2 = count_numbers(lines[3], *isep, &num3);
+        int fields2 = count_csv_numbers(lines[3], *isep, &num3);
         if (fields1 == 0 || fields2 != fields1)
             continue;
         int num = min(num2, num3);
@@ -134,7 +134,7 @@ char read_4lines(istream &f, bool decimal_comma,
 
     // if the first row has labels (not numbers) read them as column names
     int num0;
-    int fields0 = count_numbers(lines[0], sep, &num0);
+    int fields0 = count_csv_numbers(lines[0], sep, &num0);
     if (fields0 != max_field_count)
         throw FormatError("different field count (`" + S(sep) +
                           "'-separated) in lines 1 and 3.");
