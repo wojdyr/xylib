@@ -88,6 +88,9 @@ inline std::string Su(unsigned n) { return format1<unsigned, 16>("%u", n); }
 inline std::string S(size_t n)
         { return format1<size_t, 21>("%lu", (unsigned long) n); }
 inline std::string S(double d) { return format1<double, 16>("%g", d); }
+// the same but with higher precision (double has ~15.9 decimal digits)
+inline std::string dbl_to_str(double d)
+                                   { return format1<double, 32>("%.15g", d); }
 
 /// delete all objects handled by pointers and clear vector
 template<typename T>

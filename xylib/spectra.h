@@ -12,6 +12,8 @@ namespace xylib {
     class SpectraDataSet : public DataSet
     {
         OBLIGATORY_DATASET_MEMBERS(SpectraDataSet)
+    private:
+        Block* read_block(std::istream& f);
     };
 
 }

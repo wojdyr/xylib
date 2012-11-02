@@ -15,153 +15,117 @@
 
 using namespace std;
 using namespace xylib::util;
-using std::setprecision;
-using std::fixed;
-
-
-
-namespace {
-    string doubleToString(double d){
-        stringstream ss; 
-        ss <<setprecision(15)<< d;
-        return (ss.str());
-    }
-}
 
 namespace xylib {
 
-
 const FormatInfo SpectraDataSet::fmt_info(
     "spectra",
-    "Spectra Omicron/Leybold data file",
-    "1 2 3 4 5 6 7 8 9",       // file endings are numbered, number is increased for each new data aquisition in the same project
-    false,                     // whether binary
-    true,                      // whether has multi-blocks
+    "Spectra Omicron/Leybold",
+    "1 2 3 4 5 6 7 8 9",    // file endings are numbered, number is increased
+                            // for each new data aquisition in the same project
+    false,                  // whether binary
+    true,                   // whether has multi-blocks
     &SpectraDataSet::ctor,
     &SpectraDataSet::check
 );
 
 bool SpectraDataSet::check(istream &f, string*)
 {
-    string line = "";
-    getline(f, line);  // first line should be experimentname
-    if (line.size() < 1)
+    f.ignore(1024, '\n'); // first line should be experimentname
+    char line[256];
+    f.getline(line, 255); // second line should be parameters
+    if (!f || f.gcount() > 200 || count_numbers(line) != 8)
         return false;
-    char line2[256];
-    f.getline(line2, 255);  // second line should be parameters
-    const char *pStart = line2;
-    char * pEnd;
-
-    strtod (pStart,&pEnd);
-    if (*pEnd == 0)
-        return false;
-    pStart = pEnd;
-    strtod (pStart,&pEnd);
-    if (*pEnd == 0)
-        return false;
-    pStart = pEnd;
-    strtod (pStart,&pEnd);
-    if (*pEnd == 0)
-        return false;
-    pStart = pEnd;
-    strtod (pStart,&pEnd);
-    if (*pEnd == 0)
-        return false;
-    pStart = pEnd;
-    strtod (pStart,&pEnd);
-    if (*pEnd == 0)
-        return false;
-    pStart = pEnd;
-    strtod (pStart,&pEnd);
-    if (*pEnd == 0)
-        return false;
-    pStart = pEnd;
-    strtod (pStart,&pEnd);
-    if (*pEnd == 0)
-        return false;
-    getline(f, line);  // third line should be spectrumname
-    if (line.size() < 1)
-        return false;
+    f.ignore(1024, '\n'); // third line should be spectrumname
+    // check that the next few lines have only single integer number
+    for (int i = 0; i != 3; ++i) {
+        f.getline(line, 32);
+        if (!f || f.gcount() > 30)
+            return false;
+        char *endptr;
+        strtol(line, &endptr, 10);
+        if (endptr == line)
+            return false;
+        while (isspace(*endptr))
+            ++endptr;
+        if (*endptr != '\0')
+            return false;
+    }
     return true;
 }
 
 
-
 void SpectraDataSet::load_data(std::istream &f)
 {
-
-    string s = "";
-    getline(f, s); // first line --> Experimentname
-
-    bool read = true;
-    while(read){
-        Block* blk = NULL;
-        double start    = 0.0;
-        double ende     = 0.0;
-        double step     = 0.0;
-        double scans    = 0.0;
-        double dwell    = 0.0;
-        long points     = 0;
-        double epass    = 0.0;
-        double exenergy = 0.0;
-        char line[256];
-        const char *pStart = line;
-        char * pEnd;
-        f.getline(line, 255); // second line --> header
-        if (f.eof()){
-            read= false;
+    f.ignore(1024, '\n'); // first line --> Experimentname
+    for (;;) {
+        Block *blk = read_block(f);
+        if (blk == NULL)
             break;
-        }
-        start       = strtod(pStart,&pEnd);
-        pStart      = pEnd;
-        ende        = strtod(pStart,&pEnd);
-        pStart      = pEnd;
-        step        = strtod(pStart,&pEnd);
-        pStart      = pEnd;
-        scans       = strtod(pStart,&pEnd);
-        pStart      = pEnd;
-        dwell       = strtod(pStart,&pEnd);
-        pStart      = pEnd;
-        points      = strtod(pStart,&pEnd);
-        pStart      = pEnd;
-        epass       = strtod(pStart,&pEnd);
-        pStart      = pEnd;
-        exenergy    = strtod(pStart,&pEnd);
-
-        getline(f, s); // thrird line --> spectraname
-        if (f.eof()){
-            read= false;
-            break;
-        }
-        blk = new Block;
-        blk->set_name(s.c_str());
-        blk->meta["Start"]          = doubleToString(start);
-        blk->meta["Ende"]           = doubleToString(ende);
-        blk->meta["step"]           = doubleToString(step);
-        blk->meta["scans"]          = doubleToString(scans);
-        blk->meta["dwell"]          = doubleToString(dwell);
-        blk->meta["points"]         = doubleToString(points);
-        blk->meta["EPass"]          = doubleToString(epass);
-        blk->meta["Photon Energy"]  = doubleToString(exenergy);
-        
-        // StepColumn *xcol = new StepColumn(exenergy-start, -step); //positive binding energy
-        StepColumn *xcol = new StepColumn(start-exenergy, step); //negative binding energy
-        xcol->set_name("binding energy [eV]");
-        blk->add_column(xcol);
-        VecColumn *ycol = new VecColumn;
-        ycol->set_name(s+" [cps]");
-        for (long i = 0; i != points; ++i)
-        {   
-            getline(f, s);
-            if (f.eof()){
-                read= false;
-                break;
-            }
-            ycol->add_val(my_strtod(s)/scans/dwell);
-        }
-        blk->add_column(ycol);
         add_block(blk);
     }
+}
+
+Block* SpectraDataSet::read_block(istream& f)
+{
+    char line[256];
+    f.getline(line, 255); // second line --> header
+    if (f.eof())
+        return NULL;
+    const char *pStart = line;
+    char *pEnd;
+    double start = strtod(pStart,&pEnd);
+    pStart = pEnd;
+    double ende = strtod(pStart,&pEnd);
+    pStart = pEnd;
+    double step = strtod(pStart,&pEnd);
+    pStart = pEnd;
+    double scans = strtod(pStart,&pEnd);
+    pStart = pEnd;
+    double dwell = strtod(pStart,&pEnd);
+    pStart = pEnd;
+    long points = strtod(pStart,&pEnd);
+    pStart = pEnd;
+    double epass = strtod(pStart,&pEnd);
+    pStart = pEnd;
+    double exenergy = strtod(pStart,&pEnd);
+
+    f.getline(line, 255); // third line --> spectraname
+    format_assert(this, !f.eof(), "unexpected EOF");
+    // It's a file from a DOS program. No idea what's encoding, but since
+    // some files have degree symbol in Latin1 it's safer to replace it.
+    for (char *p = line; *p != '\0'; ++p)
+        if (*p == (char) 0xB0)
+            *p = '^';
+    string spectra_name = str_trim(line);
+
+    Block *blk = new Block;
+    blk->set_name(spectra_name);
+    blk->meta["Start"]          = dbl_to_str(start);
+    blk->meta["Ende"]           = dbl_to_str(ende);
+    blk->meta["step"]           = dbl_to_str(step);
+    blk->meta["scans"]          = dbl_to_str(scans);
+    blk->meta["dwell"]          = dbl_to_str(dwell);
+    blk->meta["points"]         = S(points);
+    blk->meta["EPass"]          = dbl_to_str(epass);
+    blk->meta["Photon Energy"]  = dbl_to_str(exenergy);
+
+    // positive binding energy
+    //StepColumn *xcol = new StepColumn(exenergy-start, -step);
+    // negative binding energy
+    StepColumn *xcol = new StepColumn(start-exenergy, step);
+    xcol->set_name("binding energy [eV]");
+    blk->add_column(xcol);
+
+    VecColumn *ycol = new VecColumn;
+    ycol->set_name(spectra_name + " [cps]");
+    for (long i = 0; i != points; ++i) {
+        f.getline(line, 32);
+        format_assert(this, !f.fail(), "reading cps data failed");
+        ycol->add_val(my_strtod(line)/scans/dwell);
+    }
+    blk->add_column(ycol);
+    return blk;
 }
 
 } // namespace xylib
