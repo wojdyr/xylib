@@ -27,6 +27,7 @@ Supported formats:
 -  Princeton Instruments WinSpec SPE
    *(only 1-D data is supported)*
 - χPLOT CHI_
+- Ron Unwin's Spectra XPS format (VGX-900 compatible)
 
 .. _CHI: http://www.esrf.eu/computing/scientific/FIT2D/FIT2D_REF/node115.html#SECTION0001851500000000000000
 
@@ -49,7 +50,7 @@ DOWNLOAD
 * MS Windows: `xyconv.exe`_
 * Linux: RPMs_ and DEBs_
 
-.. _`xyconv.exe`: http://downloads.sourceforge.net/xylib/xylib_win-1.0.zip
+.. _`xyconv.exe`: http://downloads.sourceforge.net/xylib/xylib_win-1.1.zip
 .. _RPMs: http://download.opensuse.org/repositories/home://wojdyr/
 .. _DEBs: https://launchpad.net/~wojdyr/+archive/fityk
 
@@ -58,7 +59,7 @@ DOWNLOAD
 * `tarball`_ 
 * Subversion repository_. 
 
-.. _`tarball`: http://downloads.sourceforge.net/xylib/xylib-1.0.tar.bz2
+.. _`tarball`: http://downloads.sourceforge.net/xylib/xylib-1.1.tar.bz2
 .. _repository: https://xylib.svn.sourceforge.net/svnroot/xylib/trunk/
 
 To build from source, you need:
@@ -117,7 +118,6 @@ CREDITS
 -  Michael Richardson provided VAMAS specification and sample files.
 -  David Hovis provided a WinSpec file format specification and sample files.
 -  Pablo Bianucci provided his code for reading WinSpec format and sample files.
--  Brian H. Toby suggested adding pdCIF format.
 -  Martijn Fransen provided very useful specifications of Philips formats.
 -  Vincent Favre-Nicolin provided PSI\_DMC and ILL\_D1A5 samples;
    reading his ObjCryst library was also helpful.
@@ -128,14 +128,17 @@ CREDITS
 -  Hector Zhao patched VAMAS code.
 -  Jim Fitzgerald (author of FitzPeaks_) provided code for reading
    Canberra (Genie) CNF files.
+-  Matthias Richter added Ron Unwin's Spectra XPS format.
 
 .. _FitzPeaks: http://www.jimfitz.demon.co.uk/fitzpeak.htm
 
 HISTORY
 =======
 
-* 1.1 (    -  -  )
-  - fixed bug in reading energy callibration from Canberra formats
+* 1.1 (2012-11-05)
+
+  - added XPS format from Ron Unwin's Spectra program (Matthias Richter)
+  - fixed bug in reading energy calibration from Canberra formats
 
 * 1.0 (2012-07-25)
 

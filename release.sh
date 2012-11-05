@@ -62,6 +62,7 @@ fi
 if [ $arg -eq 3 ]; then
     mkdir -p xylib_win-$VERSION/docs
     cp -r svn_copy/xylib/install_dir/include/xylib/ xylib_win-$VERSION
+    rm index.html
     #make index.html
     rst2html --stylesheet-path=web.css README index.html
     cp index.html README.dev TODO COPYING sample-urls xylib_win-$VERSION/docs
