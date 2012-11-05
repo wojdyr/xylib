@@ -1,16 +1,10 @@
-// Spectra data file
+// Ron Unwin's Spectra data file
 // Licence: Lesser GNU Public License 2.1 (LGPL)
 // Author: Matthias Richter
 
 
 #define BUILDING_XYLIB
 #include "spectra.h"
-
-#include <cmath>
-#include <cstdlib>
-#include <iostream>
-#include <sstream>
-#include <iomanip>
 #include "util.h"
 
 using namespace std;
@@ -92,11 +86,14 @@ Block* SpectraDataSet::read_block(istream& f)
 
     f.getline(line, 255); // third line --> spectraname
     format_assert(this, !f.eof(), "unexpected EOF");
-    // It's a file from a DOS program. No idea what's encoding, but since
-    // some files have degree symbol in Latin1 it's safer to replace it.
+    // It's a file from a DOS program. According to the manual it's
+    // ASCII file, but some files have non-ASCII characters.
+    // Let's "convert" them to ascii.
     for (char *p = line; *p != '\0'; ++p)
-        if (*p == (char) 0xB0)
+        if (*p == (char) 0xB0) // some files have degree symbol in Latin1
             *p = '^';
+        else if ((signed char) *p < 0)
+            *p = '?';
     string spectra_name = str_trim(line);
 
     Block *blk = new Block;
