@@ -18,7 +18,8 @@ AC_ARG_WITH(bzlib,
 
 # Checks for programs.
 AC_PROG_CXX
-LT_INIT([win32-dll])
+AM_PROG_AR
+LT_INIT([disable-static win32-dll])
 
 # Checks for libraries.
 XYLIB_ADDLIB=
