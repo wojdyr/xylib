@@ -56,10 +56,12 @@ DOWNLOAD
 **Source**:
 
 * `tarball`_
-* GitHub repository_ (requires ``autoreconf -i`` after cloning).
+* GitHub repository_ |travis-status|_ (requires ``autoreconf -i`` after cloning)
 
 .. _`tarball`: http://downloads.sourceforge.net/xylib/xylib-1.1.tar.bz2
 .. _repository: https://github.com/wojdyr/xylib
+.. _travis-status: https://travis-ci.org/wojdyr/xylib/
+.. |travis-status| image:: https://api.travis-ci.org/wojdyr/xylib.png
 
 Prerequisites:
 

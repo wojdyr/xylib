@@ -72,5 +72,6 @@ pre.literal-block  {
 }
 
 img {
-    border:0
+    border: 0;
+    vertical-align: middle;
 }
