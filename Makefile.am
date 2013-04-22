@@ -2,7 +2,7 @@
 ACLOCAL_AMFLAGS=-I build-aux
 SUBDIRS = xylib
 
-EXTRA_DIST = web.css sample-urls README.dev xylib_capi.py
+EXTRA_DIST = web.css sample-urls README.rst README.dev xylib_capi.py
 
 bin_PROGRAMS = xyconv
 
@@ -15,5 +15,5 @@ if USE_XYLIB_DLL
 xyconv_CPPFLAGS = -DXYLIB_DLL
 endif
 
-index.html: README web.css
-	rst2html --stylesheet-path=web.css README index.html
+index.html: README.rst web.css
+	rst2html --stylesheet-path=$(srcdir)/web.css $< $@

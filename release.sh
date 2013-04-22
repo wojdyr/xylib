@@ -9,7 +9,7 @@ if [ $# -eq 0 ]; then
     echo 2. make tarball
     echo 3. make Windows binaries
     echo 4. RPMs: https://build.opensuse.org/project/show?project=home%3Awojdyr
-    echo 5. prepare DEBs in Launchpad
+    echo 5. prepare DEBs in Launchpad  /obsolete/
     echo 6. SourceForge file release
     echo 7. update webpage
     echo 8. announce at FreshMeat
@@ -33,15 +33,14 @@ if [ $arg -eq 0 ]; then
     grep LoadLibrary xylib_capi.py
     echo in README.rst:
     grep "\* $VERSION" README.rst
-    echo svnversion: `svnversion`
 fi
 
-# 1. test compilation from svn
+# 1. test compilation from git
 if [ $arg -eq 1 ]; then
-    rm -rf svn_copy
-    mkdir svn_copy
-    cd svn_copy
-    svn co https://xylib.svn.sourceforge.net/svnroot/xylib/trunk xylib
+    rm -rf git_copy
+    mkdir git_copy
+    cd git_copy
+    git clone ../../xylib
     cd xylib
     autoreconf -i || exit 1
     ./configure --disable-static && make distcheck || exit 1
@@ -52,16 +51,16 @@ fi
 
 # 2. make tarball
 if [ $arg -eq 2 ]; then
-    gunzip svn_copy/xylib/xylib-*.tar.gz
-    bzip2 svn_copy/xylib/xylib-*.tar
-    mv svn_copy/xylib/xylib-*.tar.bz2 . && echo OK
+    gunzip git_copy/xylib/xylib-*.tar.gz
+    bzip2 git_copy/xylib/xylib-*.tar
+    mv git_copy/xylib/xylib-*.tar.bz2 . && echo OK
     #make dist-bzip2
 fi
 
 # 3. make Windows binaries 
 if [ $arg -eq 3 ]; then
     mkdir -p xylib_win-$VERSION/docs
-    cp -r svn_copy/xylib/install_dir/include/xylib/ xylib_win-$VERSION
+    cp -r git_copy/xylib/install_dir/include/xylib/ xylib_win-$VERSION
     rm index.html
     #make index.html
     rst2html --stylesheet-path=web.css README.rst index.html

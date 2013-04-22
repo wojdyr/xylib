@@ -49,7 +49,6 @@ DOWNLOAD
 
 * MS Windows: `xyconv.exe`_
 * Linux: fresh RPMs and DEBs `from OBS`_
-  http://software.opensuse.org/download/package?project=home:wojdyr&package=xylib
 
 .. _`xyconv.exe`: http://downloads.sourceforge.net/xylib/xylib_win-1.1.zip
 .. _`from OBS`: http://software.opensuse.org/download/package?project=home:wojdyr&package=xylib
