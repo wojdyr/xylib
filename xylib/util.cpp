@@ -1,6 +1,5 @@
 // private helper functions (namespace xylib::util)
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 #define BUILDING_XYLIB
 #include "util.h"

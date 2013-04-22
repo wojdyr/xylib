@@ -1,6 +1,5 @@
 // Canberra AccuSpec MCA
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 #define BUILDING_XYLIB
 #include "canberra_mca.h"

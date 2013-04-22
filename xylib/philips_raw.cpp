@@ -1,6 +1,5 @@
 // Philips RD raw scan format V3 (.rd) and V5 (.sd)
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// ds_philips_rd.cpp $
 
 #define BUILDING_XYLIB
 #include "philips_raw.h"

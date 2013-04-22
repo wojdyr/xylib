@@ -1,6 +1,5 @@
 // CSV or DSV format (comma- or more generally delimiter-separated values)
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id:$
 
 // Here is a bunch of links related to CSV, TSV and in general DSV (comma-,
 // tab- and delimiter-separated values):

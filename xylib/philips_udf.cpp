@@ -1,6 +1,5 @@
 // Philips UDF format - powder diffraction data from Philips diffractometers
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 #define BUILDING_XYLIB
 #include "philips_udf.h"

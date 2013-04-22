@@ -1,4 +1,3 @@
-# $Id: Makefile.am 354 2007-11-19 12:38:52Z wojdyr $
 
 lib_LTLIBRARIES = libxy.la
 

@@ -1,6 +1,5 @@
 // Philips UDF format - powder diffraction data from Philips diffractometers
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 //    Implementation based on the analysis of the sample files.
 

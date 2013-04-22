@@ -1,6 +1,5 @@
 // Convert file supported by xylib to ascii format
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 #include <iostream>
 #include <fstream>

@@ -1,6 +1,5 @@
 // CSV or DSV format (comma- or more generally delimiter-separated values)
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id: $
 
 #define BUILDING_XYLIB
 #include "csv.h"

@@ -1,6 +1,5 @@
 // Princeton Instruments WinSpec SPE Format
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 // According to the format specification, SPE format has several versions
 // (v1.43, v1.6 and the newest v2.25). But we need not implement every version

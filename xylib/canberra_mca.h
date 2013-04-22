@@ -1,6 +1,5 @@
 // Canberra AccuSpec MCA
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 // based on a chapter from an unknown instruction, pages B1-B5:
 // APPENDIX B: FILE STRUCTURES

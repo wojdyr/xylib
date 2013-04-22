@@ -1,6 +1,5 @@
 // Canberra CNF (aka CAM format) with spectral data from Genie software
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 #define BUILDING_XYLIB
 #include "canberra_cnf.h"

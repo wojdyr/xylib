@@ -1,6 +1,5 @@
 // ISO14976 VAMAS Surface Chemical Analysis Standard Data Transfer Format File
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 // This implementation is based on [1] and on the analysis of sample files.
 //

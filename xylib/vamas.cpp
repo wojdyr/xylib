@@ -1,6 +1,5 @@
 // ISO14976 VAMAS Surface Chemical Analysis Standard Data Transfer Format File
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 #define BUILDING_XYLIB
 #include "vamas.h"

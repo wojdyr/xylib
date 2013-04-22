@@ -1,6 +1,5 @@
 // Sietronics Sieray CPI format
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 // Implementation based on analysis of sample files
 // and description from http://www.ccp14.ac.uk/tutorial/xfit-95/dformat.htm

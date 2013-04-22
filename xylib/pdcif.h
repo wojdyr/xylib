@@ -1,6 +1,5 @@
 // Powder Diffraction CIF (pdCIF)
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 // Powder Diffraction CIF (Crystallographic Information File)
 // specification: http://www.iucr.org/iucr-top/cif/index.html

@@ -1,6 +1,5 @@
 // ascii plain text
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 // Multi-column ascii text file.
 // In each line, we try to read as many numbers as possible.

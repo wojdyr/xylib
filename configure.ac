@@ -1,6 +1,4 @@
-# $Id$
-# after changing, run "autoreconf --install --verbose"
-
+# Process this file with `autoreconf -i` to produce a configure script.
 AC_INIT(xylib, 1.1)
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_MACRO_DIR(build-aux)

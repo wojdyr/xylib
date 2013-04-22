@@ -1,6 +1,5 @@
 // Siemens/Bruker Diffrac-AT Raw Format version 1/2/3
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 #define BUILDING_XYLIB
 #include "brucker_raw.h"

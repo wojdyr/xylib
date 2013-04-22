@@ -1,6 +1,5 @@
-/* Public API of xylib library.
+/* Public API of the xylib library.
  * Licence: Lesser GNU Public License 2.1 (LGPL)
- * $Id$
  */
 
 /** xylib is a library for reading files that contain x-y data from powder

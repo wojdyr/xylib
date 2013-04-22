@@ -24,15 +24,15 @@ if [ $arg -eq 0 ]; then
     echo version: $VERSION
     echo in xylib/xylib.h:
     grep 'define XYLIB_VERSION' xylib/xylib.h
-    echo in README:
-    grep '.tar.bz2' README
-    grep '.zip' README
+    echo in README.rst:
+    grep '.tar.bz2' README.rst
+    grep '.zip' README.rst
     echo in xylib/Makefile.am:
     grep 'version-info' xylib/Makefile.am
     echo in xylib_capi.py:
     grep LoadLibrary xylib_capi.py
-    echo in README:
-    grep "\* $VERSION" README
+    echo in README.rst:
+    grep "\* $VERSION" README.rst
     echo svnversion: `svnversion`
 fi
 
@@ -64,7 +64,7 @@ if [ $arg -eq 3 ]; then
     cp -r svn_copy/xylib/install_dir/include/xylib/ xylib_win-$VERSION
     rm index.html
     #make index.html
-    rst2html --stylesheet-path=web.css README index.html
+    rst2html --stylesheet-path=web.css README.rst index.html
     cp index.html README.dev TODO COPYING sample-urls xylib_win-$VERSION/docs
     echo copy files xylib.dll and xyconv.exe to `pwd`/xylib_win-$VERSION
     echo and do:  zip -r xylib_win-$VERSION.zip xylib_win-$VERSION/
@@ -98,7 +98,7 @@ fi
 
 # 8. announce at FreshMeat
 if [ $arg -eq 8 ]; then
-    grep -5 "\* $VERSION" README | tail -6
+    grep -5 "\* $VERSION" README.rst | tail -6
     echo
     echo http://freshmeat.net/projects/xylib/releases/new
 fi

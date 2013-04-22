@@ -1,6 +1,5 @@
 // RIET7/LHPM/CSRIET DAT,  ILL_D1A5 and PSI_DMC formats
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 #define BUILDING_XYLIB
 #include "riet7.h"

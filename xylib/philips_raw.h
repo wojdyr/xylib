@@ -1,6 +1,5 @@
 // Header of class PhilipsRawDataSet
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 //Based on the file format specification sent to us by Martijn Fransen.
 //

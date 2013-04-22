@@ -1,6 +1,5 @@
 // Princeton Instruments WinSpec SPE Format - spectroscopy data
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 #define BUILDING_XYLIB
 #include "winspec_spe.h"

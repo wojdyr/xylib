@@ -1,6 +1,5 @@
 // Public API of xylib library.
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 /// This header is new in 0.4 and may be changed in future.
 /// Support for caching files read by xylib.

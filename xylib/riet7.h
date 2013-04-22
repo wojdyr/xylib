@@ -1,6 +1,5 @@
 // RIET7/LHPM/CSRIET DAT,  ILL_D1A5 and PSI_DMC formats
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 // RIET7/LHPM/CSRIET DAT (*.dat) constant count time XRD format is implemented
 // as described at: http://www.ccp14.ac.uk/tutorial/xfit-95/dformat.htm

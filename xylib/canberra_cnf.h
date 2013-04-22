@@ -1,6 +1,5 @@
 // Canberra CNF (aka CAM format) with spectral data from Genie software
 // Licence: Lesser GNU Public License 2.1 (LGPL)
-// $Id$
 
 // Based on code from Jim Fitzgerald that is used in FitzPeaks (Gamma Analysis
 // and Calibration Software, http://www.jimfitz.demon.co.uk/fitzpeak.htm).

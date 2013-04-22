@@ -38,60 +38,60 @@ supported formats to text with tab-separated values.
 
 For API description, see `xylib/xylib.h`__ file.
 
-__ http://xylib.svn.sourceforge.net/viewvc/xylib/trunk/xylib/xylib.h?view=markup
+__ https://raw.github.com/wojdyr/xylib/master/xylib/xylib.h
 
 Licence: `LGPL <http://creativecommons.org/licenses/LGPL/2.1/>`_
 
 DOWNLOAD
 ========
 
-**Binary packages**: 
+**Binary packages**:
 
 * MS Windows: `xyconv.exe`_
-* Linux: RPMs_ and DEBs_
+* Linux: fresh RPMs and DEBs `from OBS`_
+  http://software.opensuse.org/download/package?project=home:wojdyr&package=xylib
 
 .. _`xyconv.exe`: http://downloads.sourceforge.net/xylib/xylib_win-1.1.zip
-.. _RPMs: http://download.opensuse.org/repositories/home://wojdyr/
-.. _DEBs: https://launchpad.net/~wojdyr/+archive/fityk
+.. _`from OBS`: http://software.opensuse.org/download/package?project=home:wojdyr&package=xylib
 
 **Source**:
 
-* `tarball`_ 
-* Subversion repository_. 
+* `tarball`_
+* GitHub repository_ (requires ``autoreconf -i`` after cloning).
 
 .. _`tarball`: http://downloads.sourceforge.net/xylib/xylib-1.1.tar.bz2
-.. _repository: https://xylib.svn.sourceforge.net/svnroot/xylib/trunk/
+.. _repository: https://github.com/wojdyr/xylib
 
-To build from source, you need:
+Prerequisites:
 
 * C++ compiler (we tested GCC, MinGW, Visual C++)
-* Boost_ libraries (only headers). 
+* Boost_ libraries (only headers).
+* optionally, zlib and bzlib libraries (for reading compressed files)
 
 .. _Boost: http://www.boost.org/
 
 On Unix, just type ``./configure && make``.
-If you download the source from svn, run ``autoreconf -i`` first.
 
 MISC NOTES
 ==========
 
 The file `sample-urls`__ contains links to files in formats handled by xylib.
 
-__ https://xylib.svn.sourceforge.net/svnroot/xylib/trunk/sample-urls
+__ https://raw.github.com/wojdyr/xylib/master/sample-urls
 
 In addition to C++ API, we provide C API and very simple `Python bindings`_.
 So far we had no requests for binding to other languages.
 
-.. _`Python bindings`: https://xylib.svn.sourceforge.net/svnroot/xylib/trunk/xylib_capi.py
+.. _`Python bindings`: https://github.com/wojdyr/xylib/blob/master/xylib_capi.py
 
 Documentation for programmers who want to extend xylib is
 in the file `README.dev`__.
 
-__ https://xylib.svn.sourceforge.net/svnroot/xylib/trunk/README.dev
+__ https://raw.github.com/wojdyr/xylib/master/README.dev
 
-freshmeat__ provides new version notifications.
+freecode__ provides new version notifications.
 
-__ http://freshmeat.net/projects/xylib/
+__ http://freecode.com/projects/xylib
 
 xylib is used by:
 
@@ -113,7 +113,7 @@ Feel free to send e-mail to the authors, or to the
 CREDITS
 =======
 
--  Google - the library was started as Google Summer of Code 2007 project 
+-  Google - the library was started as Google Summer of Code 2007 project
    by Peng ZHANG, mentored by Marcin Wojdyr from Fityk organization.
 -  Michael Richardson provided VAMAS specification and sample files.
 -  David Hovis provided a WinSpec file format specification and sample files.
@@ -121,8 +121,8 @@ CREDITS
 -  Martijn Fransen provided very useful specifications of Philips formats.
 -  Vincent Favre-Nicolin provided PSI\_DMC and ILL\_D1A5 samples;
    reading his ObjCryst library was also helpful.
--  Janos Vegh sent us his VAMAS reading routines (long time ago, before this 
-   project started). 
+-  Janos Vegh sent us his VAMAS reading routines (long time ago, before this
+   project started).
 -  Andreas Breslau added Bruker V3 (RAW1.01) support.
 -  Bjørn Tore Lønstad provided Bruker RAW V3 format specification and samples.
 -  Hector Zhao patched VAMAS code.
