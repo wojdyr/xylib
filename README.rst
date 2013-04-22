@@ -11,7 +11,7 @@ Supported formats:
 -  plain text, delimiter-separated values (e.g. CSV)
 -  Crystallographic Information File for Powder Diffraction (pdCIF)
 -  Siemens/Bruker UXD
--  Siemens/Bruker RAW ver. 1/2/3/4
+-  Siemens/Bruker RAW ver. 1/2/3
 -  Philips UDF
 -  Philips RD (raw scan) V3
 -  Rigaku DAT
