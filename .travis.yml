@@ -6,6 +6,7 @@ before_install:
   - sudo apt-get install -qq libboost-dev
 before_script:
   - autoreconf -i
+script: ./configure && make
 branches:
   only:
     - master
