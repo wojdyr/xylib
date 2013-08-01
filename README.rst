@@ -129,12 +129,17 @@ CREDITS
 -  Hector Zhao patched VAMAS code.
 -  Jim Fitzgerald (author of FitzPeaks_) provided code for reading
    Canberra (Genie) CNF files.
--  Matthias Richter added Ron Unwin's Spectra XPS format.
+-  Matthias Richter added Ron Unwin's Spectra XPS format
+   and SpecsLab2 xy format.
 
 .. _FitzPeaks: http://www.jimfitz.demon.co.uk/fitzpeak.htm
 
 HISTORY
 =======
+
+* 1.2 (2013-08-01)
+
+  - added SpecsLab2 xy format (Matthias Richter)
 
 * 1.1 (2012-11-05)
 
