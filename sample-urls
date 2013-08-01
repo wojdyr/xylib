@@ -1,12 +1,10 @@
 # This file contains links to sample files in various formats.
 # Please send us your files, it will make testing xylib easier.
 #
-# The non-URL lines are started with '#' so it's easier to download
-# all the files, e.g.:
-# $ grep -v '^#' sample-urls | wget -i -
+# The files from http/ftp can be downloaded by:
+# grep '^[hf]' sample-urls | wget -i -
 #
-# We've been granted permissions to distribute the files stored at
-# http://www.unipress.waw.pl/fityk/xylib_samples
+# We've been granted permissions to distribute the files stored in samples dir.
 # The other files were just found on the web and are not guaranteed
 # to still be there.
 
@@ -26,11 +24,11 @@ http://www.mx.iucr.org/iucr-top/comm/cpd/QARR/raw/cpd-3.raw
 
 # Siemens/Bruker v4 raw files
 # samples from Andreas Breslau
-http://www.unipress.waw.pl/fityk/xylib_samples/Cu3Au-1.raw
-http://www.unipress.waw.pl/fityk/xylib_samples/Cu3Au-2.raw
-http://www.unipress.waw.pl/fityk/xylib_samples/format1.raw
+samples/Cu3Au-1.raw
+samples/Cu3Au-2.raw
+samples/format1.raw
 # sample from Bjørn Tore Lønstad
-http://www.unipress.waw.pl/fityk/xylib_samples/BT86.raw
+samples/BT86.raw
 
 #  pdCIF format files
 #http://pubs.acs.org/subscribe/journals/inocaj/suppinfo/41/i14/ic0111177/ic0111177.cif
@@ -64,7 +62,7 @@ http://sdpd.univ-lemans.fr/course/week-1/sample3.uxd
 http://sdpd.univ-lemans.fr/course/week-1/sample4.uxd
 http://sdpd.univ-lemans.fr/DU-SDPD/solutions/week-3/synchro.uxd
 # sample from Bjørn Tore Lønstad
-http://www.unipress.waw.pl/fityk/xylib_samples/BT86.UXD
+samples/BT86.UXD
 
 # Rigaku dat files
 # There are Rigaku ".dat" sample files at:
@@ -74,22 +72,22 @@ http://www.unipress.waw.pl/fityk/xylib_samples/BT86.UXD
 # VAMAS files
 http://www.surfacespectra.com/xps/download/fomblin_y.vms
 # data from Michael Richardson <michael.richardson@vuw.ac.nz> 
-http://www.unipress.waw.pl/fityk/xylib_samples/mjr9_59c.vms
-http://www.unipress.waw.pl/fityk/xylib_samples/mjr9_64c.vms
-http://www.unipress.waw.pl/fityk/xylib_samples/mjr9_116a.vms
+samples/mjr9_59c.vms
+samples/mjr9_64c.vms
+samples/mjr9_116a.vms
 
 # GSAS files
 http://www.mx.iucr.org/iucr-top/comm/cpd/QARR/gss/cpd-1a.gss
 
 # text files
-http://www.unipress.waw.pl/fityk/xylib_samples/with_sigma.txt
-http://www.unipress.waw.pl/fityk/xylib_samples/xy_text.txt
+samples/with_sigma.txt
+samples/xy_text.txt
 
 # Princeton Instruments WinSpec SPE files
 # sample files from Pablo Bianucci <pbian@physics.utexas.edu> 
-http://www.unipress.waw.pl/fityk/xylib_samples/1d-1.spe
-http://www.unipress.waw.pl/fityk/xylib_samples/1d-2.spe
-http://www.unipress.waw.pl/fityk/xylib_samples/1d-3.spe
+samples/1d-1.spe
+samples/1d-2.spe
+samples/1d-3.spe
 
 # Sietronics Sieray CPI files
 http://www.chemistry.ohio-state.edu/~woodward/ceo2br.cpi
@@ -99,11 +97,11 @@ http://mysite.du.edu/~balzar/lebailbr.dbw
 http://sdpd.univ-lemans.fr/DU-SDPD/semaine-4/na5.rit
 
 # Canberra MCA files (made by one of machines in Hamburg synchrotron)
-http://www.unipress.waw.pl/fityk/xylib_samples/03yag02.mca
-http://www.unipress.waw.pl/fityk/xylib_samples/04nacl02.mca
+samples/03yag02.mca
+samples/04nacl02.mca
 
 # Canberra CNF file from Will Paxton
-http://www.unipress.waw.pl/fityk/xylib_samples/SMP00011.CNF
+samples/SMP00011.CNF
 
 # XFIT XDD files
 http://www.ccp14.ac.uk/ccp/ccp14/ftp-mirror/krumm/Software/windows/stereo/Y2O3.XDD
@@ -114,10 +112,10 @@ http://www.ccp14.ac.uk/ccp/ccp14/ftp-mirror/krumm/Software/windows/stereo/Y2O3.X
 http://www.ccp14.ac.uk/ccp/ccp14/ftp-mirror/csirominerals-anon-ftp/pub/xtallography/xrd-data-formats/riet7/fct-xray.dat
 # LaNi2Mn3: J. of Alloys and Compounds 348 (2003), 176-183, 
 # http://dx.doi.org/10.1016/S0925-8388(02)00838-1
-http://www.unipress.waw.pl/fityk/xylib_samples/D1A5.dat
+samples/D1A5.dat
 # NdNi4MgDx : J. of Alloys and Compounds 348 (2003), 129-137, 
 # http://dx.doi.org/10.1016/S0925-8388(02)00797-1
-http://www.unipress.waw.pl/fityk/xylib_samples/PSI_DMC.dat
+samples/PSI_DMC.dat
 
 # Spectra Omicron XPS data example
 https://raw.github.com/Yohko/xylibformats/c499304a57f8de77e7a8222cd7f6db72ab9016a7/examples/spectra_example.1
