@@ -41,7 +41,7 @@ using std::fixed;
 
 namespace {
 
-    void Debugprintf(string str, string out){
+    void Debugprintf(string /*str*/, string /*out*/){
         //comment in for debugging
         //printf(str.c_str(), out.c_str());
     }
@@ -66,10 +66,12 @@ namespace {
 	};
 
 
+        /*
 	string stripstr(string str, char in, char out){
 		replace(str.begin(), str.end(), in, out);
 		return str;
 	}
+        */
 
 
 	string cleanstr(string str){
@@ -78,6 +80,7 @@ namespace {
 		return str;
 	}
 
+    /*
     int grepDataTitle(const char * str, int *cycle, int *curve, int *scan, int *channel){
         int numRead=0, tmpcycle=0, tmpcurve=0, tmpscan=0, tmpchannel=0;
         string out="";
@@ -102,6 +105,7 @@ namespace {
         Debugprintf("V_flag is%s\n", intToString(numRead));
         return numRead;
     }
+    */
 
     string grepLine(string str, string *option){
         size_t posdp=0,posspace=0;
@@ -109,13 +113,13 @@ namespace {
 
         posdp = str.find_first_of(":");
         posspace = str.find_first_of(" ");
-        if( posspace == -1)
+        if( posspace == string::npos)
         {
             *option="";
             return "";
         }
 
-        if( posdp == -1)  // needed to support multiline comments
+        if( posdp == string::npos)  // needed to support multiline comments
         {
             *option = str.substr(posspace,str.length());
         }else{
@@ -152,7 +156,7 @@ namespace {
 
     bool checkEnergyScale(vector<double> * w,int num, double eps)
     {
-        for (size_t i = 1; i < num; ++i) // check to see if we have aquidistante energy scale
+        for (int i = 1; i < num; ++i) // check to see if we have aquidistante energy scale
         {
             if( abs( w->at(1) - w->at(0) - ( w->at(i) - w->at(i-1)) )  >= eps)
             {
@@ -178,7 +182,7 @@ const FormatInfo SpecsxyDataSet::fmt_info(
     &SpecsxyDataSet::check
 );
 
-bool SpecsxyDataSet::check(istream &f){
+bool SpecsxyDataSet::check(istream &f, string*){
         string TmpS = "";
         getline(f, TmpS);
         if(TmpS.find("# Created by:        SpecsLab2, Version 2.",0) != 0)
@@ -191,7 +195,8 @@ bool SpecsxyDataSet::check(istream &f){
 
 void SpecsxyDataSet::load_data(std::istream &f){
         Block* blk = NULL;
-        int line=0, datacounter=0,numLinesLoaded=0, cnt=0, cycleHeader=0, cmtLine=0, num=0, n_wave=1;
+        int line=0, numLinesLoaded=0, cmtLine=-1, n_wave=1;
+        //int datacounter=0, cnt=0, cycleHeader=0, num=0;
         string cycleheader = "";
         bool aquedist = false;
         double startx=0.0, stepx=0.0;
@@ -200,9 +205,9 @@ void SpecsxyDataSet::load_data(std::istream &f){
         vector<double> xw;
         xw.resize(0);
         double eps=1E-6; // used in checkEnergyScale(...) to determine if two adjacent energy intervals are equal
-        string str="", type ="????", group="", spectrum="", fname="", newfname="", oldgroup="", tmp="";
+        string str="", type ="????", group="", /*spectrum="",*/ fname="", newfname="", oldgroup="", tmp="";
         string method="", lens="", slit="", analyzer="", mode="", curvesPerScan="", valuesPerCurve="",dwellTime="", excEnergy="", passEnergy="", biasVoltage="";
-        string detVoltage="", effWorkfunction="", source="", numberOfScan="", kinEnergy="", remote="", comment="", region="", energy="",headerComment="", remoteInfo="";
+        string detVoltage="", effWorkfunction="", source="", numberOfScan="", kinEnergy="", remote="", comment="", region="", energy="", remoteInfo="";
         int i1=0;
         int cycle=0, scan=0, curve=0, channel=0;
         double xval=0.0, yval=0.0;
@@ -336,7 +341,7 @@ void SpecsxyDataSet::load_data(std::istream &f){
                     add_block(blk);
                     n_wave  += 1;
                 }
-                num = grepDataTitle(str.c_str(), &cycle, &curve, &scan, &channel);
+                //num = grepDataTitle(str.c_str(), &cycle, &curve, &scan, &channel);
                 /*if( num >= 2 ){
                     cycleheader = num;
                     continue;
@@ -435,14 +440,14 @@ void SpecsxyDataSet::load_data(std::istream &f){
                 }
                 if(str.compare("Comment:") == 0){
                     cmtLine = line;
-                    headerComment = cleanstr(option);
+                    comment = cleanstr(option);
                     i1=1;
                 }
                 if(i1==0){
                     if( ( cmtLine + 1 ) == line && option.compare("") != 0 ){
                         cmtLine +=1;
-                        //headerComment  = headerComment + "\n" + cleanstr(option); // can xylib handle multiple comment lines??
-                        headerComment  = headerComment + " " + cleanstr(option);
+                        //comment  = comment + "\n" + cleanstr(option); // can xylib handle multiple comment lines??
+                        comment = comment + " " + cleanstr(option);
                     }else{
                         cmtLine=-1;
                     }
