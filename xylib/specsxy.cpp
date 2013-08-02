@@ -174,7 +174,7 @@ namespace xylib {
 
 const FormatInfo SpecsxyDataSet::fmt_info(
     "specsxy",
-    "SPECS Specslab2 xy data file",
+    "SPECS Specslab2 xy",
     "xy",
     false,                     // whether binary
     true,                      // whether has multi-blocks
