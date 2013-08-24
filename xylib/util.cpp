@@ -120,6 +120,11 @@ string read_string(istream &f, unsigned len)
 // format to double
 // good description of the format is at:
 // http://home.kpn.nl/jhm.bonten/computers/bitsandbytes/wordsizes/hidbit.htm
+//
+// TODO: consider this comment from S.M.:
+//         PDP-11 F floating point numbers can be converted very easily (and
+//         efficently) into standard IEEE 754 format: Swap the higher an lower
+//         16-bit words, cast to float and divide by 4.
 double from_pdp11(const unsigned char* p)
 {
     int sign = (p[1] & 0x80) == 0 ? 1 : -1;

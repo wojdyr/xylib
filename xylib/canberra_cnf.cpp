@@ -94,6 +94,15 @@ bool is_printable(const string &s)
 // comment from Stefan Schneider-Kennedy:
 // > 8 byte little endian. Number of 100ns intervals since 1859.
 // > Like Microsoft's FILETIME with an offset.
+//
+// comment from Stephan Messlinger:
+// > The magic offset of 3506716800 seconds between the CNF time format to
+// > unixtime does not point to 1859 but to Nov 17, 1958, 00:00. This is the
+// > starting point for the 'Modified Julian Date', which is commonly used in
+// > astronomy. Together with resolution of 100 ns, this points out to the DEC
+// > VMS time format (which again fits to the PDP11 floating point format for
+// > the energy coefficients).
+//
 static
 string convert_date(const char* p)
 {
