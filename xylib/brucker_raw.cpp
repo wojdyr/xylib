@@ -87,6 +87,7 @@ void BruckerRawDataSet::load_version1(std::istream &f)
         blk->add_column(xcol);
 
         float t = read_flt_le(f);
+        // documentation says: "-1.E6 = unknown"
         if (-1e6 != t)
             blk->meta["THETA_START"] = S(t);
 
@@ -96,7 +97,7 @@ void BruckerRawDataSet::load_version1(std::istream &f)
 
         t = read_flt_le(f);
         if (-1e6 != t)
-            blk->meta["PHI_START"], S(t);
+            blk->meta["PHI_START"] = S(t);
 
         blk->meta["SAMPLE_NAME"] = read_string(f, 32);
         blk->meta["K_ALPHA1"] = S(read_flt_le(f));
