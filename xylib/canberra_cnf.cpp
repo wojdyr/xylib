@@ -234,8 +234,10 @@ void CanberraCnfDataSet::load_data(std::istream &f)
     // channel data
     const char* chan_ptr = beg + chan_offset;
     if (chan_ptr+512+4*n_channels > end || chan_ptr[0] != 5 ||
-                                           chan_ptr[1] != 0x20)
+                                           chan_ptr[1] != 0x20) {
+        delete xcol;
         throw FormatError("Channel data not found.");
+    }
     VecColumn *ycol = new VecColumn;
     // the two first channels sometimes contain live and real time
     for (int i = 0; i < 2; ++i) {
