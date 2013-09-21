@@ -62,27 +62,23 @@ bool PdCifDataSet::check(istream &f, string*)
 
 namespace {
 
-// Based on: http://www.iucr.org/iucr-top/cif/spec/version1.1/cifsyntax.html
-// Appendix A: A formal grammar for CIF
-//
-// There are errors in this spec:
-// - no whitespace between LoopHeader and LoopBody
-// - extra "|" in <TokenizedComments> (...<eol> |}...)
-// - there is <AnyPrintChar> in <SingleQuotedString> and <DoubleQuotedString>
-//   and single-quote(') and double-quote(") are also in AnyPrintChar
-// - reserved words are not excluded from UnquotedString
+// Based on: http://www.iucr.org/resources/cif/spec/version1.1/cifsyntax
+// "Appendix A: A formal grammar for CIF"
+// assuming that:
+// - in <DataItems> there should be <WhiteSpace> between <LoopHeader> and
+//   <LoopBody>
+// - the extra "|" in <TokenizedComments> (...<eol> |}...) should be ignored
 //
 // This parser is not strict:
 //  - <Comments> may end with EOF (not only with EOL)
 //  - SkipLine rule was added to skip (some of) invalid lines
 //
-// Known issues:
-// - to make is simpler, UnquotedString can't start with semicolon,
+// Limitations (that make parser simpler):
+// - UnquotedString can't start with semicolon,
 //   and SemiColonTextField don't have to start after EOL.
+// - SingleQuotedString and DoubleQuotedString cannot include
+//   corresponding quote symbols
 //
-// Finally, there is so many mistakes in both CIF specification and in popular
-// existing software, that it's hard to tell how the correct implementation
-// should look like
 
 // types of <Value>
 const int v_inapplicable = 0;
