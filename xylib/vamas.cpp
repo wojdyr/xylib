@@ -339,8 +339,8 @@ Block* VamasDataSet::read_block(istream &f)
         block->meta["signal time correction"] = read_line_trim(f);
 
     if (include[36]) {
-        if (("AES1" == tech || "AES2" == tech || "EDX" == tech || "ELS" == tech
-             || "UPS" == tech || "XPS" == tech || "XRF" == tech)
+        if (("AES diff" == tech || "AES dir" == tech || "EDX" == tech ||
+             "ELS" == tech || "UPS" == tech || "XPS" == tech || "XRF" == tech)
             && ("MAPDP" == exp_mode || "MAPSVDP" == exp_mode
                 || "SDP" == exp_mode || "SDPSV" == exp_mode)) {
             skip_lines(f, 7);
