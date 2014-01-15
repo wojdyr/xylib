@@ -166,11 +166,13 @@ void TextDataSet::load_data(std::istream &f)
                 row = row2;
             }
 
-            // decrease the number of columns to the new minimum of numbers
-            // in line
-            for (size_t i = row.size(); i != cols.size(); ++i)
-                delete cols[i];
-            cols.resize(row.size());
+            // this check is not redundant, row may have changed
+            if (row.size() < cols.size()) {
+                // decrease the number of columns to the new minimum
+                for (size_t i = row.size(); i != cols.size(); ++i)
+                    delete cols[i];
+                cols.resize(row.size());
+            }
         }
 
         else if (row.size() > cols.size()) {
