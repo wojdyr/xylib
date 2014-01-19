@@ -75,6 +75,10 @@ http://www.surfacespectra.com/xps/download/fomblin_y.vms
 samples/mjr9_59c.vms
 samples/mjr9_64c.vms
 samples/mjr9_116a.vms
+# data files for VAMAS PC138, see
+# http://www.npl.co.uk/science-technology/surface-and-nanoanalysis/services/vamas-pc138
+# in self-extracting zip
+#http://www.npl.co.uk/upload/exe/VAMASex.exe
 
 # GSAS files
 http://www.mx.iucr.org/iucr-top/comm/cpd/QARR/gss/cpd-1a.gss

@@ -19,16 +19,15 @@ namespace xylib {
     {
         OBLIGATORY_DATASET_MEMBERS(VamasDataSet)
 
-    protected:
+    private:
         // a complete block contains 40 parts.
-        // include[i] indicates if the i-th part (0-based) is included
-        bool include[40];
+        // include_[i] indicates if the i-th part (0-based) is included
+        bool include_[40];
 
-        int blk_fue;            // number of future upgrade experiment entries
-        int exp_fue;            // number of future upgrade block entries
-        std::string exp_mode;   // experimental mode
-        std::string scan_mode;  // scan mode
-        int exp_var_cnt;        // count of experimental variables
+        int blk_fue_;           // number of future upgrade experiment entries
+        std::string exp_mode_;   // experimental mode
+        std::string scan_mode_;  // scan mode
+        int exp_var_cnt_;        // count of experimental variables
 
         Block *read_block(std::istream &f);
     };
