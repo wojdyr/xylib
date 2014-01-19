@@ -88,6 +88,7 @@ bool VamasDataSet::check(istream &f, string*)
     static const string magic =
      "VAMAS Surface Chemical Analysis Standard Data Transfer Format 1988 May 4";
     string line;
+    skip_whitespace(f);
     return getline(f, line) && str_trim(line) == magic;
 }
 
@@ -99,6 +100,7 @@ bool VamasDataSet::check(istream &f, string*)
 void VamasDataSet::load_data(std::istream &f)
 {
     int n;
+    skip_whitespace(f);
     skip_lines(f, 1);   // magic number: "VAMAS Sur..."
     meta["institution identifier"] = read_line_trim(f);
     meta["institution model identifier"] = read_line_trim(f);
