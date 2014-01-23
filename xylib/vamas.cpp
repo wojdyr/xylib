@@ -139,16 +139,23 @@ void VamasDataSet::load_data(std::istream &f)
         meta["experimental variable unit " + S(i)] = read_line_trim(f);
     }
 
-    // fill `include_' table
-    n = read_line_int(f);    // # of entries in inclusion or exclusion list
-    bool d = (n > 0);
+    // number of entries in parameter inclusion or exclusion list
+    n = read_line_int(f);
+    // If the values of any of the block parameters are the same in all of the
+    // blocks their values may be sent in the first block and then omitted
+    // from all subsequent blocks.
+    // n > 0 : the parameters listed are to be included
+    // n < 0 : the parameters listed are to be excluded
+    // n = 0 : all parameters are to be given in all blocks
+    // A complete block contains 40 parts.
+    bool all[40], inclusion_list[40];
     for (int i = 0; i < 40; ++i) {
-        include_[i] = !d;
+        all[i] = true;
+        inclusion_list[i] = (n <= 0);
     }
-    n = (d ? n : -n);
-    for (int i = 0; i < n; ++i) {
-        int idx = read_line_int(f) - 1;
-        include_[idx] = d;
+    for (int i = 0; i < abs(n); ++i) {
+        int idx = read_line_int(f) - 1; // "-1" because the input is 1-based
+        inclusion_list[idx] = !inclusion_list[idx];
     }
 
     // # of manually entered items in block
@@ -161,70 +168,98 @@ void VamasDataSet::load_data(std::istream &f)
 
     // handle the blocks
     unsigned blk_cnt = read_line_int(f);
+    const Block* first_block = NULL;
     for (unsigned i = 0; i < blk_cnt; ++i) {
-        Block *blk = read_block(f);
+        Block *blk = read_block(f, i == 0 ? all : inclusion_list, first_block);
+        if (i == 0)
+            first_block = blk;
         add_block(blk);
     }
 }
 
+static string two_digit(const string& s)
+{
+    if (s.empty())
+        return "  ";
+    return s.length() == 1 ? "0"+s : s;
+}
 
 // read one block from file
-Block* VamasDataSet::read_block(istream &f)
+Block* VamasDataSet::read_block(istream &f, bool includes[],
+                                const Block* first_block)
 {
     Block *block = new Block;
     double x_start=0., x_step=0.;
     string x_name;
 
-    int cor_var = 0;    // # of corresponding variables
     vector<VecColumn*> ycols;
 
     block->meta["block id"] = read_line_trim(f);
     block->meta["sample identifier"] = read_line_trim(f);
 
-    if (include_[0])
-        block->meta["year"] = read_line_trim(f);
-    if (include_[1])
-        block->meta["month"] = read_line_trim(f);
-    if (include_[2])
-        block->meta["day"] = read_line_trim(f);
-    if (include_[3])
-        block->meta["hour"] = read_line_trim(f);
-    if (include_[4])
-        block->meta["minute"] = read_line_trim(f);
-    if (include_[5])
-        block->meta["second"] = read_line_trim(f);
-    if (include_[6])
-        block->meta["no. of hours in advanced GMT"] = read_line_trim(f);
+    string date_time;
+    string first_dt;
+    if (first_block)
+        first_dt = first_block->meta.get("date_time");
+    // year, month, etc. should be numbers, but don't assume it, just in case
+    if (includes[0]) {
+        date_time = read_line_trim(f);
+        if (date_time.size() < 4)
+            date_time.insert(date_time.begin(), 4 - date_time.size(), ' ');
+    } else {
+        date_time = first_dt.substr(0, 4);
+    }
 
-    if (include_[7]) {   // skip comments on this block
+    date_time += includes[1] ? "-" + two_digit(read_line_trim(f))
+                             : first_dt.substr(4, 3);;
+    date_time += includes[2] ? "-" + two_digit(read_line_trim(f))
+                             : first_dt.substr(7, 3);;
+    date_time += includes[3] ? " " + two_digit(read_line_trim(f))
+                             : first_dt.substr(10, 3);;
+    date_time += includes[4] ? ":" + two_digit(read_line_trim(f))
+                             : first_dt.substr(13, 3);;
+    date_time += includes[5] ? ":" + two_digit(read_line_trim(f))
+                             : first_dt.substr(16, 3);;
+    if (includes[6]) {
+        string timezone = read_line_trim(f);
+        if (!timezone.empty()) {
+            if (timezone[0] == '-')
+                date_time += " -" + two_digit(timezone.substr(1)) + "00";
+            else
+                date_time += " +" + two_digit(timezone) + "00";
+        }
+    }
+    block->meta["date_time"] = date_time;
+
+    if (includes[7]) {   // skip comments on this block
         int cmt_lines = read_line_int(f);
         skip_lines(f, cmt_lines);
     }
 
     string tech;
-    if (include_[8]) {
+    if (includes[8]) {
         tech = read_line_trim(f);
         block->meta["tech"] = tech;
         assert_in_array(tech, techs, "tech");
     }
 
-    if (include_[9]) {
+    if (includes[9]) {
         if ("MAP" == exp_mode_ || "MAPDP" == exp_mode_) {
             block->meta["x coordinate"] = read_line_trim(f);
             block->meta["y coordinate"] = read_line_trim(f);
         }
     }
 
-    if (include_[10]) {
+    if (includes[10]) {
         for (int i = 0; i < exp_var_cnt_; ++i) {
             block->meta["experimental variable value " + S(i)] = read_line_trim(f);
         }
     }
 
-    if (include_[11])
+    if (includes[11])
         block->meta["analysis source label"] = read_line_trim(f);
 
-    if (include_[12]) {
+    if (includes[12]) {
         if ("MAPDP" == exp_mode_ || "MAPSVDP" == exp_mode_
                 || "SDP" == exp_mode_ || "SDPSV" == exp_mode_
                 || "SNMS energy spec" == tech || "FABMS" == tech
@@ -240,18 +275,18 @@ Block* VamasDataSet::read_block(istream &f)
         }
     }
 
-    if (include_[13])
+    if (includes[13])
         block->meta["analysis source characteristic energy"]
                                                            = read_line_trim(f);
-    if (include_[14])
+    if (includes[14])
         block->meta["analysis source strength"] = read_line_trim(f);
 
-    if (include_[15]) {
+    if (includes[15]) {
         block->meta["analysis source beam width x"] = read_line_trim(f);
         block->meta["analysis source beam width y"] = read_line_trim(f);
     }
 
-    if (include_[16]) {
+    if (includes[16]) {
         if ("MAP" == exp_mode_ || "MAPDP" == exp_mode_ || "MAPSV" == exp_mode_
                 || "MAPSVDP" == exp_mode_ || "SEM" == exp_mode_) {
             block->meta["field of view x"] = read_line_trim(f);
@@ -259,54 +294,54 @@ Block* VamasDataSet::read_block(istream &f)
         }
     }
 
-    if (include_[17]) {
+    if (includes[17]) {
         if ("SEM" == exp_mode_ || "MAPSV" == exp_mode_
                 || "MAPSVDP" == exp_mode_) {
             throw FormatError("unsupported MAPPING mode");
         }
     }
 
-    if (include_[18])
+    if (includes[18])
         block->meta["analysis source polar angle of incidence"] = read_line_trim(f);
-    if (include_[19])
+    if (includes[19])
         block->meta["analysis source azimuth"] = read_line_trim(f);
-    if (include_[20])
+    if (includes[20])
         block->meta["analyser mode"] = read_line_trim(f);
-    if (include_[21])
+    if (includes[21])
         block->meta["analyser pass energy or retard ratio or mass resolution"]
                                                             = read_line_trim(f);
-    if (include_[22]) {
+    if (includes[22]) {
         if ("AES diff" == tech) {
             block->meta["differential width"] = read_line_trim(f);
         }
     }
 
-    if (include_[23])
+    if (includes[23])
         block->meta["magnification of analyser transfer lens"] = read_line_trim(f);
-    if (include_[24])
+    if (includes[24])
         block->meta["analyser work function or acceptance energy of atom or ion"] = read_line_trim(f);
-    if (include_[25])
+    if (includes[25])
         block->meta["target bias"] = read_line_trim(f);
 
-    if (include_[26]) {
+    if (includes[26]) {
         block->meta["analysis width x"] = read_line_trim(f);
         block->meta["analysis width y"] = read_line_trim(f);
     }
 
-    if (include_[27]) {
+    if (includes[27]) {
         block->meta["analyser axis take off polar angle"] = read_line_trim(f);
         block->meta["analyser axis take off azimuth"] = read_line_trim(f);
     }
 
-    if (include_[28])
+    if (includes[28])
         block->meta["species label"] = read_line_trim(f);
 
-    if (include_[29]) {
+    if (includes[29]) {
         block->meta["transition or charge state label"] = read_line_trim(f);
         block->meta["charge of detected particle"] = read_line_trim(f);
     }
 
-    if (include_[30]) {
+    if (includes[30]) {
         if ("REGULAR" == scan_mode_) {
             x_name = read_line_trim(f);
             block->meta["abscissa label"] = x_name;
@@ -320,26 +355,35 @@ Block* VamasDataSet::read_block(istream &f)
     else
         throw FormatError("how to find abscissa properties in this file?");
 
-    if (include_[31]) {
+    int cor_var; // number of corresponding variables
+    if (includes[31]) {
         cor_var = read_line_int(f);
         // columns initialization
         for (int i = 0; i != cor_var; ++i) {
+            string corresponding_variable_label = read_line_trim(f);
+            skip_lines(f, 1);    // ignoring corresponding variable unit
             ycols.push_back(new VecColumn);
-            ycols[i]->set_name(read_line_trim(f)); // corresponding variable label
-            skip_lines(f, 1);                      // corresponding variable unit
+            ycols[i]->set_name(corresponding_variable_label);
+        }
+    } else {
+        assert(first_block != NULL);
+        cor_var = first_block->get_column_count() - 1; // don't count xcol
+        for (int i = 0; i != cor_var; ++i) {
+            ycols.push_back(new VecColumn);
+            ycols[i]->set_name(first_block->get_column(i).get_name());
         }
     }
 
-    if (include_[32])
+    if (includes[32])
         block->meta["signal mode"] = read_line_trim(f);
-    if (include_[33])
+    if (includes[33])
         block->meta["signal collection time"] = read_line_trim(f);
-    if (include_[34])
+    if (includes[34])
         block->meta["# of scans to compile this blk"] = read_line_trim(f);
-    if (include_[35])
+    if (includes[35])
         block->meta["signal time correction"] = read_line_trim(f);
 
-    if (include_[36]) {
+    if (includes[36]) {
         if (("AES diff" == tech || "AES dir" == tech || "EDX" == tech ||
              "ELS" == tech || "UPS" == tech || "XPS" == tech || "XRF" == tech)
             && ("MAPDP" == exp_mode_ || "MAPSVDP" == exp_mode_
@@ -348,15 +392,15 @@ Block* VamasDataSet::read_block(istream &f)
         }
     }
 
-    if (include_[37]) {
+    if (includes[37]) {
         block->meta["sample normal polar angle of tilt"] = read_line_trim(f);
         block->meta["sample normal polar tilt azimuth"] = read_line_trim(f);
     }
 
-    if (include_[38])
+    if (includes[38])
         block->meta["sample rotate angle"] = read_line_trim(f);
 
-    if (include_[39]) {
+    if (includes[39]) {
         int n = read_line_int(f);   // # of additional numeric parameters
         for (int i = 0; i < n; ++i) {
             // 3 items in every loop: param_label, param_unit, param_value
@@ -376,6 +420,7 @@ Block* VamasDataSet::read_block(istream &f)
     block->add_column(xcol);
 
     int col = 0;
+    assert(ycols.size() == (size_t) cor_var);
     for (int i = 0; i < cur_blk_steps; ++i) {
         double y = my_strtod(read_line_trim(f));
         ycols[col]->add_val(y);
