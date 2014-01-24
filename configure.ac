@@ -1,5 +1,5 @@
 # Process this file with `autoreconf -i` to produce a configure script.
-AC_INIT(xylib, 1.2)
+AC_INIT(xylib, 1.3)
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_MACRO_DIR(build-aux)
 AC_CONFIG_SRCDIR(xylib/xylib.cpp)

@@ -1,5 +1,5 @@
 
-VERSION=1.2
+VERSION=1.3
 
 if [ $# -eq 0 ]; then
     echo Usage: $0 step
@@ -22,6 +22,8 @@ arg=$1
 # 0. check version numbers and soname
 if [ $arg -eq 0 ]; then
     echo version: $VERSION
+    echo configure.ac:
+    grep AC_INIT configure.ac
     echo in xylib/xylib.h:
     grep 'define XYLIB_VERSION' xylib/xylib.h
     echo in README.rst:
@@ -65,7 +67,7 @@ if [ $arg -eq 3 ]; then
     #make index.html
     rst2html --stylesheet-path=web.css README.rst index.html
     cp index.html README.dev TODO COPYING sample-urls xylib_win-$VERSION/docs
-    echo copy files xylib.dll and xyconv.exe to `pwd`/xylib_win-$VERSION
+    echo copy files xylib-*.dll and xyconv.exe to `pwd`/xylib_win-$VERSION
     echo and do:  zip -r xylib_win-$VERSION.zip xylib_win-$VERSION/
 fi
 
@@ -107,9 +109,9 @@ if [ $arg -eq 9 ]; then
     rm -rf mingw32
     mkdir mingw32
     cd mingw32
-    MDIR=$HOME/local/mingw32msvc
-    ../configure --host=i586-mingw32msvc --enable-static --disable-shared \
-	         CPPFLAGS="-I$HOME/local/src/boost_1_42_0/ -I$MDIR/include/" \
+    MDIR=$HOME/local/mingw32
+    ../configure --host=i686-w64-mingw32 --enable-static --disable-shared \
+	         CPPFLAGS="-I$HOME/local/src/boost_1_50_0/ -I$MDIR/include/" \
 		 CXXFLAGS="-O3" LDFLAGS="-s -L$MDIR/lib" --without-bzlib \
 		 --prefix=$MDIR && \
     make install
