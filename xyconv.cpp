@@ -267,8 +267,14 @@ int main(int argc, char **argv)
         for ( ; n < argc; ++n) {
             string out = argv[n];
             size_t p = out.rfind('.');
-            if (p != string::npos)
+            if (p != string::npos) {
+                if (out.substr(p) == ".xy") {
+                    cout << "Skipping file with extension xy: " << argv[n]
+                         << endl;
+                    continue;
+                }
                 out.erase(p);
+            }
             out += ".xy";
             cout << "converting " << argv[n] << " to " << out << endl;
             convert_file(argv[n], out, filetype, options, !option_s);
