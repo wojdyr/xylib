@@ -8,6 +8,8 @@
 #include <cstring>
 #include <iomanip>
 #include <algorithm>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #if HAVE_CONFIG_H
 #  include <config.h>
@@ -491,6 +493,13 @@ DataSet* guess_and_load_stream(istream &is,
     return load_stream_of_format(is, fi, options);
 }
 
+static bool is_directory(string const& path)
+{
+    struct stat buf;
+    stat(path.c_str(), &buf);
+    return S_ISDIR(buf.st_mode);
+    // could use PathIsDirectory() on Windows
+}
 
 DataSet* load_file(string const& path, string const& format_name,
                    string const& options)
@@ -500,7 +509,9 @@ DataSet* load_file(string const& path, string const& format_name,
     int len = (int) path.size();
     bool gzipped = (len > 3 && path.substr(len-3) == ".gz");
     bool bz2ed = (len > 4 && path.substr(len-4) == ".bz2");
-    if (gzipped) {
+    if (is_directory(path)) {
+        throw RunTimeError("It is a directory, not a file: " + path);
+    } else if (gzipped) {
 #ifdef HAVE_LIBZ
         gzFile gz_stream = gzopen(path.c_str(), "rb");
         if (!gz_stream) {
@@ -513,8 +524,7 @@ DataSet* load_file(string const& path, string const& format_name,
 #else
         throw RunTimeError("Program is compiled with disabled zlib support.");
 #endif //HAVE_LIBZ
-    }
-    else if (bz2ed) {
+    } else if (bz2ed) {
 #ifdef HAVE_LIBBZ2
         BZFILE* bz_stream = BZ2_bzopen(path.c_str(), "rb");
         if (!bz_stream) {
@@ -527,8 +537,7 @@ DataSet* load_file(string const& path, string const& format_name,
 #else
         throw RunTimeError("Program is compiled with disabled bzlib support.");
 #endif //HAVE_LIBBZ2
-    }
-    else {
+    } else {
         ifstream is(path.c_str(), ios::in | ios::binary);
         if (!is)
             throw RunTimeError("can't open input file: " + path);
