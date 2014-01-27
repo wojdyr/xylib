@@ -21,7 +21,7 @@ const FormatInfo TextDataSet::fmt_info(
     &TextDataSet::check
 );
 
-bool TextDataSet::is_valid_option(std::string const& t)
+bool TextDataSet::is_valid_option(std::string const& t) const
 {
     return t == "strict" ||
            t == "first-line-header" ||

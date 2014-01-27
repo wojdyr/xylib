@@ -296,7 +296,7 @@ public:
     void set_options(std::string const& options);
 
     /// true if this option is handled for this format
-    virtual bool is_valid_option(std::string const&) { return false; }
+    virtual bool is_valid_option(std::string const&) const { return false; }
 
 protected:
     explicit DataSet(FormatInfo const* fi_);
