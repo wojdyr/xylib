@@ -117,6 +117,7 @@ void RigakuDataSet::load_data(std::istream &f)
             ycol->add_values_from_str(line, ',');
         }
     }
+    format_assert(this, ycol == NULL && blk == NULL, "*BEGIN without *END");
     format_assert(this, grp_cnt != 0, "no GROUP_COUNT attribute given");
     format_assert(this, grp_cnt == get_block_count(),
                   "block count different from expected");
