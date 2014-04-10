@@ -91,6 +91,7 @@ void CanberraMcaDataSet::load_data(std::istream &f)
         le_to_host(&y, 4);
         ycol->add_val(y);
     }
+    delete [] all_data;
     blk->add_column(ycol);
 
     add_block(blk);
