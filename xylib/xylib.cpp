@@ -496,7 +496,8 @@ DataSet* guess_and_load_stream(istream &is,
 static bool is_directory(string const& path)
 {
     struct stat buf;
-    stat(path.c_str(), &buf);
+    if (stat(path.c_str(), &buf) != 0)
+        return false;
     return S_ISDIR(buf.st_mode);
     // could use PathIsDirectory() on Windows
 }

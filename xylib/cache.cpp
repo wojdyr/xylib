@@ -67,6 +67,11 @@ Cache::Cache()
     imp_->max_size_ = 1;
 }
 
+Cache::~Cache()
+{
+    delete imp_;
+}
+
 // not thread-safe
 shared_ptr<const DataSet> Cache::load_file(string const& path,
                                            string const& format_name,

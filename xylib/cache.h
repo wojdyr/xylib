@@ -66,6 +66,7 @@ private:
     static Cache *instance_; // for singleton pattern
     CacheImp* imp_;
     Cache();
+    ~Cache();
 };
 
 inline
