@@ -137,6 +137,8 @@ CREDITS
 HISTORY
 =======
 
+* 1.4 ()
+
 * 1.3 (2014-01-24)
 
   - bug fixes only

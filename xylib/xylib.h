@@ -57,7 +57,7 @@
  *  XYLIB_VERSION / 100 % 100 is the minor version
  *  XYLIB_VERSION / 10000 is the major version
  */
-#define XYLIB_VERSION 10300 /* 1.3.0 */
+#define XYLIB_VERSION 10400 /* 1.4.0 */
 
 #ifdef __cplusplus
 
