@@ -31,12 +31,15 @@ Supported formats:
 
 .. _CHI: http://www.esrf.eu/computing/scientific/FIT2D/FIT2D_REF/node115.html#SECTION0001851500000000000000
 
-The library is written in C++, but it comes with C and Python bindings.
+The library comes with two programs for converting supported formats
+to plain text: command-line **xyconv** and graphical **xyconvert**.
 
-It also comes with a tiny program **xyconv**, which converts
-supported formats to text with tab-separated values.
+The library is written in C++ and has C bindings. It can be used directly
+through FFI in several other languages, for example `in Python`_.
 
-For API description, see `xylib/xylib.h`__ file.
+.. _`in Python`: https://github.com/wojdyr/xylib/blob/master/xylib_capi.py
+
+API is described in the `xylib/xylib.h`__ file.
 
 __ https://raw.github.com/wojdyr/xylib/master/xylib/xylib.h
 
@@ -49,6 +52,7 @@ DOWNLOAD
 
 * MS Windows: `xyconv.exe`_
 * Linux: fresh RPMs and DEBs `from OBS`_
+* OSX: in MacPorts
 
 .. _`xyconv.exe`: http://downloads.sourceforge.net/xylib/xylib_win-1.1.zip
 .. _`from OBS`: http://software.opensuse.org/download/package?project=home:wojdyr&package=xylib
@@ -68,10 +72,16 @@ Prerequisites:
 * C++ compiler (we tested GCC, MinGW, Visual C++)
 * Boost_ libraries (only headers).
 * optionally, zlib and bzlib libraries (for reading compressed files)
+* optionally, wxWidgets 3.0 (for xyconvert - GUI converter)
 
 .. _Boost: http://www.boost.org/
 
-On Unix, just type ``./configure && make``.
+On Unix do ``./configure`` (or ``./configure --with-gui`` to build also
+xyconvert), and then ``make``.
+
+On Windows either use MinGW and do the same, or create a project
+for MSVC or another compiler: xyconv is built from ``xyconv.cpp``
+and ``xylib/*.cpp``
 
 MISC NOTES
 ==========
@@ -79,11 +89,6 @@ MISC NOTES
 The file `sample-urls`__ contains links to files in formats handled by xylib.
 
 __ https://raw.github.com/wojdyr/xylib/master/sample-urls
-
-In addition to C++ API, we provide C API and very simple `Python bindings`_.
-So far we had no requests for binding to other languages.
-
-.. _`Python bindings`: https://github.com/wojdyr/xylib/blob/master/xylib_capi.py
 
 Documentation for programmers who want to extend xylib is
 in the file `README.dev`__.
@@ -96,8 +101,8 @@ __ http://freecode.com/projects/xylib
 
 xylib is used by:
 
--  `fityk <http://www.unipress.waw.pl/fityk>`_
--  `xyConvert <http://www.unipress.waw.pl/fityk/xyconvert>`_
+-  `fityk <http://fityk.nieto.pl>`_
+-  ...
 
 AUTHORS
 =======
@@ -138,6 +143,8 @@ HISTORY
 =======
 
 * 1.4 ()
+
+  - included xyConvert (GUI converter)
 
 * 1.3 (2014-01-24)
 

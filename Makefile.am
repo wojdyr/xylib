@@ -2,7 +2,8 @@
 ACLOCAL_AMFLAGS=-I build-aux
 SUBDIRS = xylib
 
-EXTRA_DIST = web.css sample-urls README.rst README.dev xylib_capi.py
+EXTRA_DIST = web.css sample-urls README.rst README.dev xylib_capi.py \
+	     gui/xyconvert.rc
 
 bin_PROGRAMS = xyconv
 
@@ -13,6 +14,22 @@ xyconv_SOURCES = xyconv.cpp
 xyconv_LDADD = xylib/libxy.la -lm
 if USE_XYLIB_DLL
 xyconv_CPPFLAGS = -DXYLIB_DLL
+endif
+
+if BUILD_GUI
+bin_PROGRAMS += gui/xyconvert
+
+if WINDOWS
+RC_FLAGS=`echo $(DEFS) $(CPPFLAGS) $(WX_CPPFLAGS) | sed -e 's/-mthreads//g'`
+xyconvert_res = gui/xyconvertres.o
+$(xyconvert_res): gui/xyconvert.rc gui/xyconvert.ico
+	$(WINDRES) -o $@ $(RC_FLAGS) $<
+endif
+
+gui_xyconvert_SOURCES = gui/xyconvert.cpp gui/xybrowser.cpp gui/xybrowser.h \
+			gui/uplot.cpp gui/uplot.h
+gui_xyconvert_CPPFLAGS = $(WX_CPPFLAGS) -DXYCONVERT
+gui_xyconvert_LDADD = $(xyconvert_res) $(WX_LIBS) xylib/libxy.la -lm
 endif
 
 index.html: README.rst web.css

@@ -5,6 +5,7 @@ if [ $# -eq 0 ]; then
     echo Usage: $0 step
     echo Steps to prepare a new release:
     echo 0. check version numbers and soname
+    echo c. Coverity scan
     echo 1. test compilation
     echo 2. make tarball
     echo 3. make Windows binaries
@@ -37,6 +38,15 @@ if [ $arg -eq 0 ]; then
     grep "\* $VERSION" README.rst
 fi
 
+# c. Coverity scan
+if [ $arg = c ]
+    make clean
+    rm -r cov-int/ xylib-cov.tgz
+    cov-build --dir cov-int make
+    tar czf fityk-cov.tgz cov-int
+    echo upload to https://scan.coverity.com/projects/1742/submit_build?tab=upload
+fi
+
 # 1. test compilation from git
 if [ $arg -eq 1 ]; then
     rm -rf git_copy
@@ -46,7 +56,8 @@ if [ $arg -eq 1 ]; then
     cd xylib
     autoreconf -i || exit 1
     ./configure --disable-static && make distcheck || exit 1
-    ./configure --prefix=`pwd`/install_dir --disable-shared && make install \
+    ./configure --prefix=`pwd`/install_dir --disable-shared --with-gui && \
+        make install \
         || exit 1
     install_dir/bin/xyconv -v || exit 1
 fi

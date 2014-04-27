@@ -14,6 +14,11 @@ AC_ARG_WITH(zlib,
 AC_ARG_WITH(bzlib,
  [  --without-bzlib               disable bzlib support (reading .bz2 files)])
 
+AC_ARG_WITH(gui,
+ [  --with-gui                    build GUI (requires wxWidgets)])
+
+WX_CONFIG_OPTIONS
+
 # Checks for programs.
 AC_PROG_CXX
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
@@ -41,6 +46,18 @@ if test "x$with_bzlib" != xno; then
    bzlib.h header was not found. Either use flag --without-bzlib or install
    bzlib library (including header files).
  ])])
+fi
+
+if test "x$with_gui" = xyes; then
+    AM_PATH_WXCONFIG([3.0.0], [], [AC_MSG_ERROR([
+              wxWidgets must be installed on your system
+              but wx-config script could not be found.
+
+              Please check that wx-config is in path, the directory
+              where wxWidgets libraries are installed (returned by
+              'wx-config --libs' command) is in LD_LIBRARY_PATH or
+              equivalent variable and wxWindows version is 3.0.0 or above.])],
+                     [adv,core,base])
 fi
 
 # Checks for header files.
@@ -72,6 +89,20 @@ elif test "$ac_cv_header_tr1_memory" != "yes" && test $uses_tr1_memory = "1"; th
     sed -i.bak 's/\(#define XYLIB_USE_TR1_MEMORY\) 1/\1 0/' $srcdir/xylib/cache.h
 fi
 
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
+#ifdef _WIN32
+choke me
+#endif
+]])],
+[windows_host=no], [windows_host=yes])
+
+if test "$windows_host" = "yes" && test "x$with_gui" = xyes; then
+    AC_CHECK_TOOL(WINDRES, windres)
+    if test "x$WINDRES" = "x"; then
+        AC_MSG_ERROR([Required resource tool 'windres' not found on PATH.])
+    fi
+fi
+
 # this is used in Makefile.am to define XYLIB_DLL when building xyconv
 AM_CONDITIONAL(USE_XYLIB_DLL, false)
 case $host in
@@ -79,6 +110,9 @@ case $host in
         AM_CONDITIONAL(USE_XYLIB_DLL, test "X$enable_static" = "Xno")
     ;;
 esac
+
+AM_CONDITIONAL([BUILD_GUI], [test "x$with_gui" = xyes])
+AM_CONDITIONAL([WINDOWS], [test "$windows_host" = yes])
 
 AC_SUBST(XYLIB_ADDLIB)
 
