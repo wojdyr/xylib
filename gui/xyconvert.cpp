@@ -62,6 +62,16 @@ bool App::OnInit()
 
     wxFrame *frame = new wxFrame(NULL, wxID_ANY, "xyConvert");
 
+#ifdef __WXOSX__
+    wxMenu* dummy_menu = new wxMenu;
+    dummy_menu->Append(wxID_ABOUT, "&About xyConvert");
+    dummy_menu->Append(wxID_EXIT, "");
+    wxMenuBar *menuBar = new wxMenuBar();
+    menuBar->Append(dummy_menu, " ");
+    frame->SetMenuBar(menuBar);
+    Connect(wxID_ABOUT, wxEVT_MENU, wxCommandEventHandler(App::OnAbout));
+#endif
+
 #ifdef __WXMSW__
     // use icon resource, the name is assigned in xyconvert.rc
     frame->SetIcon(wxIcon("a_xyconvert"));
