@@ -122,7 +122,8 @@ samples/D1A5.dat
 samples/PSI_DMC.dat
 
 # Spectra Omicron XPS data example
-https://raw.github.com/Yohko/xylibformats/c499304a57f8de77e7a8222cd7f6db72ab9016a7/examples/spectra_example.1
+# from https://github.com/Yohko/importtool/blob/master/samples/Spectra.1
+samples/Spectra.1
 
 # SpecsLab2 xy-file with some XPS and XAS spectra, from Matthias Richter
 samples/specsxy_example.xy
