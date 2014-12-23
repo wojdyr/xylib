@@ -86,18 +86,13 @@ and ``xylib/*.cpp``
 MISC NOTES
 ==========
 
-The file `sample-urls`__ contains links to files in formats handled by xylib.
+Examples of supported files: `sample-urls`__.
 
 __ https://raw.github.com/wojdyr/xylib/master/sample-urls
 
-Documentation for programmers who want to extend xylib is
-in the file `README.dev`__.
+How to add a new format to xylib (for programmers): `README.dev`__.
 
 __ https://raw.github.com/wojdyr/xylib/master/README.dev
-
-freecode__ provides new version notifications.
-
-__ http://freecode.com/projects/xylib
 
 xylib is used by:
 

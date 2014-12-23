@@ -9,6 +9,8 @@ REQUESTED FORMATS
 * JCAMP format (Standard NMR Data Format)
 * GSAS format (see gsas.cpp for comments) 
 * Thermo GRAMS/32 SPC
+* Rigaku raw file from Miniflex2 XRD. Low priority - Rigaku devs refused to
+  show a spec ("The MiniFlex *.raw is Rigaku proprietary binary file format")
 
 note: These formats wait for volunteers. Or at least for a code that
       could be adapted and included in this library.
