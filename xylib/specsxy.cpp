@@ -9,7 +9,6 @@
 
 
 #define BUILDING_XYLIB
-#define UNICODE
 #include "specsxy.h"
 
 #include <cmath>
