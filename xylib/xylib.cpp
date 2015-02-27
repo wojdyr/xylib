@@ -493,6 +493,11 @@ DataSet* guess_and_load_stream(istream &is,
     return load_stream_of_format(is, fi, options);
 }
 
+// MSVC has no S_ISDIR
+#ifndef S_ISDIR
+# define S_ISDIR(mode) ((mode&S_IFMT) == S_IFDIR)
+#endif
+
 static bool is_directory(string const& path)
 {
     struct stat buf;
