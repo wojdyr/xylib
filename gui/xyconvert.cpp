@@ -5,6 +5,7 @@
 #include <wx/aboutdlg.h>
 #include <wx/cmdline.h>
 #include <wx/filepicker.h>
+#include <wx/settings.h>
 #include "xyconvert16.xpm"
 #include "xyconvert48.xpm"
 #include "xybrowser.h"
@@ -129,7 +130,8 @@ bool App::OnInit()
 
     frame->SetSizerAndFit(sizer);
 #ifdef __WXGTK__
-    frame->SetSize(-1, 550);
+    int screen_height = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y);
+    frame->SetSize(-1, screen_height > 760 ? 680 : 550);
 #endif
 
 #ifdef __WXMSW__
@@ -182,12 +184,12 @@ void App::OnConvert(wxCommandEvent&)
                 break;
             if (answer != wxYES)
                 continue;
-
         }
-        FILE *f = fopen(new_filename.mb_str(), "w");
+        FILE *f = NULL;
         try {
             wxBusyCursor wait;
-            xylib::DataSet const *ds = xylib::load_file(paths[i].ToStdString(),
+            xylib::DataSet const *ds = xylib::load_file(
+                                            (const char*) paths[i].fn_str(),
                                             browser->get_filetype(), options);
             xylib::Block const *block = ds->get_block(block_nr);
             xylib::Column const& xcol = block->get_column(idx_x);
@@ -196,10 +198,10 @@ void App::OnConvert(wxCommandEvent&)
                                                  : NULL);
             const int np = block->get_point_count();
 
+            f = fopen((const char*)new_filename.fn_str(), "w");
             if (with_header) {
                 fprintf(f, "# converted by xyConvert %s from file:\n# %s\n",
-                        xylib_get_version(),
-                        (const char *)new_filename.mb_str());
+                        xylib_get_version(), (const char*)paths[i].utf8_str());
                 if (ds->get_block_count() > 1)
                     fprintf(f, "# (block %d) %s\n", block_nr,
                                                     block->get_name().c_str());
@@ -227,7 +229,8 @@ void App::OnConvert(wxCommandEvent&)
         } catch (runtime_error const& e) {
             wxMessageBox(e.what(), "Error", wxCANCEL|wxICON_ERROR);
         }
-        fclose(f);
+        if (f != NULL)
+            fclose(f);
     }
 }
 
@@ -235,11 +238,14 @@ void App::OnAbout(wxCommandEvent&)
 {
     wxAboutDialogInfo adi;
     adi.SetVersion(xylib_get_version());
-    wxString desc = "A simple converter of files supported by xylib library\n"
-                    "to two- or three-column text format.\n";
+    wxString desc = "A simple converter based on the xylib library.\n"
+                    "It can convert files supported by xylib\n"
+                    "into two- or three-column text format.\n"
+                    "This tool is designed to convert multiple files\n"
+                    "so the output filename is not explicit.";
     adi.SetDescription(desc);
     adi.SetWebSite("http://xylib.sf.net/");
-    adi.SetCopyright("(C) 2008-2014 Marcin Wojdyr <wojdyr@gmail.com>");
+    adi.SetCopyright("(C) 2008-2015 Marcin Wojdyr <wojdyr@gmail.com>");
     wxAboutBox(adi);
 }
 

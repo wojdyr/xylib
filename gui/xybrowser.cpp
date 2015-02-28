@@ -180,7 +180,7 @@ XyFileBrowser::XyFileBrowser(wxWindow* parent)
 
     // ----- right upper panel -----
     text_preview =  new wxTextCtrl(rupper_panel, -1, wxT(""),
-                                   wxDefaultPosition, wxSize(200, -1),
+                                   wxDefaultPosition, wxSize(300, -1),
                                    wxTE_RICH|wxTE_READONLY|wxTE_MULTILINE);
     rupper_sizer->Add(text_preview, 1, wxEXPAND|wxALL, 5);
     auto_text_cb = new wxCheckBox(rupper_panel, -1,

@@ -69,7 +69,7 @@ add_library(xy
             xylib/xylib.cpp)
 
 target_link_libraries(xy ${ZLIB_LIBRARIES} ${BZIP2_LIBRARIES})
-set_target_properties(xy PROPERTIES SOVERSION 3 VERSION "3.3.0")
+set_target_properties(xy PROPERTIES SOVERSION 3 VERSION 3.3.0)
 
 add_executable(xyconv xyconv.cpp)
 target_link_libraries(xyconv xy ${ZLIB_LIBRARIES} ${BZIP2_LIBRARIES})
