@@ -342,8 +342,15 @@ void XyFileBrowser::update_text_preview()
     wxString path = get_one_path();
     if (!path.empty() && wxFileExists(path)) {
         int bytes_read = wxFile(path).Read(buffer, buf_size-1);
-        text_preview->SetValue(wxString(buffer));
-        if (bytes_read == buf_size-1) {
+        wxString str(buffer); // implicit conversion using current locale
+        if (str.empty())
+            str = wxString::From8BitData(buffer, bytes_read);
+        for (wxString::iterator i = str.begin(); i != str.end(); ++i)
+            if (*i == '\0')
+                *i = '\1';
+        printf("len %d - %d\n", str.Length(), bytes_read);
+        text_preview->SetValue(str);
+        if (!str.empty() && bytes_read == buf_size-1) {
             text_preview->SetDefaultStyle(wxTextAttr(*wxBLACK, *wxYELLOW));
             text_preview->AppendText(
                     "\nThis preview shows only the first 64kb of file.\n");
@@ -364,7 +371,8 @@ void XyFileBrowser::update_plot_preview()
             string options;
             if (comma_cb->GetValue())
                 options = "decimal-comma";
-            plot_preview->load_dataset(path.ToStdString(), get_filetype(),
+            plot_preview->load_dataset((const char*) path.fn_str(),
+                                       get_filetype(),
                                        options);
         }
     } else
