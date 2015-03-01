@@ -4,8 +4,10 @@
 #include <wx/wx.h>
 #include <wx/aboutdlg.h>
 #include <wx/cmdline.h>
+#include <wx/filefn.h>
 #include <wx/filepicker.h>
 #include <wx/settings.h>
+#include <wx/infobar.h>
 #include "xyconvert16.xpm"
 #include "xyconvert48.xpm"
 #include "xybrowser.h"
@@ -26,6 +28,7 @@ private:
     wxDirPickerCtrl *dirpicker;
     XyFileBrowser *browser;
     wxTextCtrl *ext_tc;
+    wxInfoBar *info_bar;
 };
 
 DECLARE_APP(App)
@@ -84,6 +87,8 @@ bool App::OnInit()
 #endif
 
     wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
+    info_bar = new wxInfoBar(frame);
+    sizer->Add(info_bar, wxSizerFlags().Expand());
     browser = new XyFileBrowser(frame);
     sizer->Add(browser, wxSizerFlags(1).Expand());
 
@@ -125,7 +130,11 @@ bool App::OnInit()
             browser->update_file_options();
         }
     }
-    dirpicker->SetPath(browser->filectrl->GetDirectory());
+    wxString ini_directory = browser->filectrl->GetDirectory();
+    if (ini_directory.empty())
+        dirpicker->SetPath(wxGetCwd());
+    else
+        dirpicker->SetPath(ini_directory);
     dirpicker->Enable(false);
 
     frame->SetSizerAndFit(sizer);
@@ -171,6 +180,7 @@ void App::OnConvert(wxCommandEvent&)
     if (dec_comma)
         options = "decimal-comma";
 
+    int conv_counter = 0;
     for (size_t i = 0; i < paths.GetCount(); ++i) {
         wxFileName old_filename(paths[i]);
         wxString fn = old_filename.GetName() + "." + ext_tc->GetValue();
@@ -199,6 +209,11 @@ void App::OnConvert(wxCommandEvent&)
             const int np = block->get_point_count();
 
             f = fopen((const char*)new_filename.fn_str(), "w");
+            if (!f) {
+                wxMessageBox("Cannot open file for writing:\n" + new_filename,
+                             "Error", wxOK|wxICON_ERROR);
+                continue;
+            }
             if (with_header) {
                 fprintf(f, "# converted by xyConvert %s from file:\n# %s\n",
                         xylib_get_version(), (const char*)paths[i].utf8_str());
@@ -226,11 +241,21 @@ void App::OnConvert(wxCommandEvent&)
                     fprintf(f, "\t%.9g", ecol->get_value(j));
                 fprintf(f, "\n");
             }
+            conv_counter++;
         } catch (runtime_error const& e) {
-            wxMessageBox(e.what(), "Error", wxCANCEL|wxICON_ERROR);
+            wxMessageBox(e.what(), "Error", wxOK|wxICON_ERROR);
         }
         if (f != NULL)
             fclose(f);
+    }
+    if (conv_counter >= 1) {
+        wxString str = "[" + wxDateTime::Now().FormatISOTime() + "]   ";
+        if (conv_counter == 1)
+            str += "1 file converted";
+        else
+            str += wxString::Format("%d files converted", conv_counter);
+
+        info_bar->ShowMessage(str, wxICON_INFORMATION);
     }
 }
 

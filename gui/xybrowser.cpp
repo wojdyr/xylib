@@ -348,7 +348,6 @@ void XyFileBrowser::update_text_preview()
         for (wxString::iterator i = str.begin(); i != str.end(); ++i)
             if (*i == '\0')
                 *i = '\1';
-        printf("len %d - %d\n", str.Length(), bytes_read);
         text_preview->SetValue(str);
         if (!str.empty() && bytes_read == buf_size-1) {
             text_preview->SetDefaultStyle(wxTextAttr(*wxBLACK, *wxYELLOW));
