@@ -370,7 +370,7 @@ void XyFileBrowser::update_plot_preview()
             string options;
             if (comma_cb->GetValue())
                 options = "decimal-comma";
-            plot_preview->load_dataset((const char*) path.fn_str(),
+            plot_preview->load_dataset((const char*) path.ToUTF8(),
                                        get_filetype(),
                                        options);
         }

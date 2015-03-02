@@ -5,6 +5,7 @@
 #include <wx/aboutdlg.h>
 #include <wx/cmdline.h>
 #include <wx/filefn.h>
+#include <wx/ffile.h>
 #include <wx/filepicker.h>
 #include <wx/settings.h>
 #include <wx/infobar.h>
@@ -138,10 +139,10 @@ bool App::OnInit()
     dirpicker->Enable(false);
 
     frame->SetSizerAndFit(sizer);
-#ifdef __WXGTK__
+//#ifdef __WXGTK__
     int screen_height = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y);
     frame->SetSize(-1, screen_height > 760 ? 680 : 550);
-#endif
+//#endif
 
 #ifdef __WXMSW__
     // wxMSW bug workaround
@@ -181,11 +182,12 @@ void App::OnConvert(wxCommandEvent&)
         options = "decimal-comma";
 
     int conv_counter = 0;
+    wxString new_path;
     for (size_t i = 0; i < paths.GetCount(); ++i) {
         wxFileName old_filename(paths[i]);
         wxString fn = old_filename.GetName() + "." + ext_tc->GetValue();
-        wxString new_filename = dirpicker->GetPath() + wxFILE_SEP_PATH + fn;
-        if (!overwrite->GetValue() && wxFileExists(new_filename)) {
+        new_path = dirpicker->GetPath() + wxFILE_SEP_PATH + fn;
+        if (!overwrite->GetValue() && wxFileExists(new_path)) {
             int answer = wxMessageBox("File " + fn + " exists.\n"
                                       "Overwrite?",
                                       "Overwrite?",
@@ -195,11 +197,10 @@ void App::OnConvert(wxCommandEvent&)
             if (answer != wxYES)
                 continue;
         }
-        FILE *f = NULL;
         try {
             wxBusyCursor wait;
             xylib::DataSet const *ds = xylib::load_file(
-                                            (const char*) paths[i].fn_str(),
+                                            (const char*) paths[i].ToUTF8(),
                                             browser->get_filetype(), options);
             xylib::Block const *block = ds->get_block(block_nr);
             xylib::Column const& xcol = block->get_column(idx_x);
@@ -208,50 +209,50 @@ void App::OnConvert(wxCommandEvent&)
                                                  : NULL);
             const int np = block->get_point_count();
 
-            f = fopen((const char*)new_filename.fn_str(), "w");
-            if (!f) {
-                wxMessageBox("Cannot open file for writing:\n" + new_filename,
+            wxFFile f(new_path, "w");
+            if (!f.IsOpened()) {
+                wxMessageBox("Cannot open file for writing:\n" + new_path,
                              "Error", wxOK|wxICON_ERROR);
                 continue;
             }
             if (with_header) {
-                fprintf(f, "# converted by xyConvert %s from file:\n# %s\n",
-                        xylib_get_version(), (const char*)paths[i].utf8_str());
+                f.Write(wxString("# Converted by xyConvert ") +
+                        xylib_get_version() + ".\n"
+                        "# Original file: " + paths[i] + "\n");
                 if (ds->get_block_count() > 1)
-                    fprintf(f, "# (block %d) %s\n", block_nr,
-                                                    block->get_name().c_str());
+                    fprintf(f.fp(), "# (block %d) %s\n",
+                            block_nr, block->get_name().c_str());
                 if (block->get_column_count() > 2) {
                     string xname = (xcol.get_name().empty() ? string("x")
                                                             : xcol.get_name());
                     string yname = (ycol.get_name().empty() ? string("y")
                                                             : ycol.get_name());
-                    fprintf(f, "#%s\t%s", xname.c_str(), yname.c_str());
+                    fprintf(f.fp(), "#%s\t%s", xname.c_str(), yname.c_str());
                     if (has_err) {
                         string ename = (ecol->get_name().empty() ? string("err")
                                                             : ecol->get_name());
-                        fprintf(f, "\t%s", ename.c_str());
+                        fprintf(f.fp(), "\t%s", ename.c_str());
                     }
-                    fprintf(f, "\n");
+                    fprintf(f.fp(), "\n");
                 }
             }
 
             for (int j = 0; j < np; ++j) {
-                fprintf(f, "%.9g\t%.9g", xcol.get_value(j), ycol.get_value(j));
+                fprintf(f.fp(), "%.9g\t%.9g",
+                        xcol.get_value(j), ycol.get_value(j));
                 if (has_err)
-                    fprintf(f, "\t%.9g", ecol->get_value(j));
-                fprintf(f, "\n");
+                    fprintf(f.fp(), "\t%.9g", ecol->get_value(j));
+                fprintf(f.fp(), "\n");
             }
             conv_counter++;
         } catch (runtime_error const& e) {
             wxMessageBox(e.what(), "Error", wxOK|wxICON_ERROR);
         }
-        if (f != NULL)
-            fclose(f);
     }
     if (conv_counter >= 1) {
         wxString str = "[" + wxDateTime::Now().FormatISOTime() + "]   ";
         if (conv_counter == 1)
-            str += "1 file converted";
+            str += "file converted: " + new_path;
         else
             str += wxString::Format("%d files converted", conv_counter);
 

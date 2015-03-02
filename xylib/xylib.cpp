@@ -47,6 +47,10 @@
 
 #include <vector>
 #include <map>
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h> // MultiByteToWideChar
+#endif
 
 using namespace std;
 using namespace xylib;
@@ -409,7 +413,7 @@ struct decompressing_istreambuf : public std::streambuf
 
     void init_buf()
     {
-        bufavail_ = 512;
+        bufavail_ = 2048;
         bufdata_ = (char*) malloc(bufavail_);
         writeptr_ = bufdata_;
     }
@@ -510,16 +514,26 @@ static bool is_directory(string const& path)
 DataSet* load_file(string const& path, string const& format_name,
                    string const& options)
 {
+    int len = (int)path.size();
+#if defined(_WIN32)
+    vector<wchar_t> wpath;
+    //MultiByteToWideChar(CP_UTF8, 0, path.c_str(), path.size(), 0, 0);
+    wpath.resize(len + 1); // should be enough
+    MultiByteToWideChar(CP_UTF8, 0, path.c_str(), len, &wpath[0], len);
+#endif
     DataSet *ret = NULL;
     // open stream
-    int len = (int) path.size();
     bool gzipped = (len > 3 && path.substr(len-3) == ".gz");
     bool bz2ed = (len > 4 && path.substr(len-4) == ".bz2");
     if (is_directory(path)) {
         throw RunTimeError("It is a directory, not a file: " + path);
     } else if (gzipped) {
 #ifdef HAVE_LIBZ
+#if defined(_WIN32)
+        gzFile gz_stream = gzopen_w(wpath.data(), "rb");
+#else
         gzFile gz_stream = gzopen(path.c_str(), "rb");
+#endif
         if (!gz_stream) {
             throw RunTimeError("can't open .gz input file: " + path);
         }
@@ -532,6 +546,7 @@ DataSet* load_file(string const& path, string const& format_name,
 #endif //HAVE_LIBZ
     } else if (bz2ed) {
 #ifdef HAVE_LIBBZ2
+        // not used much on Windows I suppose
         BZFILE* bz_stream = BZ2_bzopen(path.c_str(), "rb");
         if (!bz_stream) {
             throw RunTimeError("can't open .bz2 input file: " + path);
@@ -544,7 +559,11 @@ DataSet* load_file(string const& path, string const& format_name,
         throw RunTimeError("Program is compiled with disabled bzlib support.");
 #endif //HAVE_LIBBZ2
     } else {
+#if defined(_WIN32)
+        ifstream is(wpath.data(), ios::in | ios::binary);
+#else
         ifstream is(path.c_str(), ios::in | ios::binary);
+#endif
         if (!is)
             throw RunTimeError("can't open input file: " + path);
         ret = guess_and_load_stream(is, path, format_name, options);
