@@ -126,7 +126,7 @@ float convert_time(const char* p)
     uint64_t d;
     memcpy(&d, p, sizeof(d));
     le_to_host(&d, sizeof(d));
-    return (~d) * 1.0e-7;
+    return (~d) * 1.0e-7f;
 }
 
 

@@ -78,7 +78,8 @@ Block* SpectraDataSet::read_block(istream& f)
     pStart = pEnd;
     double dwell = strtod(pStart,&pEnd);
     pStart = pEnd;
-    long points = strtod(pStart,&pEnd);
+    // supposedly it's always integer, but using strtod just in case
+    long points = (long) strtod(pStart,&pEnd);
     pStart = pEnd;
     double epass = strtod(pStart,&pEnd);
     pStart = pEnd;
