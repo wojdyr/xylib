@@ -43,6 +43,13 @@ endif()
 # configure.ac changes XYLIB_USE_TR1_MEMORY in cache.h (which is a bit tricky
 # and may not be a good idea). Here we leave it as it is.
 
+
+if (MSVC)
+    # warning C4275: non dll-interface class 'std::runtime_error' used as base
+    # for dll-interface class ...
+    add_definitions( /wd4275 )
+endif()
+
 add_library(xy
             xylib/brucker_raw.cpp
             xylib/cache.cpp
