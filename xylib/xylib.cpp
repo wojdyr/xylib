@@ -48,8 +48,11 @@
 #include <vector>
 #include <map>
 #ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h> // MultiByteToWideChar
+# define WIN32_LEAN_AND_MEAN
+# include <windows.h> // MultiByteToWideChar
+# if defined(__GLIBCXX__)
+#  include <ext/stdio_filebuf.h> // __gnu_cxx::stdio_filebuf
+# endif
 #endif
 
 using namespace std;
@@ -559,14 +562,30 @@ DataSet* load_file(string const& path, string const& format_name,
         throw RunTimeError("Program is compiled with disabled bzlib support.");
 #endif //HAVE_LIBBZ2
     } else {
-#if defined(_WIN32)
-        ifstream is(wpath.data(), ios::in | ios::binary);
+#if defined(_MSC_VER)
+        ifstream is(&wpath[0], ios::in | ios::binary);
+#elif defined(_WIN32) && defined(__GLIBCXX__)
+        // based on http://stackoverflow.com/a/19271763/104453
+        // and https://sf.net/p/mingw-w64/mailman/message/29714455/
+        FILE* c_file = _wfopen(&wpath[0], L"rb");
+        if (c_file == NULL)
+            throw RunTimeError("can't open input file: " + path);
+        try {
+         __gnu_cxx::stdio_filebuf<char> fbuf(c_file, ios::in | ios::binary, 1);
+         iostream is(&fbuf);
 #else
         ifstream is(path.c_str(), ios::in | ios::binary);
 #endif
         if (!is)
             throw RunTimeError("can't open input file: " + path);
         ret = guess_and_load_stream(is, path, format_name, options);
+#if defined(_WIN32) && defined(__GLIBCXX__)
+        } catch (...) {
+            fclose(c_file);
+            throw;
+        }
+        fclose(c_file);
+#endif
     }
     return ret;
 }
