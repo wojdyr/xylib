@@ -16,15 +16,15 @@ void print_usage()
     cout <<
 "Usage:\n"
 "\txyconv [-t FILETYPE] [-x OPTION] INPUT_FILE OUTPUT_FILE\n"
-"\txyconv [-t FILETYPE] [-x OPTION] -m INPUT_FILE1 ...\n"
+"\txyconv [-t FILETYPE] [-x OPTION] -m DIR INPUT_FILE1 ...\n"
 "\txyconv -i FILETYPE\n"
 "\txyconv -g INPUT_FILE ...\n"
 "\txyconv [-l|-v|-h]\n"
 "  Converts INPUT_FILE to ascii OUTPUT_FILE\n"
 "  -t     specify filetype of input file\n"
 "  -x     specify option for filetype (can be used more than once)\n"
-"  -m     convert one or multiple files; output files have the same name\n"
-"         as input, but with extension changed to .xy\n"
+"  -m DIR convert one or multiple files; output files are written in DIR,\n"
+"         with the same basename and extension .xy\n"
 "  -l     list all supported file types\n"
 "  -v     output version information and exit\n"
 "  -h     show this help message and exit\n"
@@ -205,6 +205,21 @@ int convert_file(string const& input, string const& output,
     return 0;
 }
 
+string get_basename(const string& path)
+{
+#ifdef _WIN32
+    size_t last_sep = path.find_last_of("\\/");
+#else
+    size_t last_sep = path.rfind('/');
+#endif
+    size_t start = last_sep == string::npos ? 0 : last_sep + 1;
+    size_t end = path.rfind('.');
+    if (end != string::npos && end > start)
+        return path.substr(start, end-start);
+    else
+        return path.substr(start);
+}
+
 int main(int argc, char **argv)
 {
     // options -l -h -i -g -v are not combined with other options
@@ -236,13 +251,17 @@ int main(int argc, char **argv)
 
     string filetype;
     string options;
-    bool option_m = false;
+    string option_m;
     bool option_s = false;
     int n = 1;
     while (n < argc - 1) {
         if (strcmp(argv[n], "-m") == 0) {
-            option_m = true;
-            ++n;
+            option_m = argv[n+1];
+            if (!xylib::is_directory(option_m)) {
+                cerr << "Directory does not exist: " << option_m << endl;
+                return 1;
+            }
+            n += 2;
         }
         else if (strcmp(argv[n], "-s") == 0) {
             option_s = true;
@@ -259,25 +278,15 @@ int main(int argc, char **argv)
         else
             break;
     }
-    if (!option_m && n != argc - 2) {
+    if (option_m.empty() && n != argc - 2) {
         print_usage();
         return -1;
     }
-    if (option_m) {
+    if (!option_m.empty()) {
         for ( ; n < argc; ++n) {
-            string out = argv[n];
-            size_t p = out.rfind('.');
-            if (p != string::npos) {
-                if (out.substr(p) == ".xy") {
-                    cout << "Skipping file with extension xy: " << argv[n]
-                         << endl;
-                    continue;
-                }
-                out.erase(p);
-            }
-            out += ".xy";
-            cout << "converting " << argv[n] << " to " << out << endl;
-            convert_file(argv[n], out, filetype, options, !option_s);
+            string path = option_m + "/" + get_basename(argv[n]) + ".xy";
+            cout << "converting " << argv[n] << " to " << path << endl;
+            convert_file(argv[n], path, filetype, options, !option_s);
         }
         return 0;
     }
