@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(xylib C CXX)
 
 option(USE_ZLIB "Handle compressed GZ files - requires Zlib library" ON)
+option(DOWNLOAD_ZLIB "Download and build the Zlib library" OFF)
 option(USE_BZIP2 "Handle compressed BZ2 files - requires Bzip2 library" ON)
 option(GUI "Build xyConvert GUI - requires wxWidgets 3.0+" ON)
 option(BUILD_SHARED_LIBS "Build as a shared library" ON)
@@ -24,16 +25,57 @@ if (BUILD_SHARED_LIBS AND WIN32)
   add_definitions(-DXYLIB_DLL=1)
 endif()
 
-if (USE_ZLIB)
+if (DOWNLOAD_ZLIB)
+  include(ExternalProject)
+  set(zlib_install "${CMAKE_INSTALL_PREFIX}")
+  ExternalProject_Add(zlib
+    URL "http://zlib.net/zlib-1.2.8.tar.gz"
+    URL_MD5 44d667c142d7cda120332623eab69f40
+    PREFIX zlib
+    CMAKE_ARGS -DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
+               -DCMAKE_INSTALL_PREFIX:PATH=${zlib_install}
+               -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+               -DSKIP_INSTALL_FILES=ON)
+
+# the zlib library should be named zlib1.lib not zlib.lib
+#    ExternalProject_Add_Step(zlib RenameLib
+#    COMMAND ${CMAKE_COMMAND} -E copy "${zlib_install}/lib/zlib.lib"
+#    "${zlib_install}/lib/zlib1.lib"
+#    DEPENDEES install)
+  set(ZLIB_INCLUDE_DIR "${zlib_install}/include")
+  if (BUILD_SHARED_LIBS)
+    if (WIN32)
+      set(ZLIB_SUFFIX ${CMAKE_IMPORT_LIBRARY_SUFFIX})
+    else()
+      set(ZLIB_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
+    endif()
+  else()
+    set(ZLIB_SUFFIX ${CMAKE_STATIC_LIBRARY_SUFFIX})
+  endif()
+  if (NOT WIN32)
+    set(ZLIB_NAME libz)
+  elseif (BUILD_SHARED_LIBS)
+    set(ZLIB_NAME zlib)
+  else() # static windows
+    set(ZLIB_NAME zlibstatic)
+  endif()
+  set(ZLIB_LIBRARIES "${zlib_install}/lib/${ZLIB_NAME}${ZLIB_SUFFIX}")
+  add_definitions(-DHAVE_LIBZ=1)
+  include_directories(${ZLIB_INCLUDE_DIR})
+  message(STATUS "Using local zlib: ${ZLIB_LIBRARIES}")
+
+elseif (USE_ZLIB)
   find_package(ZLIB REQUIRED)
   add_definitions(-DHAVE_LIBZ=1)
   include_directories(${ZLIB_INCLUDE_DIR})
 endif()
+
 if (USE_BZIP2)
   find_package(BZip2 REQUIRED)
   add_definitions(-DHAVE_LIBBZ2=1)
   include_directories(${Bzip2_INCLUDE_DIR})
 endif()
+
 if (GUI)
   set(wxWidgets_wxrc_EXECUTABLE no_thanks)
   find_package(wxWidgets REQUIRED adv core base)
@@ -75,6 +117,9 @@ add_library(xy
             xylib/xfit_xdd.cpp
             xylib/xylib.cpp)
 
+if (DOWNLOAD_ZLIB)
+  add_dependencies(xy zlib)
+endif()
 target_link_libraries(xy ${ZLIB_LIBRARIES} ${BZIP2_LIBRARIES})
 set_target_properties(xy PROPERTIES SOVERSION 3 VERSION 3.3.0)
 
