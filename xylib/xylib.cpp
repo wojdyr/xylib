@@ -502,7 +502,7 @@ DataSet* guess_and_load_stream(istream &is,
 # define S_ISDIR(mode) ((mode&S_IFMT) == S_IFDIR)
 #endif
 
-static bool is_directory(string const& path)
+bool is_directory(string const& path)
 {
     struct stat buf;
     if (stat(path.c_str(), &buf) != 0)

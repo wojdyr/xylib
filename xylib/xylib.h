@@ -332,6 +332,9 @@ XYLIB_API bool check_format(FormatInfo const* fi, std::istream& f,
 /// "ASCII X Y Files (*)|*|Sietronics Sieray CPI (*.cpi)|*.cpi"
 XYLIB_API std::string get_wildcards_string(std::string const& all_files="*");
 
+// a little helper, checks if path exists and is directory
+XYLIB_API bool is_directory(std::string const& path);
+
 } // namespace xylib
 
 // For internal use only.
