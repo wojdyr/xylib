@@ -212,14 +212,12 @@ void SpecsxyDataSet::load_data(std::istream &f){
         double xval=0.0, yval=0.0;
         string option="";
 		string xcolname = "";
-        bool read = true;
 		int ScanMode = 0;
 
-        while(read){
+        while(1){
             getline(f, str);
             line+=1;
             if (f.eof()){// hit EOF
-                    read= false;
                     break;
             }
             str=str_trim(str);

@@ -466,8 +466,10 @@ template <typename IteratorT>
 void t_on_loop_finish::operator()(IteratorT, IteratorT) const
 {
     int ncol = (int) da.loop_tags.size();
+    if (ncol == 0)
+        return;
     int nrow = (int) da.loop_values.size() / ncol;
-    if (ncol == 0 || nrow == 0)
+    if (nrow == 0)
         return;
     vector<VecColumn*> cols;
     for (int i = 0; i < ncol; ++i) {

@@ -37,7 +37,7 @@ bool SpectraDataSet::check(istream &f, string*)
         if (!f || f.gcount() > 30)
             return false;
         char *endptr;
-        strtol(line, &endptr, 10);
+        (void) strtol(line, &endptr, 10);
         if (endptr == line)
             return false;
         while (isspace(*endptr))

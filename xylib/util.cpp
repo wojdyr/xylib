@@ -376,7 +376,7 @@ int count_numbers(const char* p)
     int n = 0;
     while (*p != '\0') {
         char *endptr;
-        strtod(p, &endptr);
+        (void) strtod(p, &endptr);
         if (p == endptr) // no more numbers
             break;
         ++n;

@@ -45,7 +45,7 @@ bool Riet7DataSet::check(istream &f, string*)
         startptr = endptr;
         double step = strtod(startptr, &endptr);
         startptr = endptr;
-        double stop = strtod(endptr, &endptr);
+        double stop = strtod(startptr, &endptr);
         double dcount = (stop - start) / step + 1;
         int count = iround(dcount);
         if (count < 4 || fabs(count - dcount) > 1e-2)
