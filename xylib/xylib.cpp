@@ -538,6 +538,9 @@ DataSet* load_file(string const& path, string const& format_name,
     // open stream
     bool gzipped = (len > 3 && path.substr(len-3) == ".gz");
     bool bz2ed = (len > 4 && path.substr(len-4) == ".bz2");
+    if ((gzipped && len > 7 && path.substr(len-7) == ".tar.gz") ||
+            (bz2ed && len > 8 && path.substr(len-8) == ".tar.bz2"))
+        throw RunTimeError("Refusing to read a tarball: " + path);
     if (is_directory(path)) {
         throw RunTimeError("It is a directory, not a file: " + path);
     } else if (gzipped) {
