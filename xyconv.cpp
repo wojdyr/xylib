@@ -8,6 +8,10 @@
 #include <string.h>
 
 #include "xylib/xylib.h"
+#ifdef _WIN32
+# define WIN32_LEAN_AND_MEAN
+# include <windows.h> // GetShortPathName
+#endif
 
 using namespace std;
 
@@ -50,6 +54,20 @@ void list_supported_formats()
              << format->desc << endl;
 }
 
+#if _WIN32
+string short_path(const char* path)
+{
+    string short_path;
+    short_path.resize(GetShortPathNameA(path, NULL, 0));
+    if (short_path.empty()) // failed, try path anyway
+        short_path = path;
+    else
+        GetShortPathNameA(path, &short_path[0], short_path.size());
+    return short_path;
+#endif
+
+
+}
 int print_guessed_filetype(int n, char** paths)
 {
     bool ok = true;
@@ -58,7 +76,11 @@ int print_guessed_filetype(int n, char** paths)
         if (n > 1)
             cout << path << ": ";
         try {
+#if _WIN32
+            ifstream is(short_path(path).c_str());
+#else
             ifstream is(path);
+#endif
             if (!is) {
                 cout << "Error: can't open input file: " << path << endl;
                 ok = false;
@@ -182,7 +204,12 @@ int convert_file(string const& input, string const& output,
                  bool with_metadata)
 {
     try {
-        xylib::DataSet *d = xylib::load_file(input, filetype, options);
+#if _WIN32
+        string input_s = short_path(input.c_str());
+#else
+        const string& input_s = input;
+#endif
+        xylib::DataSet *d = xylib::load_file(input_s, filetype, options);
         // validate options
         for (const char *p = options.c_str(); *p != '\0'; ) {
             while (isspace(*p))
