@@ -54,7 +54,7 @@ void list_supported_formats()
              << format->desc << endl;
 }
 
-#if _WIN32
+#ifdef _WIN32
 string short_path(const char* path)
 {
     string short_path;
@@ -64,10 +64,9 @@ string short_path(const char* path)
     else
         GetShortPathNameA(path, &short_path[0], short_path.size());
     return short_path;
+}
 #endif
 
-
-}
 int print_guessed_filetype(int n, char** paths)
 {
     bool ok = true;
@@ -76,7 +75,7 @@ int print_guessed_filetype(int n, char** paths)
         if (n > 1)
             cout << path << ": ";
         try {
-#if _WIN32
+#ifdef _WIN32
             ifstream is(short_path(path).c_str());
 #else
             ifstream is(path);
@@ -204,7 +203,7 @@ int convert_file(string const& input, string const& output,
                  bool with_metadata)
 {
     try {
-#if _WIN32
+#ifdef _WIN32
         string input_s = short_path(input.c_str());
 #else
         const string& input_s = input;
