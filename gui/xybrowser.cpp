@@ -13,6 +13,7 @@
 using namespace std;
 
 #ifndef XYCONVERT
+#include "cmn.h"
 #include "fityk/data.h"
 using fityk::get_file_basename;
 #else
@@ -345,6 +346,8 @@ void XyFileBrowser::update_text_preview()
         wxString str(buffer); // implicit conversion using current locale
         if (str.empty())
             str = wxString::From8BitData(buffer, bytes_read);
+        // remove nulls to display binary files (it looks better than randomly
+        // truncated binary file)
         for (wxString::iterator i = str.begin(); i != str.end(); ++i)
             if (*i == '\0')
                 *i = '\1';
