@@ -6,6 +6,7 @@
 
 #include <cassert>
 #include <cstring>
+#include <climits>  // for INT_MAX
 #include <iomanip>
 #include <algorithm>
 #include <sys/types.h>
