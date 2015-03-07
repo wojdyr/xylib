@@ -436,8 +436,8 @@ struct decompressing_istreambuf : public std::streambuf
 
     virtual streampos seekpos (streampos sp, ios_base::openmode which)
     {
-        if (which & ios_base::in && sp >= 0 && bufdata_ + sp < writeptr_) {
-            setg(bufdata_, bufdata_+sp, writeptr_);
+        if ((which & ios_base::in) && sp >= 0 &&  sp < writeptr_ - bufdata_) {
+            setg(bufdata_, bufdata_+(int)sp, writeptr_);
             return sp;
         }
         else
