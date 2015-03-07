@@ -140,9 +140,10 @@ CREDITS
 HISTORY
 =======
 
-* 1.4 ()
+* 1.4 (unreleased)
 
   - included xyConvert (GUI converter)
+  - support filenames with non-ascii characters
 
 * 1.3 (2014-01-24)
 

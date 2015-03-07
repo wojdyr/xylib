@@ -308,8 +308,10 @@ private:
 };
 
 
-/// if format_name is not given, it is guessed
-/// return value: pointer to Dataset that contains all data read from file
+/// Read file from disk. Optionally supports compressed files (.gz and .bz2).
+/// Parameter path should be in utf8 (ascii also works).
+/// If format_name is not given, it is guessed.
+/// Return value: pointer to Dataset that contains all data read from file.
 XYLIB_API DataSet* load_file(std::string const& path,
                              std::string const& format_name="",
                              std::string const& options="");
@@ -320,6 +322,7 @@ XYLIB_API DataSet* load_stream(std::istream &is,
                                std::string const& options="");
 
 /// guess a format of the file; does NOT handle compressed files
+/// If nothing matches - returns "text" (it's a fallback, not validated here)
 XYLIB_API FormatInfo const* guess_filetype(std::string const& path,
                                            std::istream &f,
                                            std::string* details);

@@ -67,13 +67,14 @@ int print_guessed_filetype(int n, char** paths)
             string details;
             xylib::FormatInfo const* fi = xylib::guess_filetype(path, is,
                                                                 &details);
-            if (fi) {
+            if (fi && strcmp(fi->name, "text") != 0) {
                 cout << fi->name << ": " << fi->desc;
                 if (!details.empty())
                     cout << " (" << details << ")";
             }
             else
-                cout << "Format of the file was not detected.";
+                // "text" is a fallback, it can be anything
+                cout << fi->name << ": unknown or text";
             cout << endl;
         } catch (runtime_error const& e) {
             cout << "Error: " << e.what() << endl;
