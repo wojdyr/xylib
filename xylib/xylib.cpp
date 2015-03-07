@@ -425,10 +425,16 @@ struct decompressing_istreambuf : public std::streambuf
     void double_buf()
     {
         int old_size = (int) (writeptr_ - bufdata_);
+        if (old_size > INT_MAX / 2) {
+            // bufdata_ will be freed in dtor
+            throw RunTimeError("We ignore very big (1GB+ uncompressed) files");
+        }
         bufdata_ = (char*) realloc(bufdata_, 2 * old_size);
-        if (!bufdata_)
+        if (!bufdata_) {
+            bufdata_ = writeptr_ - old_size; // will be freed in dtor
             throw RunTimeError("Can't allocate memory (" + S(2*old_size)
                     + " bytes).");
+        }
         // bufdata_ can be changed
         writeptr_ = bufdata_ + old_size;
         bufavail_ = old_size;
