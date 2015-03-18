@@ -12,7 +12,7 @@ namespace xylib {
 
 const FormatInfo PhilipsRawDataSet::fmt_info(
     "philips_rd",
-    "Philips RD Raw Scan V3",
+    "Philips PC-APD RD Raw Scan",
     "rd sd",
     true,                       // whether binary
     false,                      // whether has multi-blocks
@@ -78,8 +78,9 @@ void PhilipsRawDataSet::load_data(std::istream &f)
 
     VecColumn *ycol = new VecColumn;
     for (unsigned i = 0; i < pt_cnt; ++i) {
+        // intensities are packed into 2-byte integers in this interesting way
         int packed_y = read_uint16_le(f);
-        double y = packed_y * packed_y / 100;
+        double y = floor(0.01 * packed_y * packed_y);
         ycol->add_val(y);
     }
     blk->add_column(ycol);

@@ -13,7 +13,7 @@ Supported formats:
 -  Siemens/Bruker UXD
 -  Siemens/Bruker RAW ver. 1/2/3
 -  Philips UDF
--  Philips RD (raw scan) V3
+-  Philips PC-APD RD raw scan V3/V5
 -  Rigaku DAT
 -  Sietronics Sieray CPI
 -  DBWS/DMPLOT data file

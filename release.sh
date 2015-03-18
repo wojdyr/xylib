@@ -43,8 +43,8 @@ if [ $arg = c ]
     make clean
     rm -r cov-int/ xylib-cov.tgz
     cov-build --dir cov-int make
-    tar czf fityk-cov.tgz cov-int
-    echo upload to https://scan.coverity.com/projects/1742/submit_build?tab=upload
+    tar czf xylib.tgz cov-int
+    echo upload to https://scan.coverity.com/projects/1742/builds/new
 fi
 
 # 1. test compilation from git
