@@ -27,22 +27,24 @@ LT_INIT([disable-static win32-dll])
 # Checks for libraries.
 XYLIB_ADDLIB=
 if test "x$with_zlib" != xno; then
+  # if found defines HAVE_LIBZ
   AC_CHECK_LIB(z, gzopen, , AC_MSG_ERROR([
    zlib library was not found.
    Either use flag --without-zlib or install the library.]))
   XYLIB_ADDLIB="$XYLIB_ADDLIB -lz"
-  AC_CHECK_HEADER([zlib.h], [], [AC_MSG_ERROR([
+  AC_CHECK_HEADER([zlib.h], , [AC_MSG_ERROR([
    zlib.h header was not found. Either use flag --without-zlib or install
    zlib library (including header files).
  ])])
 fi
 
 if test "x$with_bzlib" != xno; then
+  # if found defines HAVE_LIBBZ2
   AC_CHECK_LIB(bz2, BZ2_bzReadOpen, , AC_MSG_ERROR([
    bzlib library was not found.
    Either use flag --without-bzlib or install the library.]))
   XYLIB_ADDLIB="$XYLIB_ADDLIB -lbz2"
-  AC_CHECK_HEADER([bzlib.h], [], [AC_MSG_ERROR([
+  AC_CHECK_HEADER([bzlib.h], , [AC_MSG_ERROR([
    bzlib.h header was not found. Either use flag --without-bzlib or install
    bzlib library (including header files).
  ])])
@@ -62,22 +64,28 @@ fi
 
 # Checks for header files.
 AC_LANG([C++])
-AC_CHECK_HEADERS([climits vector], [],
-                 [AC_MSG_ERROR([Could not find necessary C++ libs headers])])
-AC_CHECK_HEADERS([boost/cstdint.hpp boost/detail/endian.hpp], [],
-                 [AC_MSG_ERROR([Could not find necessary Boost headers])])
-AC_CHECK_HEADERS([boost/spirit/version.hpp], [],
-                 [AC_MSG_ERROR([Boost::Spirit headers were not found.])])
-AC_CHECK_HEADERS([boost/tokenizer.hpp], [],
-                 [AC_MSG_ERROR([Boost Tokenizer header not found.])])
-AC_CHECK_HEADERS([sys/types.h sys/stat.h], [],
-                 [AC_MSG_ERROR([Headers containg POSIX stat() are not found
-		  Please inform xylib maintainer about this problem,
-		  including information about your compiler. ])])
-AC_CHECK_HEADERS([tr1/memory],
-                 [AC_DEFINE([XYLIB_HAVE_TR1_MEMORY], [1],
-	                            [Define if <tr1/memory> is available])])
+AC_CHECK_HEADER([climits], [],
+                [AC_MSG_ERROR([Could not find necessary C++ libs headers])])
+AC_CHECK_HEADER([boost/cstdint.hpp], [],
+                [AC_MSG_ERROR([Could not find necessary Boost headers])])
+AC_CHECK_HEADER([boost/detail/endian.hpp], [],
+                [AC_MSG_ERROR([Could not find necessary Boost headers])])
+AC_CHECK_HEADER([boost/spirit/version.hpp], [],
+                [AC_MSG_ERROR([Boost::Spirit headers were not found.])])
+AC_CHECK_HEADER([boost/tokenizer.hpp], [],
+                [AC_MSG_ERROR([Boost Tokenizer header not found.])])
+AC_CHECK_HEADER([sys/types.h], [],
+                [AC_MSG_ERROR([Header sys/types.h not found.
+                 Please inform xylib maintainer about this problem,
+                 including information about your compiler. ])])
+AC_CHECK_HEADER([sys/stat.h], [],
+                [AC_MSG_ERROR([Header sys/stat.h not found.
+                 Please inform xylib maintainer about this problem,
+                 including information about your compiler. ])])
 
+# We try to use tr1/memory directly instead of through boost to avoid extra
+# dependency for Linux distros, see xylib/cache.h for details.
+AC_CHECK_HEADER([tr1/memory], [], [])
 # We change directly $srcdir/xylib/cache.h.
 # Using cache.h.in would be more elegant, but would make it harder to
 # to build without configure, for example in ad-hoc MS VC++ project.
