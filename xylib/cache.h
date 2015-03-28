@@ -20,8 +20,9 @@
 #include <vector>
 #include "xylib.h"
 
-// MSVC has shared_ptr in <memory>, but let's use boost
-#ifndef _MSC_VER
+// boost/shared_ptr.hpp works on all systems, but to avoid pulling boost as
+// dependency of xylib-dev on Linux distros we directly include <tr1/memory>
+#ifdef __GLIBCXX__
 // the value here (1 or 0) is set by xylib configure script
 // (yes, the configure script can modify this file!)
 #define XYLIB_USE_TR1_MEMORY 1
