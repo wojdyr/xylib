@@ -3,7 +3,8 @@ ACLOCAL_AMFLAGS=-I build-aux
 SUBDIRS = xylib
 
 EXTRA_DIST = web.css sample-urls README.rst README.dev xylib_capi.py \
-	     gui/xyconvert.rc CMakeLists.txt
+	     gui/xyconvert.rc gui/xyconvert16.xpm gui/xyconvert48.xpm \
+	     CMakeLists.txt
 
 bin_PROGRAMS = xyconv
 
