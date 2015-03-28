@@ -5,7 +5,7 @@ AC_CONFIG_MACRO_DIR(build-aux)
 AC_CONFIG_SRCDIR(xylib/xylib.cpp)
 AC_CONFIG_HEADER(config.h)
 
-AM_INIT_AUTOMAKE([1.11 foreign silent-rules -Wall])
+AM_INIT_AUTOMAKE([1.11 foreign silent-rules subdir-objects -Wall])
 
 # optional zlib and bzlib libraries
 AC_ARG_WITH(zlib,
