@@ -3,12 +3,16 @@ project(xylib C CXX)
 
 option(USE_ZLIB "Handle compressed GZ files - requires Zlib library" ON)
 option(DOWNLOAD_ZLIB "Download and build the Zlib library" OFF)
-option(USE_BZIP2 "Handle compressed BZ2 files - requires Bzip2 library" ON)
+option(USE_BZIP2 "Handle compressed BZ2 files - requires Bzip2 library" OFF)
 option(GUI "Build xyConvert GUI - requires wxWidgets 3.0+" ON)
 option(BUILD_SHARED_LIBS "Build as a shared library" ON)
 
 if(NOT DEFINED LIB_INSTALL_DIR)
   set(LIB_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/lib)
+endif()
+
+if (POLICY CMP0042)
+  cmake_policy(SET CMP0042 OLD)
 endif()
 
 # if we build static library we likely prefer 3rd-party libraries also static
