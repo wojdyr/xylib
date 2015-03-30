@@ -15,7 +15,7 @@ AC_ARG_WITH(bzlib,
  [  --without-bzlib               disable bzlib support (reading .bz2 files)])
 
 AC_ARG_WITH(gui,
- [  --with-gui                    build GUI (requires wxWidgets)])
+ [  --without-gui                 do not build GUI (which requires wxWidgets)])
 
 WX_CONFIG_OPTIONS
 
@@ -50,7 +50,7 @@ if test "x$with_bzlib" != xno; then
  ])])
 fi
 
-if test "x$with_gui" = xyes; then
+if test "x$with_gui" != xno; then
     AM_PATH_WXCONFIG([3.0.0], [], [AC_MSG_ERROR([
               wxWidgets must be installed on your system
               but wx-config script could not be found.
@@ -104,7 +104,7 @@ choke me
 ]])],
 [windows_host=no], [windows_host=yes])
 
-if test "$windows_host" = "yes" && test "x$with_gui" = xyes; then
+if test "$windows_host" = "yes" && test "x$with_gui" != xno; then
     AC_CHECK_TOOL(WINDRES, windres)
     if test "x$WINDRES" = "x"; then
         AC_MSG_ERROR([Required resource tool 'windres' not found on PATH.])
@@ -119,7 +119,7 @@ case $host in
     ;;
 esac
 
-AM_CONDITIONAL([BUILD_GUI], [test "x$with_gui" = xyes])
+AM_CONDITIONAL([BUILD_GUI], [test "x$with_gui" != xno])
 AM_CONDITIONAL([WINDOWS], [test "$windows_host" = yes])
 
 AC_SUBST(XYLIB_ADDLIB)
