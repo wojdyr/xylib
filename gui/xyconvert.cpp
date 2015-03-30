@@ -64,6 +64,11 @@ bool App::OnInit()
                                        + version + "\n");
         return false;
     }
+    //wxInitAllImageHandlers();
+#ifdef __WXOSX__
+    // wxInfoBar uses close_png in wxRendererMac::DrawTitleBarBitmap()
+    wxImage::AddHandler(new wxPNGHandler);
+#endif
 
     wxFrame *frame = new wxFrame(NULL, wxID_ANY, "xyConvert");
 
