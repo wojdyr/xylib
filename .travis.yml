@@ -4,9 +4,9 @@ compiler:
   - clang
 before_install:
   - sudo apt-get install -qq libboost-dev
-before_script:
-  - autoreconf -i
-script: ./configure && make
+script:
+    - if [ "$CC" = gcc ]; then autoreconf -i && ./configure --without-gui && make; fi
+    - if [ "$CC" = clang ]; then cmake . -DGUI=OFF && make; fi
 branches:
   only:
     - master
