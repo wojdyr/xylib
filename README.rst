@@ -50,20 +50,18 @@ DOWNLOAD
 
 **Binary packages**:
 
-* MS Windows: `xyconv.exe`_
+* Windows and OSX bundles from `the latest release on GitHub`__
 * Linux: fresh RPMs and DEBs `from OBS`_
-* OSX: in MacPorts
 
-.. _`xyconv.exe`: http://downloads.sourceforge.net/xylib/xylib_win-1.1.zip
-.. _`from OBS`: http://software.opensuse.org/download/package?project=home:wojdyr&package=xylib
+__ https://github.com/wojdyr/xylib/releases/latest
+.. _`from OBS`: http://software.opensuse.org/download/package?project=home:wojdyr&package=xyconvert
 
 **Source**:
 
 * `tarball`_
 * GitHub repository_ |travis-status|_ |appveyor-status|_
-  (requires ``autoreconf -i`` after cloning)
 
-.. _`tarball`: https://github.com/wojdyr/xylib/releases/download/v1.3/xylib-1.3.tar.bz2
+.. _`tarball`: https://github.com/wojdyr/xylib/releases/download/v1.4/xylib-1.4.tar.bz2
 .. _repository: https://github.com/wojdyr/xylib
 .. _travis-status: https://travis-ci.org/wojdyr/xylib/
 .. |travis-status| image:: https://api.travis-ci.org/wojdyr/xylib.png
@@ -79,12 +77,11 @@ Prerequisites:
 
 .. _Boost: http://www.boost.org/
 
-On Unix do ``./configure`` (or ``./configure --with-gui`` to build also
-xyconvert), and then ``make``.
+Two build systems are provided: either use CMake or, on Unix,
+``./configure && make``. To skip building the GUI use option
+``-D GUI=OFF`` for CMake or ``--without-gui`` for configure.
+If you are using git, ``autoreconf -i`` is needed before ``./configure``.
 
-On Windows either use MinGW and do the same, or create a project
-for MSVC or another compiler: xyconv is built from ``xyconv.cpp``
-and ``xylib/*.cpp``
 
 MISC NOTES
 ==========
@@ -140,7 +137,7 @@ CREDITS
 HISTORY
 =======
 
-* 1.4 (unreleased)
+* 1.4 (2015-03-31)
 
   - included xyConvert (GUI converter)
   - support filenames with non-ascii characters
