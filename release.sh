@@ -10,10 +10,11 @@ if [ $# -eq 0 ]; then
     echo 2. make tarball
     echo 3. make Windows binaries
     echo 4. RPMs: https://build.opensuse.org/project/show?project=home%3Awojdyr
-    echo 5. prepare DEBs in Launchpad  /obsolete/
-    echo 6. SourceForge file release
+#    echo 5. prepare DEBs in Launchpad  /obsolete/
+    echo "6. git tag -a v$version -m 'version $version'; git push --tags"
+    echo "   (and upload tarball and binaries)"
     echo 7. update webpage
-    echo 8. announce at FreshMeat
+    echo 8. announce
     echo 9. make Windows static lib for linking with fityk
     exit
 fi
@@ -82,7 +83,7 @@ if [ $arg -eq 3 ]; then
     echo and do:  zip -r xylib_win-$VERSION.zip xylib_win-$VERSION/
 fi
 
-# 5. prepare DEBs in Launchpad
+# 5. prepare DEBs in Launchpad  /obsolete/
 if [ $arg -eq 5 ]; then
     echo go to directory with old debs, or: apt-get source xylib
     echo cd xylib-oldversion
@@ -96,10 +97,9 @@ if [ $arg -eq 5 ]; then
     echo etc.
 fi
 
-# 6. SourceForge file release
+# 6. GitHub file release
 if [ $arg -eq 6 ]; then
-scp xylib-$VERSION.tar.bz2 xylib_win-$VERSION.zip `whoami`,xylib@frs.sourceforge.net:/home/frs/project/x/xy/xylib/
-echo verify the release: https://sourceforge.net/downloads/xylib/
+    echo "do: git tag -a v$version -m 'version $version'; git push --tags"
 fi
 
 # 7. update webpage
@@ -108,11 +108,10 @@ if [ $arg -eq 7 ]; then
     scp index.html `whoami`,xylib@web.sourceforge.net:htdocs/
 fi
 
-# 8. announce at FreshMeat
+# 8. announce
 if [ $arg -eq 8 ]; then
     grep -5 "\* $VERSION" README.rst | tail -6
-    echo
-    echo http://freshmeat.net/projects/xylib/releases/new
+    echo maybe post to http://fityk-announce.nieto.pl/
 fi
 
 # 9. make Windows static lib for linking with fityk
