@@ -64,14 +64,16 @@ if (DOWNLOAD_ZLIB)
     set(ZLIB_NAME zlibstatic)
   endif()
   set(ZLIB_LIBRARIES "${zlib_install}/lib/${ZLIB_NAME}${ZLIB_SUFFIX}")
-  add_definitions(-DHAVE_LIBZ=1)
   include_directories(${ZLIB_INCLUDE_DIR})
   message(STATUS "Using local zlib: ${ZLIB_LIBRARIES}")
 
 elseif (USE_ZLIB)
   find_package(ZLIB REQUIRED)
-  add_definitions(-DHAVE_LIBZ=1)
   include_directories(${ZLIB_INCLUDE_DIR})
+endif()
+
+if (DEFINED ZLIB_LIBRARIES)
+  add_definitions(-DHAVE_LIBZ=1)
 endif()
 
 if (USE_BZIP2)
@@ -162,3 +164,4 @@ install(TARGETS xy
         RUNTIME DESTINATION bin
         ARCHIVE DESTINATION "${LIB_INSTALL_DIR}"
         LIBRARY DESTINATION "${LIB_INSTALL_DIR}")
+install(FILES xylib/xylib.h xylib/cache.h DESTINATION include/xylib)
