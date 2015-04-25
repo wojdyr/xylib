@@ -60,6 +60,12 @@ struct CacheImp
 
 Cache* Cache::instance_ = NULL;
 
+Cache* Cache::Get()
+{
+    if (instance_ == NULL)
+        instance_ = new Cache();
+    return instance_;
+}
 
 Cache::Cache()
     : imp_(new CacheImp)

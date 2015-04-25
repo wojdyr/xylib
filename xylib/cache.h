@@ -46,8 +46,7 @@ class XYLIB_API Cache
 {
 public:
     // get instance
-    static Cache* Get()
-        { if (instance_ == NULL) instance_ = new Cache(); return instance_; }
+    static Cache* Get();
 
     // Arguments are the same as in load_file() in xylib.h,
     // but a const ref is returned instead of pointer.
