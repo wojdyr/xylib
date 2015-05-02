@@ -16,7 +16,7 @@ const FormatInfo ChiPlotDataSet::fmt_info(
     "ChiPLOT data",
     "chi",
     false,                      // whether binary
-    true,                       // whether has multi-blocks
+    false,                      // whether has multi-blocks
     &ChiPlotDataSet::ctor,
     &ChiPlotDataSet::check
 );
