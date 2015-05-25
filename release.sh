@@ -40,7 +40,7 @@ if [ $arg -eq 0 ]; then
 fi
 
 # c. Coverity scan
-if [ $arg = c ]
+if [ $arg = c ]; then
     make clean
     rm -r cov-int/ xylib-cov.tgz
     cov-build --dir cov-int make
@@ -121,6 +121,7 @@ if [ $arg -eq 9 ]; then
     cd mingw32
     MDIR=$HOME/local/mingw32
     ../configure --host=i686-w64-mingw32 --enable-static --disable-shared \
+                 --with-pic --without-gui \
 	         CPPFLAGS="-I$HOME/local/src/boost_1_50_0/ -I$MDIR/include/" \
 		 CXXFLAGS="-O3" LDFLAGS="-s -L$MDIR/lib" --without-bzlib \
 		 --prefix=$MDIR && \
