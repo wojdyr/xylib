@@ -77,7 +77,7 @@ if [ $arg -eq 3 ]; then
     cp -r git_copy/xylib/install_dir/include/xylib/ xylib_win-$VERSION
     rm index.html
     #make index.html
-    rst2html --stylesheet-path=web.css README.rst index.html
+    rst2html --stylesheet=web.css --template=web-tmpl.txt README.rst index.html
     cp index.html README.dev TODO COPYING sample-urls xylib_win-$VERSION/docs
     echo copy files xylib-*.dll and xyconv.exe to `pwd`/xylib_win-$VERSION
     echo and do:  zip -r xylib_win-$VERSION.zip xylib_win-$VERSION/
@@ -120,7 +120,7 @@ if [ $arg -eq 9 ]; then
     mkdir mingw32
     cd mingw32
     MDIR=$HOME/local/mingw32
-    ../configure --host=i686-w64-mingw32 --enable-static --disable-shared \
+    ../configure --host=i686-w64-mingw32 --enable-static --enable-shared \
                  --with-pic --without-gui \
 	         CPPFLAGS="-I$HOME/local/src/boost_1_50_0/ -I$MDIR/include/" \
 		 CXXFLAGS="-O3" LDFLAGS="-s -L$MDIR/lib" --without-bzlib \

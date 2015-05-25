@@ -16,6 +16,8 @@ p, li {
 
 code { font-family: monospace; }
 
+ul { padding-left: 20px; }
+
 h1, h2 { 
     font-family: 'Trebuchet MS', sans-serif;
     font-weight: bold;

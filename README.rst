@@ -70,7 +70,7 @@ __ https://github.com/wojdyr/xylib/releases/latest
 
 Prerequisites:
 
-* C++ compiler (all popular ones are tested: GCC, Clang, Visual C++)
+* C++ compiler (all popular ones are tested: GCC, Clang, MSVC)
 * Boost_ libraries (only headers).
 * optionally, zlib and bzlib libraries (for reading compressed files)
 * optionally, wxWidgets 3.0 (for xyconvert - GUI converter)

@@ -34,4 +34,5 @@ gui_xyconvert_LDADD = $(xyconvert_res) $(WX_LIBS) xylib/libxy.la -lm
 endif
 
 index.html: README.rst web.css
-	rst2html --stylesheet-path=$(srcdir)/web.css $< $@
+	rst2html --stylesheet=$(srcdir)/web.css \
+	         --template=$(srcdir)/web-tmpl.txt $< $@
