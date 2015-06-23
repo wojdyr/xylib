@@ -276,8 +276,8 @@ void SpecsxyDataSet::load_data(std::istream &f){
 	                switch(ScanMode)
 	                {
 	                    case ScanMode_FixedTransm:
-                        	startx -= my_strtod(excEnergy); // negative binding energy for XPS
-                        	xcolname = "bindingenergy [eV]";
+                                //startx -= my_strtod(excEnergy);
+                                xcolname = "energy [eV]";
 	                    break;
 	                    case ScanMode_FixedEnerg:
                         	startx = 0;
