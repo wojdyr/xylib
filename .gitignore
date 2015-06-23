@@ -8,6 +8,7 @@ config.h.in
 aclocal.m4
 autom4te.cache
 build-aux/ar-lib
+build-aux/compile
 build-aux/config.guess
 build-aux/config.sub
 build-aux/depcomp
@@ -17,3 +18,5 @@ build-aux/lt*
 build-aux/missing
 gcc-build/
 index.html
+xylib-?.?.tar.bz2
+*-build/

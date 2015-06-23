@@ -116,9 +116,9 @@ fi
 
 # 9. make Windows static lib for linking with fityk
 if [ $arg -eq 9 ]; then
-    rm -rf mingw32
-    mkdir mingw32
-    cd mingw32
+    rm -rf mingw32-build
+    mkdir mingw32-build
+    cd mingw32-build
     MDIR=$HOME/local/mingw32
     ../configure --host=i686-w64-mingw32 --enable-static --enable-shared \
                  --with-pic --without-gui \
