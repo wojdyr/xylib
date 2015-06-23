@@ -43,7 +43,10 @@ double from_pdp11(const unsigned char* p);
 std::string str_trim(std::string const& str);
 void str_split(std::string const& line, std::string const& sep,
                std::string &key, std::string &val);
-bool str_startwith(const std::string &str_src, const std::string &ss);
+inline bool str_startwith(const std::string &str, const std::string &prefix) {
+    return str.compare(0, prefix.size(), prefix) == 0;
+}
+
 std::string str_tolower(const std::string &str);
 bool has_word(const std::string &sentence, const std::string &word);
 

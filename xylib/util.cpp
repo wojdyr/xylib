@@ -177,12 +177,6 @@ void str_split(string const& line, string const& sep,
     }
 }
 
-// true if str starts with ss
-bool str_startwith(const string &str, const string &ss)
-{
-    return ss == str.substr(0, ss.size());
-}
-
 // change all letters in a string to lower case
 std::string str_tolower(const std::string &str)
 {
