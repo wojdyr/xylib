@@ -471,7 +471,6 @@ void t_on_loop_finish::operator()(IteratorT, IteratorT) const
     int nrow = (int) da.loop_values.size() / ncol;
     if (nrow == 0)
         return;
-    vector<VecColumn*> cols;
     for (int i = 0; i < ncol; ++i) {
         string const& name = da.loop_tags[i];
         if (!is_pd_data_tag(name))

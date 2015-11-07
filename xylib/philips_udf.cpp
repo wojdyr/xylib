@@ -85,7 +85,7 @@ void UdfDataSet::load_data(std::istream &f)
     string line;
     while (getline(f, line)) {
         bool has_slash = false;
-        for (string::iterator i = line.begin(); i != line.end(); i++) {
+        for (string::iterator i = line.begin(); i != line.end(); ++i) {
             if (*i == ',')
                 *i = ' ';
             else if (*i == '/')

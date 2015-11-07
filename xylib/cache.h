@@ -57,7 +57,7 @@ public:
     // set max. number of cached files, default=1
     void set_max_size(size_t max_size);
     // get max. number of cached files
-    inline size_t get_max_size() const;
+    size_t get_max_size() const;
 
     // clear cache
     void clear_cache();
@@ -67,6 +67,7 @@ private:
     CacheImp* imp_;
     Cache();
     ~Cache();
+    Cache(const Cache&); // disallow
 };
 
 inline

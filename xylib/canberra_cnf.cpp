@@ -181,7 +181,6 @@ void CanberraCnfDataSet::load_data(std::istream &f)
     // sample data - split name into name and description
     // (this was not in code from JF, it's my guess - MW)
     const char* sam_ptr = beg + sam_offset;
-    string name;
     if (sam_ptr+0x30+80 >= end || sam_ptr[0] != 1 || sam_ptr[1] != 0x20)
         fprintf(stderr, "Warning. Sample data not found.\n");
     else {

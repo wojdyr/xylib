@@ -462,7 +462,7 @@ protected:
 #ifdef HAVE_LIBZ
 struct gzip_istreambuf : public decompressing_istreambuf
 {
-    gzip_istreambuf(gzFile gz)
+    explicit gzip_istreambuf(gzFile gz)
     {
         for (;;) {
             int n = gzread(gz, writeptr_, bufavail_);
@@ -479,7 +479,7 @@ struct gzip_istreambuf : public decompressing_istreambuf
 #ifdef HAVE_LIBBZ2
 struct bzip2_istreambuf : public decompressing_istreambuf
 {
-    bzip2_istreambuf(BZFILE* bz2)
+    explicit bzip2_istreambuf(BZFILE* bz2)
     {
         for (;;) {
             int n = BZ2_bzread(bz2, writeptr_, bufavail_);//the only difference
