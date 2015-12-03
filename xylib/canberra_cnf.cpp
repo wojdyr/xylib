@@ -33,7 +33,7 @@ const FormatInfo CanberraCnfDataSet::fmt_info(
 
 bool CanberraCnfDataSet::check(istream &f, string*)
 {
-    int chan_offset = 0;
+    int acq_offset = 0;
     f.ignore(112);
     int pos = 112;
     char buf[48];
@@ -41,18 +41,19 @@ bool CanberraCnfDataSet::check(istream &f, string*)
         f.read(buf, 48);
         if (f.gcount() != 48)
             return false;
+        if ((buf[1] != 0x20 || buf[2] != 0x01) && buf[1] != 0 && buf[2] != 0)
+            return false;
         pos += 48;
-        if (buf[0] == 5 && ((buf[1] == 0x20 && buf[2] == 0x01) ||
-                             buf[1] == 0 || buf[2] == 0)) {
-            chan_offset = from_le<uint32_t>(buf+10);
+        if (buf[0] == 0) {
+            acq_offset = from_le<uint32_t>(buf+10);
             break;
         }
     }
-    if (chan_offset <= pos)
+    if (acq_offset <= pos)
         return false;
-    f.ignore(chan_offset - pos);
+    f.ignore(acq_offset - pos);
     f.read(buf, 48);
-    return (!f.eof() && f.gcount() == 48 && buf[0] == 5 && buf[1] == 0x20);
+    return (!f.eof() && f.gcount() == 48 && buf[0] == 0 && buf[1] == 0x20);
 }
 
 static
@@ -144,34 +145,54 @@ void CanberraCnfDataSet::load_data(std::istream &f)
 
     // we have here 48-byte blocks with meta data
     for (const char* ptr = beg+112; ptr+48 < end; ptr += 48) {
+        // MW - should records 0 in ptr[1] or ptr[2] be really accepted?
+        if ((ptr[1] != 0x20 || ptr[2] != 0x01) && ptr[1] != 0 && ptr[2] != 0)
+            break;
         uint32_t offset = from_le<uint32_t>(ptr+10);
-        if ((ptr[1] == 0x20 && ptr[2] == 0x01) || ptr[1] == 0 || ptr[2] == 0) {
-            switch (ptr[0]) {
-                case 0:
-                    if (acq_offset == 0)
-                        acq_offset = offset;
-                    else
-                        enc_offset = offset;
-                    break;
-                case 1:
-                    if (sam_offset == 0)
-                        sam_offset = offset;
-                    break;
-                case 2:
-                    if (eff_offset == 0)
-                        eff_offset = offset;
-                    break;
-                case 5:
-                    if (chan_offset == 0)
-                        chan_offset = offset;
-                    break;
-                default:
-                    break;
-            }
-            if (acq_offset != 0 && sam_offset != 0 &&
-                        eff_offset != 0 && chan_offset != 0)
+#if 0
+        printf("%6ld: hex %02x %02x %02x %02x  -> %6u",
+               ptr-beg, ptr[0], ptr[1], ptr[2], ptr[3], offset);
+        if (offset > 0 && beg+offset+1 < end)
+            printf(" -> hex %02x %02x", beg[offset], beg[offset+1]);
+        printf("\n");
+#endif
+        switch (ptr[0]) {
+            case 0:
+                if (acq_offset == 0)
+                    acq_offset = offset;
+                else
+                    enc_offset = offset;
+                break;
+            case 1:
+                if (sam_offset == 0)
+                    sam_offset = offset;
+                break;
+            case 2:
+                if (eff_offset == 0)
+                    eff_offset = offset;
+                break;
+            case 5:
+                // We don't have specs, so it's all based on guessing.
+                // At least for me. Checking a few CNF files I've got,
+                // normally we are here when the record starts with 0x052001,
+                // but the condition above (which I copied like everything
+                // else from JF) is also passing when it starts with, say,
+                // 0x054000 (Miha Cernetic sent us such a file).
+                // No idea if the condition above can be safely changed.
+                // Here is a workaround from JF - checking the value at the
+                // offset.
+                if (chan_offset == 0 &&
+                           offset+1 < file_string.size() &&
+                           file_string[offset] == '\x05' &&
+                           file_string[offset+1] == '\x20')
+                       chan_offset = offset;
+                break;
+            default:
                 break;
         }
+        if (acq_offset != 0 && sam_offset != 0 &&
+                    eff_offset != 0 && chan_offset != 0)
+            break;
     }
     if (enc_offset == 0)
         enc_offset = acq_offset;
