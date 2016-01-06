@@ -6,6 +6,9 @@ xylib
 xylib is a portable library for reading files that contain x-y data from
 powder diffraction, spectroscopy and other experimental methods.
 
+It comes with two programs that can convert supported formats
+to plain text: command-line **xyconv** and graphical **xyconvert**.
+
 Supported formats:
 
 -  plain text, delimiter-separated values (e.g. CSV)
@@ -31,30 +34,65 @@ Supported formats:
 
 .. _CHI: http://www.esrf.eu/computing/scientific/FIT2D/FIT2D_REF/node115.html#SECTION0001851500000000000000
 
-The library comes with two programs for converting supported formats
-to plain text: command-line **xyconv** and graphical **xyconvert**.
+Examples of supported files are collected in `sample-urls`__.
+
+__ https://raw.github.com/wojdyr/xylib/master/sample-urls
+
+
+LIBRARY
+=======
 
 The library is written in C++ and has C bindings. It can be used directly
 through FFI in several other languages, for example `in Python`_.
 
 .. _`in Python`: https://github.com/wojdyr/xylib/blob/master/xylib_capi.py
 
-API is described in the `xylib/xylib.h`__ file.
+**API** is documented in the `xylib/xylib.h`__ file.
+Adding new formats -- in
+`README.dev <https://raw.github.com/wojdyr/xylib/master/README.dev>`_.
 
 __ https://raw.github.com/wojdyr/xylib/master/xylib/xylib.h
 
-Licence: `LGPL <http://creativecommons.org/licenses/LGPL/2.1/>`_
+Licence: `LGPL <https://raw.githubusercontent.com/wojdyr/xylib/master/COPYING>`_
+
+xylib is used by:
+
+-  `fityk <http://fityk.nieto.pl>`_
+-  `qpx-gamma <https://github.com/usnistgov/qpx-gamma>`_
+-  ...
+
+xyconv
+======
+
+Converts a file from one of the supported formats to plain text::
+
+  xyconv myfile.bin plain.txt
+
+It has a few options, see ``xyconv -h`` for details.
+
+xyConvert
+=========
+
+.. image:: xyconvert-gtk.png
+    :align: center
+
+The GUI is designed for quick converting of many files at once.
 
 DOWNLOAD
 ========
 
 **Binary packages**:
 
-* Windows and OSX bundles from `the latest release on GitHub`__
-* Linux: fresh RPMs and DEBs `from OBS`_
+* |ico-win| Windows and |ico-osx| OS X bundles from
+  `the latest release on GitHub`__
+* |ico-tux| Linux: fresh RPMs and DEBs `from OBS`_
 
 __ https://github.com/wojdyr/xylib/releases/latest
 .. _`from OBS`: http://software.opensuse.org/download/package?project=home:wojdyr&package=xyconvert
+
+.. |ico-win| image:: ico-win.png
+.. |ico-tux| image:: ico-tux.png
+.. |ico-osx| image:: ico-osx.png
 
 **Source**:
 
@@ -68,9 +106,9 @@ __ https://github.com/wojdyr/xylib/releases/latest
 .. _appveyor-status: https://ci.appveyor.com/project/wojdyr/xylib
 .. |appveyor-status| image:: https://ci.appveyor.com/api/projects/status/9gotaqqhl8j9ovge?svg=true
 
-Prerequisites:
+To compile the source code you need:
 
-* C++ compiler (all popular ones are tested: GCC, Clang, MSVC)
+* C++ compiler (all popular ones are tested: GCC, Clang, MSVC, icc)
 * Boost_ libraries (only headers).
 * optionally, zlib and bzlib libraries (for reading compressed files)
 * optionally, wxWidgets 3.0 (for xyconvert - GUI converter)
@@ -82,22 +120,6 @@ Two build systems are provided: either use CMake or, on Unix,
 ``-D GUI=OFF`` for CMake or ``--without-gui`` for configure.
 If you are using git, ``autoreconf -i`` is needed before ``./configure``.
 
-
-MISC NOTES
-==========
-
-Examples of supported files: `sample-urls`__.
-
-__ https://raw.github.com/wojdyr/xylib/master/sample-urls
-
-How to add a new format to xylib (for programmers): `README.dev`__.
-
-__ https://raw.github.com/wojdyr/xylib/master/README.dev
-
-xylib is used by:
-
--  `fityk <http://fityk.nieto.pl>`_
--  ...
 
 AUTHORS
 =======
@@ -136,6 +158,10 @@ CREDITS
 
 HISTORY
 =======
+
+* 1.5 (unreleased)
+
+  - improved CNF reading (thanks to Jim and Miha)
 
 * 1.4 (2015-03-31)
 

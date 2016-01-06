@@ -33,6 +33,6 @@ gui_xyconvert_CPPFLAGS = $(WX_CPPFLAGS) -DXYCONVERT
 gui_xyconvert_LDADD = $(xyconvert_res) $(WX_LIBS) xylib/libxy.la -lm
 endif
 
-index.html: README.rst web.css
-	rst2html --stylesheet=$(srcdir)/web.css \
-	         --template=$(srcdir)/web-tmpl.txt $< $@
+index.html: README.rst web/web.css
+	rst2html --stylesheet=$(srcdir)/web/web.css \
+	         --template=$(srcdir)/web/web-tmpl.txt $< $@
