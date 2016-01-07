@@ -2,8 +2,10 @@ language: cpp
 compiler:
   - gcc
   - clang
-before_install:
-  - sudo apt-get install -qq libboost-dev
+addons:
+    apt:
+      packages:
+        - libboost-dev
 script:
     - if [ "$CC" = gcc ]; then autoreconf -i && ./configure --without-gui && make; fi
     - if [ "$CC" = clang ]; then cmake . -DGUI=OFF && make; fi
