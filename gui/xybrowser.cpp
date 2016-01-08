@@ -18,15 +18,14 @@ using namespace std;
 using fityk::get_file_basename;
 #else
 // copied from common.h
+#ifdef _MSC_VER
+#define snprintf sprintf_s
+#endif
 template <typename T, int N>
 std::string format1(const char* fmt, T t)
 {
     char buffer[N];
-#ifdef _MSC_VER
-    _snprintf(buffer, N, fmt, t);
-#else
     snprintf(buffer, N, fmt, t);
-#endif
     buffer[N-1] = '\0';
     return std::string(buffer);
 }
