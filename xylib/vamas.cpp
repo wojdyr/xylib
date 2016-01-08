@@ -194,7 +194,7 @@ Block* VamasDataSet::read_block(istream &f, bool includes[],
 
     vector<VecColumn*> ycols;
 
-    block->meta["block id"] = read_line_trim(f);
+    block->set_name(read_line_trim(f));
     block->meta["sample identifier"] = read_line_trim(f);
 
     string date_time;
