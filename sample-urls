@@ -106,6 +106,8 @@ samples/04nacl02.mca
 
 # Canberra CNF file from Will Paxton
 samples/SMP00011.CNF
+# Canberra CNF file from Miha Černetič that originally couldn't be read
+samples/background_8.CNF
 
 # XFIT XDD files
 http://www.ccp14.ac.uk/ccp/ccp14/ftp-mirror/krumm/Software/windows/stereo/Y2O3.XDD
