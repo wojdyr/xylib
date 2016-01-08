@@ -73,8 +73,12 @@ It has a few options, see ``xyconv -h`` for details.
 xyConvert
 =========
 
-.. image:: xyconvert-gtk.png
-    :align: center
+.. image:: web/xyconvert-linux.png
+   :width: 804px
+   :height: 609px
+   :scale: 75%
+   :align: center
+   :target: web/xyconvert-linux.png
 
 The GUI is designed for quick converting of many files at once.
 
@@ -90,9 +94,9 @@ DOWNLOAD
 __ https://github.com/wojdyr/xylib/releases/latest
 .. _`from OBS`: http://software.opensuse.org/download/package?project=home:wojdyr&package=xyconvert
 
-.. |ico-win| image:: ico-win.png
-.. |ico-tux| image:: ico-tux.png
-.. |ico-osx| image:: ico-osx.png
+.. |ico-win| image:: web/ico-win.png
+.. |ico-tux| image:: web/ico-tux.png
+.. |ico-osx| image:: web/ico-osx.png
 
 **Source**:
 
