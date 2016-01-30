@@ -63,8 +63,10 @@ void CpiDataSet::load_data(std::istream &f)
     blk->add_column(xcol);
 
     // ignore the rest of the header
-    while (!str_startwith(s, "SCANDATA"))
-        getline (f, s);
+    while (getline(f, s))
+        if (str_startwith(s, "SCANDATA"))
+            break;
+    format_assert(this, f, "missing SCANDATA");
 
     // data
     VecColumn *ycol = new VecColumn();
