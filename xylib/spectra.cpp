@@ -69,8 +69,9 @@ Block* SpectraDataSet::read_block(istream& f)
     const char *pStart = line;
     char *pEnd;
     double start = strtod(pStart,&pEnd);
+    format_assert(this, pEnd != pStart);
     pStart = pEnd;
-    double ende = strtod(pStart,&pEnd);
+    double end = strtod(pStart,&pEnd);
     pStart = pEnd;
     double step = strtod(pStart,&pEnd);
     pStart = pEnd;
@@ -80,10 +81,14 @@ Block* SpectraDataSet::read_block(istream& f)
     pStart = pEnd;
     // supposedly it's always integer, but using strtod just in case
     long points = (long) strtod(pStart,&pEnd);
+    format_assert(this, pEnd != pStart);
+    format_assert(this, points > 0 && points < 1e8,
+                  "unexpected 6th parameter (#points)");
     pStart = pEnd;
     double epass = strtod(pStart,&pEnd);
     pStart = pEnd;
     double exenergy = strtod(pStart,&pEnd);
+    format_assert(this, pEnd != pStart);
 
     f.getline(line, 255); // third line --> spectraname
     format_assert(this, !f.eof(), "unexpected EOF");
@@ -100,7 +105,7 @@ Block* SpectraDataSet::read_block(istream& f)
     Block *blk = new Block;
     blk->set_name(spectra_name);
     blk->meta["Start"]          = dbl_to_str(start);
-    blk->meta["Ende"]           = dbl_to_str(ende);
+    blk->meta["End"]            = dbl_to_str(end);
     blk->meta["step"]           = dbl_to_str(step);
     blk->meta["scans"]          = dbl_to_str(scans);
     blk->meta["dwell"]          = dbl_to_str(dwell);
