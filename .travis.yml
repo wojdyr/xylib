@@ -3,18 +3,15 @@ compiler:
   - gcc
   - clang
 addons:
-    apt:
-      packages:
-        - libboost-dev
+  apt:
+    packages:
+      - libboost-dev
 script:
-    - if [ "$CC" = gcc ]; then autoreconf -i && ./configure --without-gui && make; fi
-    - if [ "$CC" = clang ]; then cmake . -DGUI=OFF && make; fi
+  - if [ "$CC" = gcc ]; then autoreconf -i && ./configure --without-gui && make; fi
+  - if [ "$CC" = clang ]; then cmake . -DGUI=OFF && make; fi
 branches:
   only:
     - master
 notifications:
-  recipients:
-    - wojdyr@gmail.com
   email:
-    on_success: change
-    on_failure: always
+    - wojdyr@gmail.com
