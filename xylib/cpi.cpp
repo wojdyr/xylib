@@ -66,7 +66,7 @@ void CpiDataSet::load_data(std::istream &f)
     while (getline(f, s))
         if (str_startwith(s, "SCANDATA"))
             break;
-    format_assert(this, f, "missing SCANDATA");
+    format_assert(this, !f.eof(), "missing SCANDATA");
 
     // data
     VecColumn *ycol = new VecColumn();
