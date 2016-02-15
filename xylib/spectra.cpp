@@ -104,14 +104,14 @@ Block* SpectraDataSet::read_block(istream& f)
 
     Block *blk = new Block;
     blk->set_name(spectra_name);
-    blk->meta["Start"]          = dbl_to_str(start);
-    blk->meta["End"]            = dbl_to_str(end);
+    blk->meta["start"]          = dbl_to_str(start);
+    blk->meta["end"]            = dbl_to_str(end);
     blk->meta["step"]           = dbl_to_str(step);
     blk->meta["scans"]          = dbl_to_str(scans);
     blk->meta["dwell"]          = dbl_to_str(dwell);
     blk->meta["points"]         = S(points);
     blk->meta["EPass"]          = dbl_to_str(epass);
-    blk->meta["Photon Energy"]  = dbl_to_str(exenergy);
+    blk->meta["source energy"]  = dbl_to_str(exenergy);
 
     // positive binding energy
     //StepColumn *xcol = new StepColumn(exenergy-start, -step);
