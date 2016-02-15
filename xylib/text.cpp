@@ -108,6 +108,7 @@ void TextDataSet::load_data(std::istream &f)
         if (row.size() > 1 ||
                 (row.size() == 1 && (strict || *p == '\0' || *p == '#'))) {
             // columns initialization
+            cols.reserve(row.size());
             for (size_t i = 0; i != row.size(); ++i) {
                 cols.push_back(new VecColumn);
                 cols[i]->add_val(row[i]);
