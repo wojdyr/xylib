@@ -276,8 +276,8 @@ Block* VamasDataSet::read_block(istream &f, bool includes[],
     }
 
     if (includes[13])
-        block->meta["analysis source characteristic energy"]
-                                                           = read_line_trim(f);
+        // a.k.a "analysis source characteristic energy"
+        block->meta["source energy"] = read_line_trim(f);
     if (includes[14])
         block->meta["analysis source strength"] = read_line_trim(f);
 
