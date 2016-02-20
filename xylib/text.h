@@ -26,7 +26,6 @@ namespace xylib {
     class TextDataSet : public DataSet
     {
         OBLIGATORY_DATASET_MEMBERS(TextDataSet)
-        virtual bool is_valid_option(std::string const& t) const;
     };
 
 } // namespace

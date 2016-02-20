@@ -111,12 +111,13 @@ void print_filetype_info(string const& filetype)
         if (fi) {
             cout << "Name: " << fi->name << endl;
             cout << "Description: " << fi->desc << endl;
-            bool has_exts = (strlen(fi->exts) != 0);
+            bool has_exts = (fi->exts[0] != '\0');
             cout << "Possible extensions: "
                  << (has_exts ? fi->exts : "(not specified)") << endl;
-            cout << "Other flags: "
+            cout << "Flags: "
                 << (fi->binary ? "binary-file" : "text-file") << " "
                 << (fi->multiblock ? "multi-block" : "single-block") << endl;
+            cout << "Options: " << fi->valid_options << endl;
         }
         else
             cout << "Unknown file format. "

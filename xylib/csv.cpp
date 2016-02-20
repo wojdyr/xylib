@@ -28,7 +28,8 @@ const FormatInfo CsvDataSet::fmt_info(
     false,                       // whether binary
     false,                       // whether has multi-blocks
     &CsvDataSet::ctor,
-    &CsvDataSet::check
+    &CsvDataSet::check,
+    "decimal-comma"
 );
 
 // The field should contain only a number with optional leading/trailing

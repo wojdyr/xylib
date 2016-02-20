@@ -30,8 +30,6 @@ namespace xylib {
     class CsvDataSet : public DataSet
     {
         OBLIGATORY_DATASET_MEMBERS(CsvDataSet)
-        virtual bool is_valid_option(std::string const& t) const
-            { return t == "decimal-comma"; }
     };
 
 }

@@ -77,6 +77,7 @@ struct XYLIB_API xylibFormat
     const char* exts; /** possible extensions, separated by spaces */
     int binary; /** 0 - ascii, 1 - binary */
     int multiblock; /** 1 if filetype supports multiple blocks, 0 otherwise */
+    const char* valid_options; /** NULL or options separated by spaces */
 };
 
 /* Three functions below are a part of C API which is useful also in C++.  */
@@ -144,7 +145,8 @@ struct XYLIB_API FormatInfo : public xylibFormat
 
     FormatInfo(const char* name_, const char* desc_, const char* exts_,
                bool binary_, bool multiblock_,
-               t_ctor ctor_, t_checker checker_);
+               t_ctor ctor_, t_checker checker_,
+               const char* valid_options_=NULL);
 };
 
 /// unexpected format, unexpected EOF, etc
@@ -296,7 +298,7 @@ public:
     void set_options(std::string const& options);
 
     /// true if this option is handled for this format
-    virtual bool is_valid_option(std::string const&) const { return false; }
+    bool is_valid_option(std::string const& opt) const;
 
 protected:
     explicit DataSet(FormatInfo const* fi_);

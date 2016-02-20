@@ -18,16 +18,9 @@ const FormatInfo TextDataSet::fmt_info(
     false,                      // whether binary
     false,                      // whether has multi-blocks
     &TextDataSet::ctor,
-    &TextDataSet::check
+    &TextDataSet::check,
+    "strict first-line-header last-line-header decimal-comma"
 );
-
-bool TextDataSet::is_valid_option(std::string const& t) const
-{
-    return t == "strict" ||
-           t == "first-line-header" ||
-           t == "last-line-header" ||
-           t == "decimal-comma";
-}
 
 bool TextDataSet::check(istream & /*f*/, string*)
 {

@@ -189,13 +189,15 @@ namespace xylib {
 
 FormatInfo::FormatInfo(const char* name_, const char* desc_, const char* exts_,
                        bool binary_, bool multiblock_,
-                       t_ctor ctor_, t_checker checker_)
+                       t_ctor ctor_, t_checker checker_,
+                       const char* valid_options_)
 {
     name = name_;
     desc = desc_;
     exts = exts_;
     binary = (int) binary_;
     multiblock = (int) multiblock_;
+    valid_options = valid_options_;
     ctor = ctor_;
     checker = checker_;
 }
@@ -388,6 +390,17 @@ void DataSet::set_options(string const& options)
     imp_->options = options;
 }
 
+bool DataSet::is_valid_option(std::string const& opt) const
+{
+    if (fi->valid_options == NULL)
+        return false;
+    const char* p = strstr(fi->valid_options, opt.c_str());
+    if (p == NULL)
+        return false;
+    // no option is a substring of another option
+    return (p == fi->valid_options || p[-1] == ' ') &&
+           (p[opt.size()] == '\0' || p[opt.size()] == ' ');
+}
 
 DataSet* load_stream_of_format(istream &is, FormatInfo const* fi,
                                string const& options)
