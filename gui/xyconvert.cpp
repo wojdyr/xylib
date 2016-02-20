@@ -176,7 +176,7 @@ void App::OnConvert(wxCommandEvent&)
     int block_nr = browser->block_ch->GetSelection();
     int idx_x = browser->x_column->GetValue();
     int idx_y = browser->y_column->GetValue();
-    bool has_err = browser->std_dev_cb->GetValue();
+    bool has_err = browser->std_dev_b->GetValue();
     int idx_err = browser->s_column->GetValue();
     bool dec_comma = browser->comma_cb->GetValue();
 
