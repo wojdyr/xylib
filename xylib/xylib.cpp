@@ -79,9 +79,9 @@ const FormatInfo *formats[] = {
     &Riet7DataSet::fmt_info,
     &DbwsDataSet::fmt_info,
     &ChiPlotDataSet::fmt_info,
-    &CsvDataSet::fmt_info,
     &SpectraDataSet::fmt_info,
     &SpecsxyDataSet::fmt_info,
+    &CsvDataSet::fmt_info,
     // TextDataSet should be at the end because it can use any extension.
     &TextDataSet::fmt_info,
     NULL // it must be a NULL-terminated array

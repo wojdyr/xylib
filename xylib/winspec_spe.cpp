@@ -15,7 +15,7 @@ namespace xylib {
 
 const FormatInfo WinspecSpeDataSet::fmt_info(
     "spe",
-    "Princeton Instruments WinSpec",
+    "PI WinSpec SPE",
     "spe",
     true,                       // whether binary
     true,                       // whether has multi-blocks

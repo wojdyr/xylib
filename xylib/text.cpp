@@ -13,7 +13,7 @@ namespace xylib {
 
 const FormatInfo TextDataSet::fmt_info(
     "text",
-    "ascii text",
+    "Text",
     "", // "txt dat asc",
     false,                      // whether binary
     false,                      // whether has multi-blocks

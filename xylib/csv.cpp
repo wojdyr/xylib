@@ -23,7 +23,7 @@ typedef boost::tokenizer< boost::escaped_list_separator<char> > Tokenizer;
 
 const FormatInfo CsvDataSet::fmt_info(
     "csv",
-    "comma-separated values",
+    "CSV or TSV",
     "csv tsv tab",
     false,                       // whether binary
     false,                       // whether has multi-blocks

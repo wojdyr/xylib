@@ -15,7 +15,7 @@ namespace xylib {
 
 const FormatInfo UxdDataSet::fmt_info(
     "uxd",
-    "Siemens/Bruker Diffrac-AT UXD",
+    "Bruker Diffrac-AT UXD",
     "uxd",
     false,                      // whether binary
     true,                       // whether has multi-blocks

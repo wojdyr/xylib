@@ -12,7 +12,7 @@ namespace xylib {
 
 const FormatInfo PhilipsRawDataSet::fmt_info(
     "philips_rd",
-    "Philips PC-APD RD Raw Scan",
+    "Philips PC-APD RD/SD",
     "rd sd",
     true,                       // whether binary
     false,                      // whether has multi-blocks

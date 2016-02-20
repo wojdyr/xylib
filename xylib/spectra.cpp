@@ -14,7 +14,7 @@ namespace xylib {
 
 const FormatInfo SpectraDataSet::fmt_info(
     "spectra",
-    "Spectra Omicron/Leybold",
+    "Spectra / VGX 900",
     "1 2 3 4 5 6 7 8 9",    // file endings are numbered, number is increased
                             // for each new data aquisition in the same project
     false,                  // whether binary
