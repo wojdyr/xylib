@@ -163,9 +163,10 @@ CREDITS
 HISTORY
 =======
 
-* 1.5 (unreleased)
+* 1.5 (2016-02-21)
 
   - improved CNF reading (thanks to Jim and Miha)
+  - changes to reading SpecsLab2 xy
 
 * 1.4 (2015-03-31)
 
