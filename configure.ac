@@ -83,20 +83,6 @@ AC_CHECK_HEADER([sys/stat.h], [],
                  Please inform xylib maintainer about this problem,
                  including information about your compiler. ])])
 
-# We try to use tr1/memory directly instead of through boost to avoid extra
-# dependency for Linux distros, see xylib/cache.h for details.
-AC_CHECK_HEADER([tr1/memory], [], [])
-# We change directly $srcdir/xylib/cache.h.
-# Using cache.h.in would be more elegant, but would make it harder to
-# to build without configure, for example in ad-hoc MS VC++ project.
-# (Including config.h would make it even worse.)
-uses_tr1_memory=`grep '#define XYLIB_USE_TR1_MEMORY ' $srcdir/xylib/cache.h | sed 's/.*\([01]\)/\1/g'`
-if test "$ac_cv_header_tr1_memory" = "yes" && test $uses_tr1_memory != "1"; then
-    sed -i.bak 's/\(#define XYLIB_USE_TR1_MEMORY\) 0/\1 1/' $srcdir/xylib/cache.h
-elif test "$ac_cv_header_tr1_memory" != "yes" && test $uses_tr1_memory = "1"; then
-    sed -i.bak 's/\(#define XYLIB_USE_TR1_MEMORY\) 1/\1 0/' $srcdir/xylib/cache.h
-fi
-
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 #ifdef _WIN32
 choke me

@@ -22,11 +22,11 @@ public:
     virtual void draw(wxDC &dc, bool);
     void load_dataset(const std::string& filename, const std::string& filetype,
                       const std::string& options);
-    shared_ptr<const xylib::DataSet> get_data() const { return data_; }
+    dataset_shared_ptr get_data() const { return data_; }
     void make_outdated() { data_updated_ = false; }
 
 private:
-    shared_ptr<const xylib::DataSet> data_;
+    dataset_shared_ptr data_;
     bool data_updated_; // if false, draw() doesn't do anything (plot is clear)
 };
 

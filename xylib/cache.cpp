@@ -10,7 +10,6 @@
 #include "xylib.h"
 #include "util.h"
 
-//no "using namespace std;" to avoid ambiguous symbol shared_ptr
 using std::string;
 using std::vector;
 
@@ -38,12 +37,12 @@ struct CachedFile
     std::string format_name_;
     std::string options_;
     std::time_t read_time_;
-    shared_ptr<const xylib::DataSet> dataset_;
+    dataset_shared_ptr dataset_;
 
     CachedFile(std::string const& path,
                std::string const& format_name,
                std::string const& options,
-               shared_ptr<const xylib::DataSet> dataset)
+               dataset_shared_ptr dataset)
         : path_(path), format_name_(format_name), options_(options),
           read_time_(std::time(NULL)), dataset_(dataset) {}
 };
@@ -79,7 +78,7 @@ Cache::~Cache()
 }
 
 // not thread-safe
-shared_ptr<const DataSet> Cache::load_file(string const& path,
+dataset_shared_ptr Cache::load_file(string const& path,
                                            string const& format_name,
                                            string const& options)
 {
@@ -103,7 +102,7 @@ shared_ptr<const DataSet> Cache::load_file(string const& path,
         }
     }
     // this can throw exception
-    shared_ptr<const DataSet> ds(xylib::load_file(path, format_name, options));
+    dataset_shared_ptr ds(xylib::load_file(path, format_name, options));
 
     if (cache_.size() >= imp_->max_size_)
         cache_.erase(cache_.begin());

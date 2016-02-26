@@ -4,7 +4,7 @@
 /// This header is new in 0.4 and may be changed in future.
 /// Support for caching files read by xylib.
 /// Usage is similar to load_file() from xylib.h:
-///  shared_ptr<const xylib::DataSet> my_dataset = xylib::cached_load_file(...);
+///  dataset_shared_ptr my_dataset = xylib::cached_load_file(...);
 /// or
 ///  xylib::DataSet const& my_dataset = xylib::Cache::Get()->load_file(...);
 
@@ -20,21 +20,14 @@
 #include <vector>
 #include "xylib.h"
 
-// boost/shared_ptr.hpp works on all systems, but to avoid pulling boost as
-// dependency of xylib-dev on Linux distros we directly include <tr1/memory>
-#ifdef __GLIBCXX__
-// the value here (1 or 0) is set by xylib configure script
-// (yes, the configure script can modify this file!)
-#define XYLIB_USE_TR1_MEMORY 1
-#endif
+// boost::shared_ptr is more portable than C++11 or TR1 shared_ptr
+// and this extra caching utility is intendent for programs that
+// use Boost anyway. The usual way of using xylib is by including
+// only xylib.h (without extra caching). I'd not recommend adding
+// Boost as a dependency of xylib-devel (or equivalent) packages.
+#include <boost/shared_ptr.hpp>
 
-#if XYLIB_USE_TR1_MEMORY
-# include <tr1/memory>
-  using std::tr1::shared_ptr;
-#else
-# include <boost/shared_ptr.hpp>
-  using boost::shared_ptr;
-#endif
+typedef boost::shared_ptr<const xylib::DataSet> dataset_shared_ptr;
 
 namespace xylib
 {
@@ -50,9 +43,9 @@ public:
 
     // Arguments are the same as in load_file() in xylib.h,
     // but a const ref is returned instead of pointer.
-    shared_ptr<const DataSet> load_file(std::string const& path,
-                                        std::string const& format_name="",
-                                        std::string const& options="");
+    dataset_shared_ptr load_file(std::string const& path,
+                                 std::string const& format_name="",
+                                 std::string const& options="");
 
     // set max. number of cached files, default=1
     void set_max_size(size_t max_size);
@@ -71,9 +64,9 @@ private:
 };
 
 inline
-shared_ptr<const DataSet> cached_load_file(std::string const& path,
-                                           std::string const& format_name="",
-                                           std::string const& options="")
+dataset_shared_ptr cached_load_file(std::string const& path,
+                                    std::string const& format_name="",
+                                    std::string const& options="")
 {
     return Cache::Get()->load_file(path, format_name, options);
 }
