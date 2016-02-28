@@ -4,6 +4,7 @@
 #define BUILDING_XYLIB
 #include "text.h"
 #include <cstdlib>
+#include <sstream>  // std::ostringstream
 #include "util.h"
 
 using namespace std;
@@ -45,9 +46,9 @@ void use_title_line(string const& line, vector<VecColumn*> &cols, Block* blk)
     if (words.size() == cols.size()) {
         for (size_t i = 0; i < words.size(); ++i)
             cols[i]->set_name(words[i]);
-    }
-    else
+    } else {
         blk->set_name(line);
+    }
 }
 
 void replace_commas_with_dots(string &s)
@@ -61,10 +62,25 @@ void replace_commas_with_dots(string &s)
 
 void TextDataSet::load_data(std::istream &f)
 {
+    string buf;
+    if (!getline(f, buf, '\n'))
+        throw FormatError("empty file?");
+    if (f.eof() && buf.find('\r') != string::npos) {
+        istringstream iss(buf);
+        getline(iss, buf, '\r');
+        load_data_with_delim(iss, '\r', buf);
+    } else {
+        load_data_with_delim(f, '\n', buf);
+    }
+}
+
+// buf contains the first line read from the stream
+void TextDataSet::load_data_with_delim(std::istream &f, char line_delim,
+                                       std::string& buf)
+{
     vector<VecColumn*> cols;
     vector<double> row; // temporary storage for values from one line
     string title_line;
-    string s;
 
     bool strict = has_option("strict");
     bool first_line_header = has_option("first-line-header");
@@ -73,14 +89,15 @@ void TextDataSet::load_data(std::istream &f)
     bool decimal_comma = has_option("decimal-comma");
 
     if (first_line_header) {
-        title_line = str_trim(read_line(f));
+        title_line = str_trim(buf);
         if (!title_line.empty() && title_line[0] == '#')
             title_line = title_line.substr(1);
+        getline(f, buf, line_delim);
     }
 
     // read lines until the first data line is read and columns are created
     string last_line;
-    while (getline(f, s)) {
+    for (;;) {
         // Basic support for LAMMPS log file.
         // There is a chance that output from thermo command will be read
         // properly, but because the LAMMPS log file doesn't have
@@ -88,13 +105,13 @@ void TextDataSet::load_data(std::istream &f)
         // All data blocks (numeric lines after `run' command) should have
         // the same columns (do not use thermo_style/thermo_modify between
         // runs).
-        if (!strict && str_startwith(s, "LAMMPS (")) {
+        if (!strict && str_startwith(buf, "LAMMPS (")) {
             last_line_header = true;
             continue;
         }
         if (decimal_comma)
-            replace_commas_with_dots(s);
-        const char *p = read_numbers(s, row);
+            replace_commas_with_dots(buf);
+        const char *p = read_numbers(buf, row);
         // We skip lines with no data.
         // If there is only one number in first line, skip it if there
         // is a text after the number.
@@ -109,17 +126,19 @@ void TextDataSet::load_data(std::istream &f)
             break;
         }
         if (last_line_header) {
-            string t = str_trim(s);
+            string t = str_trim(buf);
             if (!t.empty())
                 last_line = (t[0] != '#' ? t : t.substr(1));
         }
+        if (!getline(f, buf, line_delim))
+            break;
     }
 
     // read all the next data lines (the first data line was read above)
-    while (getline(f, s)) {
+    while (getline(f, buf, line_delim)) {
         if (decimal_comma)
-            replace_commas_with_dots(s);
-        read_numbers(s, row);
+            replace_commas_with_dots(buf);
+        read_numbers(buf, row);
 
         // We silently skip lines with no data.
         if (row.empty())
@@ -140,10 +159,10 @@ void TextDataSet::load_data(std::istream &f)
 
                 // if it's the single line with smaller length, we ignore it
                 vector<double> row2;
-                getline(f, s);
+                getline(f, buf, line_delim);
                 if (decimal_comma)
-                    replace_commas_with_dots(s);
-                read_numbers(s, row2);
+                    replace_commas_with_dots(buf);
+                read_numbers(buf, row2);
                 if (row2.size() <= 1)
                     continue;
                 if (row2.size() < cols.size()) {

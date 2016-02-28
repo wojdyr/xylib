@@ -167,6 +167,7 @@ HISTORY
 
   - improved CNF reading (thanks to Jim and Miha)
   - changes to reading SpecsLab2 xy
+  - support text files with lines terminated by CR only
 
 * 1.4 (2015-03-31)
 
