@@ -86,6 +86,8 @@ http://www.mx.iucr.org/iucr-top/comm/cpd/QARR/gss/cpd-1a.gss
 # text files
 samples/with_sigma.txt
 samples/xy_text.txt
+# text with lines terminated by CR (from Iacopo, copy/pasted from Calc on Mac)
+samples/pesa.txt
 
 # Princeton Instruments WinSpec SPE files
 # sample files from Pablo Bianucci <pbian@physics.utexas.edu> 
