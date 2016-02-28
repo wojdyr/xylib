@@ -9,9 +9,13 @@
 #include <wx/splitter.h>
 #include <wx/spinctrl.h>
 #include "xylib/xylib.h"
-#include "xylib/cache.h"  // shared_ptr (we want it the same as in xylib)
+#include "xylib/cache.h"  // dataset_shared_ptr
 
 #include "uplot.h"
+
+#if XYLIB_VERSION < 10500
+typedef shared_ptr<const xylib::DataSet> dataset_shared_ptr;
+#endif
 
 class PreviewPlot : public PlotWithTics
 {
