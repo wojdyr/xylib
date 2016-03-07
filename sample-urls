@@ -131,3 +131,5 @@ samples/Spectra.1
 
 # SpecsLab2 xy-file with some XPS and XAS spectra, from Matthias Richter
 samples/specsxy_example.xy
+# and from Matthias May ("Kinetic Energy Axis: no")
+samples/mm-specs.xy
