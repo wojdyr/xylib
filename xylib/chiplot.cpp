@@ -4,6 +4,7 @@
 #define BUILDING_XYLIB
 #include "chiplot.h"
 
+#include <cstdlib>
 #include "util.h"
 
 using namespace std;

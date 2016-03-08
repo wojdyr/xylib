@@ -6,7 +6,6 @@
 
 #include <string>
 #include <vector>
-#include <stdexcept>
 #include <fstream>
 #include <cassert>
 #include <cmath>

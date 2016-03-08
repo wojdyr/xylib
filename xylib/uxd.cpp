@@ -5,6 +5,7 @@
 #include "uxd.h"
 
 #include <cerrno>
+#include <cstdlib>
 
 #include "util.h"
 

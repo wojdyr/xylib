@@ -6,9 +6,9 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <vector>
 
 #include "xylib.h"
-#include "util.h"
 
 using std::string;
 using std::vector;

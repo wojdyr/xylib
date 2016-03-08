@@ -5,6 +5,8 @@
 
 #define BUILDING_XYLIB
 #include "spectra.h"
+
+#include <cstdlib>
 #include "util.h"
 
 using namespace std;

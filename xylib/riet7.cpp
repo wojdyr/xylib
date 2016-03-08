@@ -3,6 +3,8 @@
 
 #define BUILDING_XYLIB
 #include "riet7.h"
+
+#include <cstdlib>
 #include "util.h"
 
 using namespace std;

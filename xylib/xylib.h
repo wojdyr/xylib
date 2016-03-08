@@ -64,7 +64,6 @@
 #include <string>
 #include <stdexcept>
 #include <fstream>
-#include <algorithm>
 
 extern "C" {
 #endif /* __cplusplus */

@@ -8,7 +8,6 @@
 #include <cmath>
 #include <climits>
 #include <limits>
-#include <algorithm>
 #include <cassert>
 #include <cerrno>
 #include <boost/detail/endian.hpp>
