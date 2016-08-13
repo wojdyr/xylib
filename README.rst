@@ -43,7 +43,8 @@ LIBRARY
 =======
 
 The library is written in C++ and has C bindings. It can be used directly
-through FFI in several other languages, for example `in Python`_.
+through FFI in several other languages, for example `in Python`_
+(if you want to use it from Python, try ``pip install xylib-py``).
 
 .. _`in Python`: https://github.com/wojdyr/xylib/blob/master/xylib.py
 
