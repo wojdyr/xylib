@@ -45,7 +45,7 @@ LIBRARY
 The library is written in C++ and has C bindings. It can be used directly
 through FFI in several other languages, for example `in Python`_.
 
-.. _`in Python`: https://github.com/wojdyr/xylib/blob/master/xylib_capi.py
+.. _`in Python`: https://github.com/wojdyr/xylib/blob/master/xylib.py
 
 **API** is documented in the `xylib/xylib.h`__ file.
 Adding new formats -- in
