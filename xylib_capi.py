@@ -11,10 +11,7 @@ from __future__ import print_function
 from ctypes import cdll, c_char_p, c_double
 import os
 
-_dll_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                         '_xylib.so')
-if not os.path.exists(_dll_path):
-    _dll_path = 'libxy.so.4'
+_dll_path = 'libxy.so.4' # platform-dependent actually
 lib = cdll.LoadLibrary(_dll_path)
 
 get_version = lib.xylib_get_version
@@ -40,7 +37,7 @@ block_metadata.restype = c_char_p
 free_dataset = lib.xylib_free_dataset
 
 
-# Usage example. Can be tested as "python -m xylib my-file".
+# Usage example. Can be tested as "./xylib_capi.py my-file".
 
 def _print_info(filename):
     if hasattr(filename, 'encode'):

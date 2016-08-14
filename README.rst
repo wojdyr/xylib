@@ -42,13 +42,14 @@ __ https://raw.github.com/wojdyr/xylib/master/sample-urls
 LIBRARY
 =======
 
-The library is written in C++ and has C bindings. It can be used directly
-through FFI in several other languages, for example `in Python`_
-(if you want to use it from Python, try ``pip install xylib-py``).
+The library is written in C++ and has C bindings.
+It has SWIG-generated bindings for Python (try ``pip install xylib-py``).
+To use it from other languages -- either also use SWIG or access
+C API through FFI (here is `an example`__).
 
-.. _`in Python`: https://github.com/wojdyr/xylib/blob/master/xylib.py
+__ https://github.com/wojdyr/xylib/blob/master/xylib_capi.py
 
-**API** is documented in the `xylib/xylib.h`__ file.
+The **API** is documented in the `xylib/xylib.h`__ file.
 Adding new formats -- in
 `README.dev <https://raw.github.com/wojdyr/xylib/master/README.dev>`_.
 
