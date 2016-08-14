@@ -43,7 +43,7 @@ LIBRARY
 =======
 
 The library is written in C++ and has C bindings.
-It has SWIG-generated bindings for Python (try ``pip install xylib-py``).
+It has SWIG-generated bindings for Python (pip-installable, see below).
 To use it from other languages -- either also use SWIG or access
 C API through FFI (here is `an example`__).
 
@@ -126,6 +126,15 @@ Two build systems are provided: either use CMake or, on Unix,
 ``-D GUI=OFF`` for CMake or ``--without-gui`` for configure.
 If you are using git, ``autoreconf -i`` is needed before ``./configure``.
 
+It also has ``setup.py`` to build the library with its Python bindings,
+and it is upload to PyPI. If you have SWIG, Boost headers and C++ compilers
+installed, it may be enough to just type::
+
+  pip install xylib-py --user
+
+If the Boost headers cannot be found, run pip with options
+``--global-option=build_ext --global-option=-I/path/to/boost_1_60_0``.
+See the ``xyconv.py`` file for usage examples.
 
 AUTHORS
 =======
@@ -165,7 +174,7 @@ CREDITS
 HISTORY
 =======
 
-* 1.5 (2016-02-??)
+* 1.5 (2016-??-??)
 
   - improved CNF reading (thanks to Jim and Miha)
   - changes to reading SpecsLab2 xy
