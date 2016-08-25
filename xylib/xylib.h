@@ -317,8 +317,15 @@ XYLIB_API DataSet* load_file(std::string const& path,
                              std::string const& format_name="",
                              std::string const& options="");
 
-/// return value: pointer to Dataset that contains all data read from file
+/// Read content of a file from stream.
+/// Returns Dataset that stores all the data.
 XYLIB_API DataSet* load_stream(std::istream &is,
+                               std::string const& format_name,
+                               std::string const& options="");
+
+/// Read content of a file from string/bytes.
+/// Returns Dataset that stores all the data.
+XYLIB_API DataSet* load_string(std::string const& str,
                                std::string const& format_name,
                                std::string const& options="");
 

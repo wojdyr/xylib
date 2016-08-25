@@ -39,7 +39,15 @@ def export_metadata(f, meta):
 
 
 def convert_file(opt):
-    d = xylib.load_file(opt.INPUT_FILE, opt.t or '')
+    try:
+        if opt.INPUT_FILE == '-':
+            if not opt.t:
+                sys.exit('need to specify file format for stdin input')
+            d = xylib.load_string(sys.stdin.read(), opt.t)
+        else:
+            d = xylib.load_file(opt.INPUT_FILE, opt.t or '')
+    except RuntimeError as e:
+        sys.exit(str(e))
     f = opt.OUTPUT_FILE
     f.write('# exported by xylib from a %s file\n' % d.fi.name)
     # output the file-level meta-info

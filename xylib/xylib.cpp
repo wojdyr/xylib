@@ -9,6 +9,7 @@
 #include <climits>  // for INT_MAX
 #include <iomanip>
 #include <algorithm>
+#include <sstream>  // for istringstream
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -631,6 +632,14 @@ DataSet* load_stream(istream &is, string const& format_name,
     FormatInfo const* fi = static_cast<FormatInfo const*>(xf);
     return load_stream_of_format(is, fi, options);
 }
+
+DataSet* load_string(string const& str, string const& format_name,
+                     string const& options)
+{
+    istringstream iss(str);
+    return load_stream(iss, format_name, options);
+}
+
 
 
 // filename: path, filename or only extension with dot
