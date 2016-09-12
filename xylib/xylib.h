@@ -325,7 +325,7 @@ XYLIB_API DataSet* load_stream(std::istream &is,
 
 /// Read content of a file from string/bytes.
 /// Returns Dataset that stores all the data.
-XYLIB_API DataSet* load_string(std::string const& str,
+XYLIB_API DataSet* load_string(std::string const& buffer,
                                std::string const& format_name,
                                std::string const& options="");
 

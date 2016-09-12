@@ -39,15 +39,11 @@ def export_metadata(f, meta):
 
 
 def convert_file(opt):
-    try:
-        if opt.INPUT_FILE == '-':
-            if not opt.t:
-                sys.exit('need to specify file format for stdin input')
-            d = xylib.load_string(sys.stdin.read(), opt.t)
-        else:
-            d = xylib.load_file(opt.INPUT_FILE, opt.t or '')
-    except RuntimeError as e:
-        sys.exit(str(e))
+    if opt.INPUT_FILE == '-':
+        src = (sys.stdin.buffer if hasattr(sys.stdin, 'buffer') else sys.stdin)
+        d = xylib.load_string(src.read(), opt.t)
+    else:
+        d = xylib.load_file(opt.INPUT_FILE, opt.t or '')
     f = opt.OUTPUT_FILE
     f.write('# exported by xylib from a %s file\n' % d.fi.name)
     # output the file-level meta-info
@@ -97,7 +93,12 @@ def main():
         return
     if not opt.INPUT_FILE or not opt.OUTPUT_FILE:
         sys.exit('Specify input and output files. Or "-h" for details.')
-    convert_file(opt)
+    if opt.INPUT_FILE == '-' and not opt.t:
+        sys.exit('You need to specify file format for stdin input')
+    try:
+        convert_file(opt)
+    except RuntimeError as e:
+        sys.exit(str(e))
 
 if __name__ == '__main__':
     main()

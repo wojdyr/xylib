@@ -35,7 +35,7 @@ sources = glob('xylib/*.cpp') + ['xylib.i']
 headers = glob('xylib/*.h')
 
 setup(name='xylib-py',
-      version='0.0.3',
+      version='0.1.0',
       description='Python bindings to xylib',
       author='Marcin Wojdyr',
       author_email='wojdyr@gmail.com',

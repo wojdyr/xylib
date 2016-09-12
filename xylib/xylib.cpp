@@ -633,10 +633,10 @@ DataSet* load_stream(istream &is, string const& format_name,
     return load_stream_of_format(is, fi, options);
 }
 
-DataSet* load_string(string const& str, string const& format_name,
+DataSet* load_string(string const& buffer, string const& format_name,
                      string const& options)
 {
-    istringstream iss(str);
+    istringstream iss(buffer);
     return load_stream(iss, format_name, options);
 }
 
