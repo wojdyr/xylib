@@ -20,3 +20,5 @@ gcc-build/
 index.html
 xylib-?.?.tar.bz2
 *-build/
+xylib.py
+xylib_wrap.cpp

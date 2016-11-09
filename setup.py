@@ -6,7 +6,7 @@
 from distutils.core import setup, Extension
 from distutils.command.sdist import sdist
 from glob import glob
-import os
+import sys
 
 # as per http://stackoverflow.com/a/21236111/104453
 from distutils.command.build import build
@@ -34,17 +34,21 @@ sdist.add_defaults = add_defaults_with_headers
 sources = glob('xylib/*.cpp') + ['xylib.i']
 headers = glob('xylib/*.h')
 
+swig_opts = ['-c++', '-modern', '-modernargs']
+if sys.version_info[0] == 3:
+    swig_opts += ['-py3']
+
 setup(name='xylib-py',
-      version='0.1.0',
+      version='0.1.1',
       description='Python bindings to xylib',
       author='Marcin Wojdyr',
       author_email='wojdyr@gmail.com',
-      license= 'LGPL2.1',
+      license='LGPL2.1',
       url='https://github.com/wojdyr/xylib',
       ext_modules=[Extension('_xylib',
                              sources=sources,
                              language='c++',
-                             swig_opts=['-c++', '-modern'],
+                             swig_opts=swig_opts,
                              include_dirs=['.'],
                              libraries=[])],
       #package_dir={'': 'xylib'},

@@ -39,9 +39,8 @@
     temp.assign(cstr, len);
     $1 = &temp;
 }
-// override default freearg typemap that checks res$argnum
-%typemap(freearg) std::string const& buffer %{
-%}
+// delete default freearg typemap that checks res$argnum
+%typemap(freearg) std::string const& buffer "";
 
 %#endif // python3
 #endif // SWIGPYTHON
