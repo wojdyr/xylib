@@ -105,7 +105,7 @@ __ https://github.com/wojdyr/xylib/releases/latest
 * `tarball`_
 * GitHub repository_ |travis-status|_ |appveyor-status|_
 
-.. _`tarball`: https://github.com/wojdyr/xylib/releases/download/v1.4/xylib-1.4.tar.bz2
+.. _`tarball`: https://github.com/wojdyr/xylib/releases/download/v1.5/xylib-1.5.tar.bz2
 .. _repository: https://github.com/wojdyr/xylib
 .. _travis-status: https://travis-ci.org/wojdyr/xylib/
 .. |travis-status| image:: https://api.travis-ci.org/wojdyr/xylib.png
@@ -174,7 +174,7 @@ CREDITS
 HISTORY
 =======
 
-* 1.5 (2016-12-??)
+* 1.5 (2016-12-15)
 
   - improved CNF reading (thanks to Jim and Miha)
   - changes to reading SpecsLab2 xy
