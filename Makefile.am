@@ -2,7 +2,8 @@
 ACLOCAL_AMFLAGS=-I build-aux
 SUBDIRS = xylib
 
-EXTRA_DIST = web.css sample-urls README.rst README.dev xylib.i xylib_capi.py \
+EXTRA_DIST = sample-urls README.rst README.dev \
+	     xylib.i xylib_capi.py \
 	     gui/xyconvert.rc gui/xyconvert16.xpm gui/xyconvert48.xpm \
 	     CMakeLists.txt
 
@@ -33,6 +34,6 @@ gui_xyconvert_CPPFLAGS = $(WX_CPPFLAGS) -DXYCONVERT
 gui_xyconvert_LDADD = $(xyconvert_res) $(WX_LIBS) xylib/libxy.la -lm
 endif
 
-index.html: README.rst web/web.css
+index.html: README.rst web/web.css web/web-tmpl.txt
 	rst2html --stylesheet=$(srcdir)/web/web.css \
 	         --template=$(srcdir)/web/web-tmpl.txt $< $@
