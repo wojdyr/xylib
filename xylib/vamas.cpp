@@ -358,6 +358,8 @@ Block* VamasDataSet::read_block(istream &f, bool includes[],
     int cor_var; // number of corresponding variables
     if (includes[31]) {
         cor_var = read_line_int(f);
+        if (cor_var < 1)
+            throw FormatError("wrong number of corresponding variables");
         // columns initialization
         for (int i = 0; i != cor_var; ++i) {
             string corresponding_variable_label = read_line_trim(f);
