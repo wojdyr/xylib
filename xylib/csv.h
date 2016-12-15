@@ -11,15 +11,17 @@
 // In this implementation continuation lines are not supported.
 // Escape character is supported. Quoting is supported.
 // Empty and blank lines are ignored.
+//
+// The delimiting character (separator) and decimal point are guessed from
+// a few popular combinations by analysing (only) lines 3-4.
+// If the option 'decimal-comma' is set - ',' is regarded a decimal point
+// (in addition, not instead of '.').
+//
 // All non-numeric fields are read as NaNs.
-// If the first line has more NaNs than 3rd and 4th lines
-// it is assumed that this line is a header. Header is used for column titles.
-// Default decimal point is '.'. If option 'decimal-comma' is set both '.'
-// and ',' are regarded decimal point.
-// Separator is determined automatically by reading the first 3 lines,
-// trying 7 separators: "\t,;|:/ ". (If 'decimal-comma' is given, comma
-// is not tried as separator.)
-// The separator that gives most numbers in lines 3 and 4 is selected.
+// If the first line has the same number of fields, but more NaNs than 3rd
+// and 4th lines it is assumed that this line is a header with column titles.
+//
+// Lines with all NaNs are ignored.
 
 #ifndef XYLIB_CSV_H_
 #define XYLIB_CSV_H_

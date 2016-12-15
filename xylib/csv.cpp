@@ -7,13 +7,6 @@
 #include <limits>
 #include <boost/tokenizer.hpp>
 
-#include <boost/version.hpp>
-#if BOOST_VERSION >= 103500
-#include <boost/math/special_functions/fpclassify.hpp>
-#else
-namespace boost { namespace math { bool isnan(double f) { return f != f; } }}
-#endif
-
 using namespace std;
 using namespace xylib::util;
 
@@ -32,47 +25,8 @@ const FormatInfo CsvDataSet::fmt_info(
     "decimal-comma"
 );
 
-// The field should contain only a number with optional leading/trailing
-// white-spaces. For different input NaN is returned.
 static
-double read_field(const char* field)
-{
-    char* endptr;
-    double d = strtod(field, &endptr);
-    if (endptr != field) {
-        while (isspace(*endptr))
-            ++endptr;
-        if (*endptr == '\0')
-            return d;
-    }
-    return numeric_limits<double>::quiet_NaN();
-}
-
-static
-int count_csv_numbers(const string& line, char sep, int *number_count)
-{
-    int field_count = 0;
-    *number_count = 0;
-    Tokenizer t(line, boost::escaped_list_separator<char>('\\', sep, '"'));
-    for (Tokenizer::iterator i = t.begin(); i != t.end(); ++i) {
-        double d = read_field(i->c_str());
-        ++field_count;
-        if (!boost::math::isnan(d))
-            ++(*number_count);
-    }
-    return field_count;
-}
-
-static
-void read_numbers_from_line(const string& line, char sep, vector<double> *out)
-{
-    Tokenizer t(line, boost::escaped_list_separator<char>('\\', sep, '"'));
-    for (Tokenizer::iterator i = t.begin(); i != t.end(); ++i)
-        out->push_back(read_field(i->c_str()));
-}
-
-static
-bool is_space(const char* str)
+bool is_space_or_end(const char* str)
 {
     while (*str) {
         if (!isspace(*str))
@@ -83,62 +37,113 @@ bool is_space(const char* str)
 }
 
 static
-char read_4lines(istream &f, bool decimal_comma,
-                         vector<vector<double> > *out,
-                         vector<string> *column_names)
+int append_numbers_from_line(const string& line, char sep,
+                             vector<vector<double> > *out)
 {
-    char buffer[1600]; // more than enough for one line
+    Tokenizer t(line, boost::escaped_list_separator<char>('\\', sep, '"'));
+    out->resize(out->size() + 1);
+    vector<double>& nums = out->back();
+    if (out->size() > 0)
+        nums.reserve(out->front().size());
+    int number_count = 0;
+    for (Tokenizer::iterator i = t.begin(); i != t.end(); ++i) {
+        const char* field = i->c_str();
+        // If the field contains anything else than a number with optional
+        // leading/trailing white-spaces then NaN is returned.
+        char* endptr;
+        double d = strtod(field, &endptr);
+        if (endptr == field || !is_space_or_end(endptr))
+            d = numeric_limits<double>::quiet_NaN();
+        else
+            number_count++;
+        nums.push_back(d);
+    }
+    return number_count;
+}
+
+// count_csv_numbers() is used much less than append_numbers_from_line(),
+// so we don't try to optimize it.
+static
+int count_csv_numbers(const string& line, char sep, int *number_count,
+                      bool decimal_comma=false)
+{
+    vector<vector<double> > out;
+    if (decimal_comma) {
+        string modified = line;
+        replace(modified.begin(), modified.end(), ',', '.');
+        *number_count = append_numbers_from_line(modified, sep, &out);
+    } else {
+        *number_count = append_numbers_from_line(line, sep, &out);
+    }
+
+    return out.size() == 1 ? out[0].size() : 0;
+}
+
+static
+char read_4lines(istream &f, bool& decimal_comma,
+                 vector<vector<double> > *out,
+                 vector<string> *column_names)
+{
+    // We set a limit on the line length because if we get a large file
+    // with no new lines we don't want to read it all.
+    const int buflen = 1600;
+    char buffer[1600]; // buflen
     string lines[4];
-    buffer[1600-1]=0;
-    for (int all_lines = 0, nonempty_lines=0;
-            nonempty_lines < 4; ++all_lines) {
-        // it can be a large file without new lines, limit line length
-        f.getline(buffer, 1600);
-        if (!f || buffer[1600-1] != 0)
-            throw FormatError("reading line " + S(all_lines) + " failed.");
-        if (!is_space(buffer)) {
-            if (decimal_comma)
-                for (char* p = buffer; *p != '\0'; ++p)
-                    if (*p == ',')
-                        *p = '.';
-            lines[nonempty_lines] = buffer;
-            ++nonempty_lines;
-        }
+    buffer[buflen-1] = '\0';
+    for (int line_no = 1, cnt = 0; cnt < 4; ++line_no) {
+        f.getline(buffer, buflen);
+        if (!f || buffer[buflen-1] != '\0')
+            throw FormatError("reading line " + S(line_no) + " failed.");
+        if (is_space_or_end(buffer))
+            continue;
+        lines[cnt] = buffer;
+        if (decimal_comma)
+            replace(lines[cnt].begin(), lines[cnt].end(), ',', '.');
+        ++cnt;
     }
 
     // Determine separator.
     // The first line can be header. Second line should not be a header,
     // but just in case, let's check lines 3 and 4.
-    int max_number_count = 0;
-    int max_field_count = 0;
+    double max_score = 0;
+    int field_count = 0;
     char sep = 0;
-    const char* separators = "\t,;|:/ ";
+    // the last duplicated ';' here is to auto-detect a popular variant:
+    // ',' as decimal point and ';' as separator
+    // (we try to detect it even if decimal_comma option was not specified)
+    const char* separators = "\t,;|: ;";
     for (const char* isep = separators; *isep != '\0'; ++isep) {
-        int num2;
-        int fields1 = count_csv_numbers(lines[2], *isep, &num2);
-        int num3;
-        int fields2 = count_csv_numbers(lines[3], *isep, &num3);
-        if (fields1 == 0 || fields2 != fields1)
+        bool comma = false;
+        // handle the special ,/; case described above
+        if (*(isep+1) == '\0') {
+            if (decimal_comma)
+                continue;
+            comma = true;
+        }
+        int num2, num3;
+        int fields2 = count_csv_numbers(lines[2], *isep, &num2, comma);
+        if (fields2 < 2)
             continue;
-        int num = min(num2, num3);
-        if (num > max_number_count || (num == max_number_count &&
-                                       fields1 > max_field_count)) {
-            max_number_count = num;
-            max_field_count = fields1;
+        int fields3 = count_csv_numbers(lines[3], *isep, &num3, comma);
+        if (fields2 != fields3)
+            continue;
+        int nan_count = fields2 - num2 + fields3 - num3;
+        double score = num2 + num3 - 1e-3 * nan_count;
+        if (score > max_score) {
+            max_score = score;
+            field_count = fields2;
             sep = *isep;
+            if (comma)
+                // we can do this b/c we know it's the final cycle of this loop
+                decimal_comma = true;
         }
     }
-    // If there is one field, it's probably not CSV
-    if (max_field_count == 1)
-        sep = 0;
 
     // if the first row has labels (not numbers) read them as column names
     int num0;
-    int fields0 = count_csv_numbers(lines[0], sep, &num0);
-    if (fields0 != max_field_count)
-        throw FormatError("different field count (`" + S(sep) +
-                          "'-separated) in lines 1 and 3.");
-    bool has_header = (num0 < max_number_count);
+    int fields0 = count_csv_numbers(lines[0], sep, &num0, decimal_comma);
+    bool has_header = (fields0 == field_count && num0 == 0 &&
+                       !str_startwith(lines[0], "# "));
     if (has_header && column_names) {
         Tokenizer t(lines[0],
                     boost::escaped_list_separator<char>('\\', sep, '"'));
@@ -148,13 +153,12 @@ char read_4lines(istream &f, bool decimal_comma,
 
     // add numbers from the first 4 lines to `out`
     if (out != NULL) {
-        if (!has_header) {
-            out->resize(out->size() + 1);
-            read_numbers_from_line(lines[0], sep, &out->back());
-        }
-        for (int i = 1; i != 4; ++i) {
-            out->resize(out->size() + 1);
-            read_numbers_from_line(lines[i], sep, &out->back());
+        for (int i = (has_header ? 1 : 0); i != 4; ++i) {
+            if (decimal_comma)
+                replace(lines[i].begin(), lines[i].end(), ',', '.');
+            int n = append_numbers_from_line(lines[i], sep, out);
+            if (n == 0)
+                out->pop_back();
         }
     }
 
@@ -164,10 +168,14 @@ char read_4lines(istream &f, bool decimal_comma,
 bool CsvDataSet::check(istream &f, string* details)
 {
     try {
-        char sep = read_4lines(f, false, NULL, NULL);
-        if (sep != 0 && details)
+        bool decimal_comma = false;
+        char sep = read_4lines(f, decimal_comma, NULL, NULL);
+        if (sep != 0 && details) {
             *details = "separator: " +
                        (sep == '\t' ? S("TAB") : "'" + S(sep) + "'");
+            if (decimal_comma)
+                *details += ", decimal comma";
+        }
         return sep != 0;
     }
     catch (FormatError &) {
@@ -188,15 +196,13 @@ void CsvDataSet::load_data(istream &f)
     char sep = read_4lines(f, decimal_comma, &data, &column_names);
     size_t n_col = data[0].size();
     while (getline(f, line)) {
-        if (is_space(line.c_str()))
+        if (is_space_or_end(line.c_str()))
             continue;
         if (decimal_comma)
-            for (string::iterator p = line.begin(); p != line.end(); ++p)
-                if (*p == ',')
-                    *p = '.';
-        data.resize(data.size() + 1);
-        data.back().reserve(n_col);
-        read_numbers_from_line(line, sep, &data.back());
+            replace(line.begin(), line.end(), ',', '.');
+        int n = append_numbers_from_line(line, sep, &data);
+        if (n == 0)
+            data.pop_back();
     }
 
     Block* blk = new Block;

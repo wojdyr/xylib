@@ -1,0 +1,16 @@
+# This is not a list of column names | as it starts with "# "
++3 | -0.3
+-3 | 0.3
+4 | -0.4
+-4 | -0.4
+this is a random comment, and below is
+2nd comment, has numbers | 3.14 but with appended text
+so it's not really a numeric field, neither this:
+|
+but the rest is fine
+
+5|+0.5
+6|-0.6|123
+ | 8
+9 |
+foo | 10

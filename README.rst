@@ -174,11 +174,12 @@ CREDITS
 HISTORY
 =======
 
-* 1.5 (2016-??-??)
+* 1.5 (2016-12-??)
 
   - improved CNF reading (thanks to Jim and Miha)
   - changes to reading SpecsLab2 xy
   - support text files with lines terminated by CR only
+  - more robust reading of CSV files
 
 * 1.4 (2015-03-31)
 
