@@ -11,7 +11,7 @@ if [ $# -eq 0 ]; then
     echo 3. make Windows binaries
     echo 4. RPMs: https://build.opensuse.org/project/show?project=home%3Awojdyr
 #    echo 5. prepare DEBs in Launchpad  /obsolete/
-    echo "6. git tag -a v$version -m 'version $version'; git push --tags"
+    echo "6. git tag -a v$VERSION -m 'version $VERSION'; git push --tags"
     echo "   (and upload tarball and binaries)"
     echo 7. update webpage
     echo 8. announce
@@ -99,7 +99,7 @@ fi
 
 # 6. GitHub file release
 if [ $arg -eq 6 ]; then
-    echo "do: git tag -a v$version -m 'version $version'; git push --tags"
+    echo "do: git tag -a v$vERSION -m 'version $VERSION'; git push --tags"
 fi
 
 # 7. update webpage
