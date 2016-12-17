@@ -105,7 +105,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${EXTRA_CXX_FLAGS}")
 
 
 add_library(xy
-            xylib/brucker_raw.cpp
+            xylib/bruker_raw.cpp
             xylib/cache.cpp
             xylib/canberra_cnf.cpp
             xylib/canberra_mca.cpp

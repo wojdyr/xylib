@@ -2,7 +2,7 @@
 // Licence: Lesser GNU Public License 2.1 (LGPL)
 
 #define BUILDING_XYLIB
-#include "brucker_raw.h"
+#include "bruker_raw.h"
 #include <sstream>
 #include "util.h"
 
@@ -11,18 +11,18 @@ using namespace xylib::util;
 
 namespace xylib {
 
-const FormatInfo BruckerRawDataSet::fmt_info(
+const FormatInfo BrukerRawDataSet::fmt_info(
     "bruker_raw",
     "Siemens/Bruker RAW",
     "raw",
     true,                       // whether binary
     true,                       // whether has multi-blocks
-    &BruckerRawDataSet::ctor,
-    &BruckerRawDataSet::check
+    &BrukerRawDataSet::ctor,
+    &BrukerRawDataSet::check
 );
 
 
-bool BruckerRawDataSet::check(istream &f, string* details)
+bool BrukerRawDataSet::check(istream &f, string* details)
 {
     string head = read_string(f, 4);
     if (head == "RAW ") {
@@ -45,7 +45,7 @@ bool BruckerRawDataSet::check(istream &f, string* details)
 }
 
 
-void BruckerRawDataSet::load_data(std::istream &f)
+void BrukerRawDataSet::load_data(std::istream &f)
 {
     string head = read_string(f, 4);
     format_assert(this, head == "RAW " || head == "RAW2" || head == "RAW1");
@@ -57,7 +57,7 @@ void BruckerRawDataSet::load_data(std::istream &f)
         load_version1_01(f);
 }
 
-void BruckerRawDataSet::load_version1(std::istream &f)
+void BrukerRawDataSet::load_version1(std::istream &f)
 {
     meta["format version"] = "1";
 
@@ -118,7 +118,7 @@ void BruckerRawDataSet::load_version1(std::istream &f)
     }
 }
 
-void BruckerRawDataSet::load_version2(std::istream &f)
+void BrukerRawDataSet::load_version2(std::istream &f)
 {
     meta["format version"] = "2";
 
@@ -169,7 +169,7 @@ void BruckerRawDataSet::load_version2(std::istream &f)
 // Contributed by Andreas Breslau.
 // Changed by Marcin Wojdyr, based on the file structure specification:
 //  DIFFRAC^plus XCH V.5.0 Release 2002. USER'S MANUAL. APPENDIX A.
-void BruckerRawDataSet::load_version1_01(std::istream &f)
+void BrukerRawDataSet::load_version1_01(std::istream &f)
 {
     meta["format version"] = "3";
 

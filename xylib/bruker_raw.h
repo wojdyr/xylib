@@ -1,7 +1,7 @@
 // Siemens/Bruker Diffrac-AT Raw Format version 1/2/3
 // Licence: Lesser GNU Public License 2.1 (LGPL)
 
-// Contains data from Siemens/Brucker X-ray diffractometers.
+// Contains data from Siemens/Bruker X-ray diffractometers.
 // Implementation based on:
 // ver. 1 and 2: the file format specification from a diffractometer manual,
 //               chapter "Appendix B: DIFFRAC-AT Raw Data File Format"
@@ -13,16 +13,16 @@
 //               "A.1 DIFFRAC^plus V3 RAW File Structure" of the manual:
 //               "DIFFRAC^plus FILE EXCHANGE and XCH" Release 2002.
 
-#ifndef XYLIB_BRUCKER_RAW_H_
-#define XYLIB_BRUCKER_RAW_H_
+#ifndef XYLIB_BRUKER_RAW_H_
+#define XYLIB_BRUKER_RAW_H_
 
 #include "xylib.h"
 
 namespace xylib {
 
-    class BruckerRawDataSet : public DataSet
+    class BrukerRawDataSet : public DataSet
     {
-        OBLIGATORY_DATASET_MEMBERS(BruckerRawDataSet)
+        OBLIGATORY_DATASET_MEMBERS(BrukerRawDataSet)
 
     protected:
         void load_version1(std::istream &f);
@@ -32,5 +32,5 @@ namespace xylib {
 
 } // namespace
 
-#endif // XYLIB_BRUCKER_RAW_H_
+#endif // XYLIB_BRUKER_RAW_H_
 

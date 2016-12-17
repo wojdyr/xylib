@@ -26,7 +26,7 @@
 #endif
 
 #include "util.h"
-#include "brucker_raw.h"
+#include "bruker_raw.h"
 #include "rigaku_dat.h"
 #include "text.h"
 #include "csv.h"
@@ -67,7 +67,7 @@ const FormatInfo *formats[] = {
     &CpiDataSet::fmt_info,
     &UxdDataSet::fmt_info,
     &RigakuDataSet::fmt_info,
-    &BruckerRawDataSet::fmt_info,
+    &BrukerRawDataSet::fmt_info,
     &VamasDataSet::fmt_info,
     &UdfDataSet::fmt_info,
     &WinspecSpeDataSet::fmt_info,
