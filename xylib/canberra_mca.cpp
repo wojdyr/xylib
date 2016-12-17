@@ -33,14 +33,10 @@ bool CanberraMcaDataSet::check(istream &f, string*)
     const int file_size = 2*512+2048*4;
     char *all_data = new char[file_size];
     f.read(all_data, file_size);
-    uint16_t word_at_0 = *reinterpret_cast<uint16_t*>(all_data + 0);
-    le_to_host(&word_at_0, 2);
-    uint16_t word_at_34 = *reinterpret_cast<uint16_t*>(all_data + 34);
-    le_to_host(&word_at_34, 2);
-    uint16_t word_at_36 = *reinterpret_cast<uint16_t*>(all_data + 36);
-    le_to_host(&word_at_36, 2);
-    uint16_t word_at_38 = *reinterpret_cast<uint16_t*>(all_data + 38);
-    le_to_host(&word_at_38, 2);
+    uint16_t word_at_0 = from_le<uint16_t>(all_data + 0);
+    uint16_t word_at_34 = from_le<uint16_t>(all_data + 34);
+    uint16_t word_at_36 = from_le<uint16_t>(all_data + 36);
+    uint16_t word_at_38 = from_le<uint16_t>(all_data + 38);
     delete [] all_data;
     return f.gcount() == file_size
            && word_at_0 == 0
@@ -82,14 +78,12 @@ void CanberraMcaDataSet::load_data(std::istream &f)
     blk->add_column(xcol);
 
     VecColumn *ycol = new VecColumn;
-    uint16_t data_offset = *reinterpret_cast<uint16_t*>(all_data+24);
-    le_to_host(&data_offset, 2);
+    uint16_t data_offset = from_le<uint16_t>(all_data+24);
     uint32_t* pw = reinterpret_cast<uint32_t*>(all_data + data_offset);
-    for (int i = 1; i <= 2048; i++) {
-        double y = *pw;
+    for (int i = 0; i < 2048; i++) {
+        le_to_host(pw, 4);
+        ycol->add_val(*pw);
         pw++;
-        le_to_host(&y, 4);
-        ycol->add_val(y);
     }
     delete [] all_data;
     blk->add_column(ycol);
