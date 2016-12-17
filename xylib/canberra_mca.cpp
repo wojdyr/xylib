@@ -79,11 +79,9 @@ void CanberraMcaDataSet::load_data(std::istream &f)
 
     VecColumn *ycol = new VecColumn;
     uint16_t data_offset = from_le<uint16_t>(all_data+24);
-    uint32_t* pw = reinterpret_cast<uint32_t*>(all_data + data_offset);
     for (int i = 0; i < 2048; i++) {
-        le_to_host(pw, 4);
-        ycol->add_val(*pw);
-        pw++;
+        uint32_t y = from_le<uint32_t>(all_data + data_offset + 4*i);
+        ycol->add_val(y);
     }
     delete [] all_data;
     blk->add_column(ycol);
