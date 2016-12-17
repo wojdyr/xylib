@@ -153,7 +153,7 @@ void VamasDataSet::load_data(std::istream &f)
         all[i] = true;
         inclusion_list[i] = (n <= 0);
     }
-    for (int i = 0; i < abs(n); ++i) {
+    for (int i = 0; i < (n >= 0 ? n : -n); ++i) {
         int idx = read_line_int(f) - 1; // "-1" because the input is 1-based
         inclusion_list[idx] = !inclusion_list[idx];
     }
