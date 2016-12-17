@@ -203,13 +203,14 @@ int convert_file(string const& input, string const& output,
                  string const& filetype, string const& options,
                  bool with_metadata)
 {
+    xylib::DataSet *d = NULL;
     try {
 #ifdef _WIN32
         string input_s = short_path(input.c_str());
 #else
         const string& input_s = input;
 #endif
-        xylib::DataSet *d = xylib::load_file(input_s, filetype, options);
+        d = xylib::load_file(input_s, filetype, options);
         // validate options
         for (const char *p = options.c_str(); *p != '\0'; ) {
             while (isspace(*p))
@@ -228,6 +229,7 @@ int convert_file(string const& input, string const& output,
         delete d;
     } catch (runtime_error const& e) {
         cerr << "Error. " << e.what() << endl;
+        delete d;
         return -1;
     }
     return 0;
