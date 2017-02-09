@@ -567,7 +567,7 @@ DataSet* load_file(string const& path, string const& format_name,
     } else if (gzipped) {
 #ifdef HAVE_LIBZ
 #if defined(_WIN32)
-        gzFile gz_stream = gzopen_w(wpath.data(), "rb");
+        gzFile gz_stream = gzopen_w(&wpath[0], "rb");
 #else
         gzFile gz_stream = gzopen(path.c_str(), "rb");
 #endif
