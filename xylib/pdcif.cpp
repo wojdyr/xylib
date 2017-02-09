@@ -531,8 +531,8 @@ void PdCifDataSet::load_data(std::istream &f)
     CifGrammar<DatasetActions> p(actions);
     parse_info<vector<char>::const_iterator> info =
         parse(vec.begin(), vec.end(), p);
-    format_assert(this, info.full,
-                  "Parse error at character " + S(info.stop - vec.begin()));
+    int stop = info.stop - vec.begin();
+    format_assert(this, info.full, "Parse error at character " + S(stop));
     int n = (int) actions.block_list.size();
     if (n == 0)
         throw RunTimeError("pdCIF file was read, "
