@@ -30,14 +30,12 @@ samples/format1.raw
 # sample from Bjørn Tore Lønstad
 samples/BT86.raw
 
-#  pdCIF format files
-#http://pubs.acs.org/subscribe/journals/inocaj/suppinfo/41/i14/ic0111177/ic0111177.cif
-#http://pubs.acs.org/subscribe/journals/inocaj/suppinfo/ic034984f/ic034984fsi20030819_115442.cif
-#http://jghx.fjirsm.ac.cn/cifs/2005No7/1829.cif
+# pdCIF format files
+# one file from COD (http://crystallography.net/cod/1517474.cif@176729)
+samples/1517474.cif
 http://www.ccp14.ac.uk/ccp/ccp14/ftp-mirror/briantoby/pub/cryst/cif/NISI.cif
-#You can also get some .cif files from the sample directory of ciftools_Linux, 
-# an open-source CIF software package which can be download from 
-#http://www.ncnr.nist.gov/programs/crystallography/software/cif/ciftools.html
+# pdCIF files can also be found in ciftools_Linux/samples from
+# http://www.ncnr.nist.gov/programs/crystallography/software/cif/ciftools.html
 
 # Philips RD files
 http://www.mx.iucr.org/iucr-top/comm/cpd/QARR/rd/cpd-1a.rd

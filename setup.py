@@ -10,7 +10,7 @@ For the list of supported formats see https://github.com/wojdyr/xylib .
 This module includes bindings to xylib and xylib itself.
 The first two numbers in the version are the version of included xylib.
 
-Prerequisites for building: SWIG and Boost libraries.
+Prerequisites for building: SWIG and Boost libraries (headers only).
 """
 
 from distutils.core import setup, Extension
