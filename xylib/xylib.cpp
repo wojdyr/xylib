@@ -36,6 +36,7 @@
 #include "winspec_spe.h"
 #include "pdcif.h"
 #include "philips_raw.h"
+#include "xrdml.h"
 //#include "gsas.h"
 #include "cpi.h"
 #include "dbws.h"
@@ -73,6 +74,7 @@ const FormatInfo *formats[] = {
     &WinspecSpeDataSet::fmt_info,
     &PdCifDataSet::fmt_info,
     &PhilipsRawDataSet::fmt_info,
+    //&XrdmlDataSet::fmt_info,
     //&GsasDataSet::fmt_info,
     &CanberraMcaDataSet::fmt_info,
     &CanberraCnfDataSet::fmt_info,

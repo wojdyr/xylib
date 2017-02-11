@@ -127,6 +127,7 @@ add_library(xy
             xylib/vamas.cpp
             xylib/winspec_spe.cpp
             xylib/xfit_xdd.cpp
+            xylib/xrdml.cpp
             xylib/xylib.cpp)
 
 if (DOWNLOAD_ZLIB)
