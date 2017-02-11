@@ -53,6 +53,10 @@ http://www.ccp14.ac.uk/ccp/ccp14/ftp-mirror/krumm/Software/windows/winfit/Winfit
 http://www.eng.uc.edu/~gbeaucag/Classes/XRD/Labs/2004_Hull_Davey_data/CU1.UDF
 http://sdpd.univ-lemans.fr/DU-SDPD/semaine-5/PbCrF1.udf
 
+# PANalytical XRDML files
+samples/empyrean.xrdml
+https://raw.githubusercontent.com/IntersectAustralia/acdata/master/sample_files/Panalytical.XRDML
+
 # UXD files
 http://sdpd.univ-lemans.fr/course/week-1/sample1.uxd
 http://sdpd.univ-lemans.fr/course/week-1/sample2.uxd
