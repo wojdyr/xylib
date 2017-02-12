@@ -1,7 +1,7 @@
 
 lib_LTLIBRARIES = libxy.la
 
-libxy_la_LDFLAGS = -no-undefined -version-info 4:0:0
+libxy_la_LDFLAGS = -no-undefined -version-info 4:1:1
 libxy_la_LIBADD = $(XYLIB_ADDLIB)
 
 libxy_la_SOURCES = xylib.cpp cache.cpp bruker_raw.cpp \
