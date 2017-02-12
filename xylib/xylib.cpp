@@ -74,7 +74,7 @@ const FormatInfo *formats[] = {
     &WinspecSpeDataSet::fmt_info,
     &PdCifDataSet::fmt_info,
     &PhilipsRawDataSet::fmt_info,
-    //&XrdmlDataSet::fmt_info,
+    &XrdmlDataSet::fmt_info,
     //&GsasDataSet::fmt_info,
     &CanberraMcaDataSet::fmt_info,
     &CanberraCnfDataSet::fmt_info,

@@ -5,7 +5,6 @@ REQUESTED FORMATS
 * Certified Scientific Software's spec format:
   http://www.certif.com/spec.html http://www.certif.com/goodies.html
   http://www.mathworks.com/matlabcentral/fileexchange/6271
-* PANalytical XRDML
 * JCAMP format (Standard NMR Data Format)
 * GSAS format (see gsas.cpp for comments) 
 * Thermo GRAMS/32 SPC

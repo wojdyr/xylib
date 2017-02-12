@@ -17,6 +17,7 @@ Supported formats:
 -  Siemens/Bruker RAW ver. 1/2/3
 -  Philips UDF
 -  Philips PC-APD RD raw scan V3/V5
+-  PANalytical XRDML
 -  Rigaku DAT
 -  Sietronics Sieray CPI
 -  DBWS/DMPLOT data file
@@ -174,8 +175,10 @@ CREDITS
 HISTORY
 =======
 
-* 1.5 (2016-12-17)
+* 1.6 (unreleased)
+  - added PANalytical XRDML
 
+* 1.5 (2016-12-17)
   - improved CNF reading (thanks to Jim and Miha)
   - changes to reading SpecsLab2 xy
   - support text files with lines terminated by CR only
