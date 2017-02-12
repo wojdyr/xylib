@@ -7,9 +7,10 @@
 #include <cassert>
 #include <cmath>
 #include <cstring>  // memcpy
+#include <fstream>
+#include <memory>
 #include <string>
 #include <vector>
-#include <fstream>
 
 #include "xylib.h"
 
@@ -196,6 +197,12 @@ public:
         return get_value(n-1);
     }
 };
+
+#if __cplusplus-0 < 201103L
+typedef std::auto_ptr<Block> AutoPtrBlock;
+#else
+typedef std::unique_ptr<Block> AutoPtrBlock;
+#endif
 
 } } // namespace xylib::util
 

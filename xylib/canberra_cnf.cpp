@@ -4,7 +4,6 @@
 #define BUILDING_XYLIB
 #include "canberra_cnf.h"
 
-#include <memory>
 #include <ctime>
 #include <cstring>
 #include <boost/cstdint.hpp>
@@ -197,11 +196,7 @@ void CanberraCnfDataSet::load_data(std::istream &f)
     if (enc_offset == 0)
         enc_offset = acq_offset;
 
-#if __cplusplus-0 < 201103L
-    auto_ptr<Block> blk(new Block);
-#else
-    unique_ptr<Block> blk(new Block);
-#endif
+    AutoPtrBlock blk(new Block);
 
     // sample data - split name into name and description
     // (this was not in code from JF, it's my guess - MW)
