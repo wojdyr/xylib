@@ -134,7 +134,7 @@ if (DOWNLOAD_ZLIB)
   add_dependencies(xy zlib)
 endif()
 target_link_libraries(xy ${ZLIB_LIBRARIES} ${BZIP2_LIBRARIES})
-set_target_properties(xy PROPERTIES SOVERSION 3 VERSION 3.3.0)
+set_target_properties(xy PROPERTIES SOVERSION 4 VERSION 4.1.1)
 
 add_executable(xyconv xyconv.cpp)
 target_link_libraries(xyconv xy ${ZLIB_LIBRARIES} ${BZIP2_LIBRARIES})

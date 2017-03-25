@@ -36,6 +36,8 @@ if [ $arg = 0 ]; then
     grep '.zip' README.rst
     echo in xylib/Makefile.am:
     grep 'version-info' xylib/Makefile.am
+    echo in CMakeLists.txt:
+    grep SOVERSION CMakeLists.txt
     echo in xylib_capi.py:
     grep libxy.so xylib_capi.py
     echo in README.rst:
