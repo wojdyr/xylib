@@ -4,15 +4,13 @@
 #define BUILDING_XYLIB
 #include "csv.h"
 #include "util.h"
+#include <algorithm>
 #include <limits>
-#include <boost/tokenizer.hpp>
 
 using namespace std;
 using namespace xylib::util;
 
 namespace xylib {
-
-typedef boost::tokenizer< boost::escaped_list_separator<char> > Tokenizer;
 
 const FormatInfo CsvDataSet::fmt_info(
     "csv",
@@ -37,16 +35,40 @@ bool is_space_or_end(const char* str)
 }
 
 static
+vector<string> split_csv_line(const string& line, char sep)
+{
+    vector<string> fields(1);
+    bool in_quote = false;
+    for (string::const_iterator i = line.begin(); i != line.end(); ++i) {
+        if (*i == sep && !in_quote) {
+            fields.push_back("");
+        } else if (*i == '"') {
+            in_quote = !in_quote;
+        } else {
+            if (*i == '\\' && i + 1 != line.end()) {
+                // The text from CSV file is of secondary importance, so we
+                // handle only a few escape sequences.
+                if (*(i+1) == '"' || *(i+1) == sep || *(i+1) == '\\')
+                    ++i;
+                //if (*(i+1) == 'n') { fields.back() += '\n'; ++i; continue; }
+            }
+            fields.back() += *i;
+        }
+    }
+    return fields;
+}
+
+static
 int append_numbers_from_line(const string& line, char sep,
                              vector<vector<double> > *out)
 {
-    Tokenizer t(line, boost::escaped_list_separator<char>('\\', sep, '"'));
+    vector<string> t = split_csv_line(line, sep);
     out->resize(out->size() + 1);
     vector<double>& nums = out->back();
     if (out->size() > 0)
         nums.reserve(out->front().size());
     int number_count = 0;
-    for (Tokenizer::iterator i = t.begin(); i != t.end(); ++i) {
+    for (vector<string>::const_iterator i = t.begin(); i != t.end(); ++i) {
         const char* field = i->c_str();
         // If the field contains anything else than a number with optional
         // leading/trailing white-spaces then NaN is returned.
@@ -145,10 +167,7 @@ char read_4lines(istream &f, bool& decimal_comma,
     bool has_header = (fields0 == field_count && num0 == 0 &&
                        !str_startwith(lines[0], "# "));
     if (has_header && column_names) {
-        Tokenizer t(lines[0],
-                    boost::escaped_list_separator<char>('\\', sep, '"'));
-        for (Tokenizer::iterator i = t.begin(); i != t.end(); ++i)
-            column_names->push_back(*i);
+        *column_names = split_csv_line(lines[0], sep);
     }
 
     // add numbers from the first 4 lines to `out`
