@@ -10,6 +10,10 @@
 #include <limits>
 #include <cassert>
 #include <cerrno>
+#ifndef DISABLE_STDERR_WARNINGS
+#include <cstdarg>
+#include <cstdio>
+#endif
 #include <boost/detail/endian.hpp>
 #include <boost/cstdint.hpp>
 
@@ -378,6 +382,15 @@ int count_numbers(const char* p)
     return n;
 }
 
+void warn(const char *fmt, ...) {
+    (void) fmt;
+#ifndef DISABLE_STDERR_WARNINGS
+    std::va_list args;
+    va_start(args, fmt);
+    vfprintf(stderr, fmt, args);
+    va_end(args);
+#endif
+}
 
 // get all numbers in the first legal line
 // sep is _optional_ separator that can be used in addition to white space

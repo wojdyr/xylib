@@ -5,7 +5,6 @@
 #include "specsxy.h"
 
 #include <cctype>
-#include <cstdio>
 #include <cstring>
 #include <string>
 #include <vector>
@@ -107,8 +106,8 @@ Block* read_block(istream &f)
         if (row.size() == 0)
             break;
         if (row.size() != cols.size()) {
-            fprintf(stderr, "Warning. Expected %d numbers in line, got %d.\n",
-                            (int) cols.size(), (int) row.size());
+            warn("Warning. Expected %d numbers in line, got %d.\n",
+                 (int) cols.size(), (int) row.size());
             row.resize(cols.size(), 0);
         }
         for (size_t i = 0; i != row.size(); ++i)

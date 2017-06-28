@@ -126,6 +126,8 @@ inline void format_assert(DataSet const* ds, bool condition,
                           + (comment.empty() ? comment : "; " + comment));
 }
 
+void warn(const char *fmt, ...);
+
 class ColumnWithName : public Column
 {
 public:
