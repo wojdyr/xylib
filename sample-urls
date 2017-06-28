@@ -83,7 +83,7 @@ samples/mjr9_116a.vms
 #http://www.npl.co.uk/upload/exe/VAMASex.exe
 
 # GSAS files
-http://www.mx.iucr.org/iucr-top/comm/cpd/QARR/gss/cpd-1a.gss
+#http://www.mx.iucr.org/iucr-top/comm/cpd/QARR/gss/cpd-1a.gss
 
 # text files
 samples/with_sigma.txt

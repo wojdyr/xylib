@@ -113,7 +113,6 @@ add_library(xy
             xylib/cpi.cpp
             xylib/csv.cpp
             xylib/dbws.cpp
-            xylib/gsas.cpp
             xylib/pdcif.cpp
             xylib/philips_raw.cpp
             xylib/philips_udf.cpp

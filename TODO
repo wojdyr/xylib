@@ -6,7 +6,7 @@ REQUESTED FORMATS
   http://www.certif.com/spec.html http://www.certif.com/goodies.html
   http://www.mathworks.com/matlabcentral/fileexchange/6271
 * JCAMP format (Standard NMR Data Format)
-* GSAS format (see gsas.cpp for comments) 
+* GSAS format
 * Thermo GRAMS/32 SPC
 * Rigaku raw file from Miniflex2 XRD. Low priority - Rigaku devs refused to
   show a spec ("The MiniFlex *.raw is Rigaku proprietary binary file format")
