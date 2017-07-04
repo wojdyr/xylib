@@ -2,15 +2,10 @@
 REQUESTED FORMATS
 =================
 
-* Certified Scientific Software's spec format:
-  http://www.certif.com/spec.html http://www.certif.com/goodies.html
-  http://www.mathworks.com/matlabcentral/fileexchange/6271
-* JCAMP format (Standard NMR Data Format)
-* GSAS format
-* Thermo GRAMS/32 SPC
-* Rigaku raw file from Miniflex2 XRD. Low priority - Rigaku devs refused to
-  show a spec ("The MiniFlex *.raw is Rigaku proprietary binary file format")
+See https://github.com/wojdyr/xylib/labels/new-format-request
 
-note: These formats wait for volunteers. Or at least for a code that
-      could be adapted and included in this library.
+Feel free to request a new format by creating a new issue there.
+
+Generally, all new formats wait for volunteers.
+Or at least for a code that could be adapted and included in this library.
 
