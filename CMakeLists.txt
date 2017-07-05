@@ -128,6 +128,7 @@ add_library(xy
             xylib/winspec_spe.cpp
             xylib/xfit_xdd.cpp
             xylib/xrdml.cpp
+	    xylib/xsyg.cpp
             xylib/xylib.cpp)
 
 if (DOWNLOAD_ZLIB)
