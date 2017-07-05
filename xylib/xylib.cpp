@@ -46,6 +46,7 @@
 #include "chiplot.h"
 #include "spectra.h"
 #include "specsxy.h"
+#include "xsyg.h"
 
 #include <vector>
 #include <map>
@@ -83,6 +84,7 @@ const FormatInfo *formats[] = {
     &SpectraDataSet::fmt_info,
     &SpecsxyDataSet::fmt_info,
     &CsvDataSet::fmt_info,
+    &XsygDataSet::fmt_info,
     // TextDataSet should be at the end because it can use any extension.
     &TextDataSet::fmt_info,
     NULL // it must be a NULL-terminated array
