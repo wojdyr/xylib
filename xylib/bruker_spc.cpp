@@ -53,7 +53,7 @@ void BrukerSpcDataSet::load_data(std::istream &f)
       //the file format is quite simple, however,
       //we have BIG endian, means we have to swap the byte position ...
       //https://stackoverflow.com/questions/105252/how-do-i-convert-between-big-endian-and-little-endian-values-in-c#105339
-      int y = __builtin_bswap32 ((int32_t) read_uint32_le(f));
+      int y = __builtin_bswap32 ((__int32_t) read_uint32_le(f));
       ycol -> add_val(y);
 
       //set x-value and update channel number
