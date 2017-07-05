@@ -453,7 +453,7 @@ void VecColumn::calculate_min_max() const
 //for all cases
 //https://stackoverflow.com/questions/2182002/convert-big-endian-to-little-endian-in-c-without-using-provided-func#2182184
 //! Byte swap int
-int32_t swap_int32( int32_t val )
+int32_t swap_int32(int32_t val)
 {
   val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF );
   return (val << 16) | ((val >> 16) & 0xFFFF);

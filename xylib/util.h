@@ -203,14 +203,15 @@ public:
     }
 };
 
+/// SK: Add declaration of swapping of signed integer binaries
+int swap_int32(int val);
+
 #if __cplusplus-0 < 201103L
 typedef std::auto_ptr<Block> AutoPtrBlock;
 #else
 typedef std::unique_ptr<Block> AutoPtrBlock;
 #endif
 
-/// SK: Add declaration of swapping of signed integer binaries
-int32_t swap_int32( int32_t val);
 
 } } // namespace xylib::util
 
