@@ -38,10 +38,7 @@
 #ifndef XYLIB_XYLIB_H_
 #define XYLIB_XYLIB_H_
 
-/* XYLIB_API is a mark for API classes and functions,
- * used to decorate classes and functions for Win32 DLL linking.
- */
-#undef XYLIB_API
+/* XYLIB_API is an implementation details - necessary for Windows DLLs */
 #if defined(_WIN32) && (defined(XYLIB_DLL) || defined(DLL_EXPORT))
 # if defined(BUILDING_XYLIB)
 #  define XYLIB_API  __declspec(dllexport)

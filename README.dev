@@ -14,10 +14,10 @@ To add new filetype foo:
 -  #include foo.h in xylib.cpp
 -  add an entry to formats[] array in xylib.cpp (but not after TextDataSet)
 -  add foo.cpp and foo.h files to xylib/Makefile.am
-   and/or add foo.cpp to CMakeLists.txt
+-  add xylib/foo.cpp to CMakeLists.txt
 
 Do not worry too much about metadata, especially if the file is human-readable.
-Currently programs programs that use xylib mostly ignore metadata.
+Currently programs that use xylib mostly ignore metadata.
 
 You may contact us before you start, to avoid duplication of work.
 
