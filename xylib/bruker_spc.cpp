@@ -7,7 +7,7 @@
 #define BUILDING_XYLIB
 #include "bruker_spc.h"
 #include <sstream>
-#include <stdint>
+#include <cstdint>
 #include "util.h"
 
 using namespace std;
