@@ -8,7 +8,6 @@
 #include "bruker_spc.h"
 #include <sstream>
 #include "util.h"
-#include "Rcpp.h"
 
 using namespace std;
 using namespace xylib::util;
