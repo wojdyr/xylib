@@ -5,15 +5,15 @@
 #include "util.h"
 #include "xylib.h"
 
+#include <cassert>
+#include <cctype>  // isspace
+#include <cerrno>
 #include <cmath>
 #include <climits>
-#include <limits>
-#include <cassert>
-#include <cerrno>
-#ifndef DISABLE_STDERR_WARNINGS
 #include <cstdarg>
 #include <cstdio>
-#endif
+#include <cstdlib> // strtol, strtod
+#include <limits>
 #include <boost/detail/endian.hpp>
 #include <boost/cstdint.hpp>
 

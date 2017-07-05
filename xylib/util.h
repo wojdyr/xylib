@@ -5,10 +5,11 @@
 #define XYLIB_UTIL_H_
 
 #include <cassert>
-#include <cmath>
+#include <cmath>    // floor
+#include <cstdio>   // snprintf
 #include <cstring>  // memcpy
 #include <fstream>
-#include <memory>
+#include <memory>   // auto_ptr/unique_ptr
 #include <string>
 #include <vector>
 
@@ -62,11 +63,12 @@ Block* read_ssel_and_data(std::istream &f, int max_headers=0);
 long my_strtol(const std::string &str);
 double my_strtod(const std::string &str);
 
-inline bool is_numeric(int c)
-    { return isdigit(c) || c=='+' ||  c=='-' || c=='.'; }
+inline bool is_numeric(int c) {
+    return (c >= '0' && c <= '9') || c=='+' ||  c=='-' || c=='.';
+}
 
 /// Round real to integer.
-inline int iround(double d) { return static_cast<int>(floor(d+0.5)); }
+inline int iround(double d) { return static_cast<int>(std::floor(d+0.5)); }
 
 /// S() converts any type to string
 template <typename T, int N>
@@ -76,7 +78,7 @@ std::string format1(const char* fmt, T t)
 #ifdef _MSC_VER
     _snprintf(buffer, N, fmt, t);
 #else
-    snprintf(buffer, N, fmt, t);
+    std::snprintf(buffer, N, fmt, t);
 #endif
     buffer[N-1] = '\0';
     return std::string(buffer);
