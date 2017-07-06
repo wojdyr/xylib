@@ -12,6 +12,3 @@ script:
 branches:
   only:
     - master
-notifications:
-  email:
-    - johannes.friedrich@uni-bayreuth.de
