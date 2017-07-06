@@ -24,7 +24,7 @@ const FormatInfo WinspecSpeDataSet::fmt_info(
 );
 
 enum {
-    SPE_HEADER_SIZE = 4100,   // fixed binary header size
+    SPE_HEADER_SIZE = 4100  // fixed binary header size
 };
 
 /* datatypes of DATA point in spe_file */
@@ -32,7 +32,7 @@ enum spe_dt {
     SPE_DATA_FLOAT = 0,     // size 4
     SPE_DATA_LONG  = 1,     // size 4
     SPE_DATA_INT   = 2,     // size 2
-    SPE_DATA_UINT  = 3,     // size 2
+    SPE_DATA_UINT  = 3      // size 2
 };
 
 // Calibration structure in SPE format.
@@ -184,5 +184,4 @@ void WinspecSpeDataSet::read_calib(istream &f, spe_calib &calib)
 }
 
 } // end of namespace xylib
-
 
