@@ -14,4 +14,4 @@ branches:
     - master
 notifications:
   email:
-    - wojdyr@gmail.com
+    - johannes.friedrich@uni-bayreuth.de
