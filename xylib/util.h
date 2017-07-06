@@ -24,6 +24,7 @@ namespace xylib { namespace util {
 void le_to_host(void *ptr, int size);
 
 unsigned int read_uint32_le(std::istream &f);
+int read_int32_le(std::istream &f);
 unsigned int read_uint16_le(std::istream &f);
 int read_int16_le(std::istream &f);
 float read_flt_le(std::istream &f);
@@ -202,11 +203,15 @@ public:
     }
 };
 
+/// SK: Add declaration of swapping of signed integer binaries
+int swap_int32(int val);
+
 #if __cplusplus-0 < 201103L
 typedef std::auto_ptr<Block> AutoPtrBlock;
 #else
 typedef std::unique_ptr<Block> AutoPtrBlock;
 #endif
+
 
 } } // namespace xylib::util
 

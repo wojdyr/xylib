@@ -97,6 +97,7 @@ T read_le(istream &f)
 }
 
 unsigned int read_uint32_le(istream &f) { return read_le<uint32_t>(f); }
+int read_int32_le(istream &f) { return read_le<int32_t>(f); } //SK: Added for signed integer
 unsigned int read_uint16_le(istream &f) { return read_le<uint16_t>(f); }
 int read_int16_le(istream &f) { return read_le<int16_t>(f); }
 float read_flt_le(istream &f) { return read_le<float>(f); }
@@ -445,6 +446,17 @@ void VecColumn::calculate_min_max() const
             max_val = *i;
     }
     last_minmax_length = data.size();
+}
+
+//SK:
+//we need byte swapping, howver, the preferred __builtin_bswap32 does not work
+//for all cases
+//https://stackoverflow.com/questions/2182002/convert-big-endian-to-little-endian-in-c-without-using-provided-func#2182184
+//! Byte swap int
+int32_t swap_int32(int32_t val)
+{
+  val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF );
+  return (val << 16) | ((val >> 16) & 0xFFFF);
 }
 
 
