@@ -46,11 +46,40 @@ void XsygDataSet::load_data(std::istream &f){
 
     ptree tree;
     unsigned int measurement_nr, AQ_nr = 1;
-
+    
     //read XML file
     read_xml(f, tree);
 
     ptree sample = tree.get_child("Sample");
+    
+    //store metaData
+    
+    std::string state, parentID, name, user, startDate, sampleCarrier, lexsygID, lexStudioVersion, firmwareVersion,
+    os, comment;
+    
+    state = sample.get("<xmlattr>.state","");
+    parentID = sample.get("<xmlattr>.parentID","");
+    name = sample.get("<xmlattr>.name","");
+    user = sample.get("<xmlattr>.user","");
+    startDate = sample.get("<xmlattr>.startDate","");
+    sampleCarrier = sample.get("<xmlattr>.sampleCarrier","");
+    lexsygID = sample.get("<xmlattr>.lexsygID","");
+    lexStudioVersion = sample.get("<xmlattr>.lexStudioVersion","");
+    firmwareVersion = sample.get("<xmlattr>.firmwareVersion","");
+    os = sample.get("<xmlattr>.os","");
+    comment = sample.get("<xmlattr>.comment","");
+    
+    meta["state"] = state;
+    meta["parentID"] = parentID;
+    meta["name"] = name;
+    meta["user"] = user;
+    meta["StartDate"] = startDate;
+    meta["sampleCarrier"] = sampleCarrier;
+    meta["lexsygID"] = lexsygID;
+    meta["lexStuidoVersion"] = lexStudioVersion;
+    meta["firmwareVersion"] = firmwareVersion;
+    meta["os"] = os;
+    meta["comment"] = comment;
 
     //loop Aliquots
     std::pair<ptiter, ptiter> sequenceRange = sample.equal_range("Sequence");
@@ -111,23 +140,30 @@ void XsygDataSet::load_data(std::istream &f){
                     }// end 1st while-loop: token
 
 
-                    //get curveDescripter
+                    //extract meta data
                     string curveDescriptor = j -> second.get("<xmlattr>.curveDescripter","");
                     std::vector<std::string> curve_descriptor_split;
                     boost::split(curve_descriptor_split, curveDescriptor, boost::is_any_of(";"));
 
-                    //get recordType
                     string recordType = i -> second.get("<xmlattr>.recordType","");
                     string detector = j -> second.get("<xmlattr>.detector","");
 
-                    //get state
                     string state = j -> second.get("<xmlattr>.state","");
-
-                    //get parentID
                     string parentID = j-> second.get("<xmlattr>.state","");
-
-                    //get startDate
                     string startDate = j -> second.get("<xmlattr>.startDate","");
+                    string curveType = j -> second.get("<xmlattr>.curveType","");
+                    string stimulator = j -> second.get("<xmlattr>.simulator","");
+                    string offset= j -> second.get("<xmlattr>.offset","");
+                    
+                    //add meta data
+                    blk->meta["state"] = state;
+                    blk->meta["parentID"] = parentID;
+                    blk->meta["startDate"] = startDate;
+                    blk->meta["curveType"] = curveType;
+                    blk->meta["stimulator"] = stimulator;
+                    blk->meta["curveDescriptor"] = curveDescriptor;
+                    blk->meta["offset"] = offset;
+                    
 
                     //set names of columns
                     x_axis_col-> set_name(curve_descriptor_split[0]);
@@ -144,12 +180,6 @@ void XsygDataSet::load_data(std::istream &f){
                     // add column to block
                     blk->add_column(x_axis_col);
                     blk->add_column(y_axis_col);
-
-                    //add meta data
-                    blk->meta["detector"] = detector;
-                    blk->meta["state"] = state;
-                    blk->meta["parentID"] = parentID;
-                    blk->meta["startDate"] = startDate;
 
                     //finally: add block
                     add_block(blk);
@@ -222,24 +252,39 @@ void XsygDataSet::load_data(std::istream &f){
                     //set names of columns
                     x_axis_col-> set_name(curve_descriptor_split[1]);
 
-                    //get recordType
                     string recordType = i -> second.get("<xmlattr>.recordType","");
-                    string detector = j -> second.get("<xmlattr>.detector","");
-
-                    //get state
                     string state = j -> second.get("<xmlattr>.state","");
-
-                    //get parentID
                     string parentID = j-> second.get("<xmlattr>.state","");
-
-                    //get startDate
                     string startDate = j -> second.get("<xmlattr>.startDate","");
+                    string curveType = j -> second.get("<xmlattr>.curveType","");
+                    string detector = j -> second.get("<xmlattr>.detector","");
+                    string offset= j -> second.get("<xmlattr>.offset","");
+                    string duration = j -> second.get("<xmlattr>.duration","");
+                    string calibration = j -> second.get("<xmlattr>.calibration","");
+                    string cameraType = j -> second.get("<xmlattr>.cameraType","");
+                    string integrationTime = j -> second.get("<xmlattr>.integrationTime","");
+                    string channelTime = j -> second.get("<xmlattr>.channelTime","");
+                    string CCD_temperature = j -> second.get("<xmlattr>.CCD_temperature","");
+                    
+                    //add meta data
+                    blk->meta["state"] = state;
+                    blk->meta["parentID"] = parentID;
+                    blk->meta["startDate"] = startDate;
+                    blk->meta["curveTyp"] = curveType;
+                    blk->meta["detector"] = detector;
+                    blk->meta["offset"] = offset;
+                    blk->meta["duration"] = duration;
+                    blk->meta["calibration"] = calibration;
+                    blk->meta["cameraType"] = cameraType;
+                    blk->meta["integrationTime"] = integrationTime;
+                    blk->meta["channelTime"] = channelTime;
+                    blk->meta["CCD_temperature"] = CCD_temperature;
+                    blk->meta["curveDescriptor"] = curveDescriptor;
 
                     //set name of block
                     ostringstream convert_AQ, convert_measurement_nr;
                     convert_AQ << AQ_nr;
                     convert_measurement_nr << measurement_nr;
-
 
                     blk->set_name("AQ: " + convert_AQ.str() + ", Meas.: " +
                             convert_measurement_nr.str() + ", Type: " + recordType + " (" + detector +")");
