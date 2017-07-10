@@ -147,7 +147,6 @@ void XsygDataSet::load_data(std::istream &f){
 
                     string recordType = i -> second.get("<xmlattr>.recordType","");
                     string detector = j -> second.get("<xmlattr>.detector","");
-
                     string state = j -> second.get("<xmlattr>.state","");
                     string parentID = j-> second.get("<xmlattr>.state","");
                     string startDate = j -> second.get("<xmlattr>.startDate","");
@@ -158,6 +157,7 @@ void XsygDataSet::load_data(std::istream &f){
                     //add meta data
                     blk->meta["state"] = state;
                     blk->meta["parentID"] = parentID;
+                    blk->meta["detector"] = detector;
                     blk->meta["startDate"] = startDate;
                     blk->meta["curveType"] = curveType;
                     blk->meta["stimulator"] = stimulator;
