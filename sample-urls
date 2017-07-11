@@ -135,3 +135,6 @@ samples/Spectra.1
 samples/specsxy_example.xy
 # and from Matthias May ("Kinetic Energy Axis: no")
 samples/mm-specs.xy
+
+# xsyg example file from Johannes Friedrich
+samples/rfqm_uv.xsyg

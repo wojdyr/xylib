@@ -27,6 +27,7 @@
 
 #include "util.h"
 #include "bruker_raw.h"
+#include "bruker_spc.h"
 #include "rigaku_dat.h"
 #include "text.h"
 #include "csv.h"
@@ -69,6 +70,7 @@ const FormatInfo *formats[] = {
     &UxdDataSet::fmt_info,
     &RigakuDataSet::fmt_info,
     &BrukerRawDataSet::fmt_info,
+    &BrukerSpcDataSet::fmt_info,
     &VamasDataSet::fmt_info,
     &UdfDataSet::fmt_info,
     &WinspecSpeDataSet::fmt_info,
@@ -438,7 +440,7 @@ struct decompressing_istreambuf : public std::streambuf
         writeptr_ = bufdata_;
     }
 
-    // should be called only when the buffer is full, double the buffer size 
+    // should be called only when the buffer is full, double the buffer size
     void double_buf()
     {
         int old_size = (int) (writeptr_ - bufdata_);

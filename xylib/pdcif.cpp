@@ -354,12 +354,12 @@ LoopValue::LoopValue(int kind_, string const& s)
     val = my_strtod(val_s);
     int ierr = my_strtol(err_s);
     string::size_type dot_pos = val_s.find('.');
-	if (dot_pos == string::npos)
-		err = ierr;
-	else {
+    if (dot_pos == string::npos) {
+        err = ierr;
+    } else {
         int frac_len = (int) (val_s.size() - dot_pos - 1);
-		err = ierr * pow(10., -frac_len);
-	}
+        err = ierr * pow(10., -frac_len);
+    }
 }
 
 struct DatasetActions
