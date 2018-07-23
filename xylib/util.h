@@ -90,6 +90,7 @@ inline std::string S(const char *k) { return std::string(k); }
 inline std::string S(const char k) { return std::string(1, k); }
 inline std::string S(int n) { return format1<int, 16>("%d", n); }
 inline std::string S(long n) { return format1<long, 21>("%ld", n); }
+inline std::string S(long long n) { return format1<long long, 24>("%lld", n); }
 // unsigned and size_t can be the same as type (e.g. MinGW on Windows)
 inline std::string Su(unsigned n) { return format1<unsigned, 16>("%u", n); }
 inline std::string S(size_t n)

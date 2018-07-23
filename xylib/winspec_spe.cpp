@@ -124,7 +124,7 @@ void WinspecSpeDataSet::load_data(std::istream &f)
                     y = read_flt_le(f);
                     break;
                 case SPE_DATA_LONG:
-                    y = read_uint32_le(f);
+                    y = read_int32_le(f);
                     break;
                 case SPE_DATA_INT:
                     y = read_int16_le(f);
