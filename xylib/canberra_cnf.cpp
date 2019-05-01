@@ -130,7 +130,7 @@ float convert_time(const char* p)
 }
 
 
-void CanberraCnfDataSet::load_data(std::istream &f)
+void CanberraCnfDataSet::load_data(std::istream &f, const char*)
 {
     string file_string;
     file_string.reserve(128*1024);

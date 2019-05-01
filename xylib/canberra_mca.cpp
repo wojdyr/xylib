@@ -45,7 +45,7 @@ bool CanberraMcaDataSet::check(istream &f, string*)
            && word_at_38 == 1;
 }
 
-void CanberraMcaDataSet::load_data(std::istream &f)
+void CanberraMcaDataSet::load_data(std::istream &f, const char*)
 {
     const int file_size = 2*512+2048*4;
     char *all_data = new char[file_size];

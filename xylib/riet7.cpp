@@ -60,7 +60,7 @@ bool Riet7DataSet::check(istream &f, string*)
     return false;
 }
 
-void Riet7DataSet::load_data(std::istream &f)
+void Riet7DataSet::load_data(std::istream &f, const char*)
 {
     Block *blk = read_ssel_and_data(f, 5);
     format_assert(this, blk != NULL);

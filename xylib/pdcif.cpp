@@ -516,7 +516,7 @@ void t_on_loop_finish::operator()(IteratorT, IteratorT) const
 
 } // anonymous namespace
 
-void PdCifDataSet::load_data(std::istream &f)
+void PdCifDataSet::load_data(std::istream &f, const char*)
 {
     // read file into vector<char>
     f.unsetf(ios::skipws);

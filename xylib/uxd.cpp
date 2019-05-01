@@ -98,7 +98,7 @@ void add_values_from_str(string const& str, char sep,
     }
 }
 
-void UxdDataSet::load_data(std::istream &f)
+void UxdDataSet::load_data(std::istream &f, const char*)
 {
     Block *blk = NULL;
     VecColumn* cols[2] = { NULL, NULL };

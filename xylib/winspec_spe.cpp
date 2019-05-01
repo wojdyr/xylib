@@ -80,7 +80,7 @@ bool WinspecSpeDataSet::check(istream &f, string*) {
 }
 
 
-void WinspecSpeDataSet::load_data(std::istream &f)
+void WinspecSpeDataSet::load_data(std::istream &f, const char*)
 {
     // only read necessary params from file header
     f.ignore(42);

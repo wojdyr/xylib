@@ -53,7 +53,7 @@ bool XfitXddDataSet::check(istream &f, string*)
     return ok;
 }
 
-void XfitXddDataSet::load_data(std::istream &f)
+void XfitXddDataSet::load_data(std::istream &f, const char*)
 {
     skip_c_style_comments(f);
     Block *blk = read_ssel_and_data(f);

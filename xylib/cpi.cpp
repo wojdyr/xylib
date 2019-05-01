@@ -28,7 +28,7 @@ bool CpiDataSet::check(istream &f, string*)
     return str_startwith(line, "SIETRONICS XRD SCAN");
 }
 
-void CpiDataSet::load_data(std::istream &f)
+void CpiDataSet::load_data(std::istream &f, const char*)
 {
     /* format example:
         SIETRONICS XRD SCAN

@@ -42,21 +42,21 @@ bool XsygDataSet::check(std::istream &f, string*)
 
 }
 
-void XsygDataSet::load_data(std::istream &f){
+void XsygDataSet::load_data(std::istream &f, const char*) {
 
     ptree tree;
     unsigned int measurement_nr, AQ_nr = 1;
-    
+
     //read XML file
     read_xml(f, tree);
 
     ptree sample = tree.get_child("Sample");
-    
+
     //store metaData
-    
+
     std::string state, parentID, name, user, startDate, sampleCarrier, lexsygID, lexStudioVersion, firmwareVersion,
     os, comment;
-    
+
     state = sample.get("<xmlattr>.state","");
     parentID = sample.get("<xmlattr>.parentID","");
     name = sample.get("<xmlattr>.name","");
@@ -68,7 +68,7 @@ void XsygDataSet::load_data(std::istream &f){
     firmwareVersion = sample.get("<xmlattr>.firmwareVersion","");
     os = sample.get("<xmlattr>.os","");
     comment = sample.get("<xmlattr>.comment","");
-    
+
     meta["state"] = state;
     meta["parentID"] = parentID;
     meta["name"] = name;
@@ -153,7 +153,7 @@ void XsygDataSet::load_data(std::istream &f){
                     string curveType = j -> second.get("<xmlattr>.curveType","");
                     string stimulator = j -> second.get("<xmlattr>.simulator","");
                     string offset= j -> second.get("<xmlattr>.offset","");
-                    
+
                     //add meta data
                     blk->meta["state"] = state;
                     blk->meta["parentID"] = parentID;
@@ -163,7 +163,7 @@ void XsygDataSet::load_data(std::istream &f){
                     blk->meta["stimulator"] = stimulator;
                     blk->meta["curveDescriptor"] = curveDescriptor;
                     blk->meta["offset"] = offset;
-                    
+
 
                     //set names of columns
                     x_axis_col-> set_name(curve_descriptor_split[0]);
@@ -191,7 +191,7 @@ void XsygDataSet::load_data(std::istream &f){
                     //create new Block, x- and y-axis
                     Block *blk = new Block;
                     VecColumn *x_axis_col = new VecColumn;
-                    
+
                     //read wavelength from attribute "wavelengthTable"
                     std::string wavelength = j->second.get("<xmlattr>.wavelengthTable","");
                     std::istringstream wavelength_ss(wavelength);
@@ -223,7 +223,7 @@ void XsygDataSet::load_data(std::istream &f){
 	                    if(it_data %2 == 1){
 //	                        times.push_back(data_split_2);
 	                    }else {
-	                    			
+
                                 // remove [ and ] from string
 	                        int last_br = data_split_2.find("]");
 	                        data_split_2.erase(last_br,1);
@@ -265,7 +265,7 @@ void XsygDataSet::load_data(std::istream &f){
                     string integrationTime = j -> second.get("<xmlattr>.integrationTime","");
                     string channelTime = j -> second.get("<xmlattr>.channelTime","");
                     string CCD_temperature = j -> second.get("<xmlattr>.CCD_temperature","");
-                    
+
                     //add meta data
                     blk->meta["state"] = state;
                     blk->meta["parentID"] = parentID;

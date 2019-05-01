@@ -28,7 +28,7 @@ bool PhilipsRawDataSet::check(istream &f, string*)
 }
 
 
-void PhilipsRawDataSet::load_data(std::istream &f)
+void PhilipsRawDataSet::load_data(std::istream &f, const char*)
 {
     // mappers, translate the numbers to human-readable strings
     static const string diffractor_types[6] = {"PW1800", "PW1710 based system",

@@ -60,7 +60,7 @@ void replace_commas_with_dots(string &s)
 
 } // anonymous namespace
 
-void TextDataSet::load_data(std::istream &f)
+void TextDataSet::load_data(std::istream &f, const char*)
 {
     string buf;
     if (!getline(f, buf, '\n'))

@@ -100,7 +100,7 @@ string trim_label(string const& str)
     return str.substr(first, last - first + 1);
 }
 
-void ChiPlotDataSet::load_data(std::istream &f)
+void ChiPlotDataSet::load_data(std::istream &f, const char*)
 {
     string graph_title = trim_label(read_line(f));
     string x_label = trim_label(read_line(f));

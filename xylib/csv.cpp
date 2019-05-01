@@ -203,7 +203,7 @@ bool CsvDataSet::check(istream &f, string* details)
 }
 
 
-void CsvDataSet::load_data(istream &f)
+void CsvDataSet::load_data(istream &f, const char*)
 {
     bool decimal_comma = has_option("decimal-comma");
 

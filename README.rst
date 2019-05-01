@@ -101,7 +101,7 @@ DOWNLOAD
   `the latest release on GitHub`__
 * |ico-tux| Linux: fresh RPMs and DEBs `from OBS`_
 
-__ https://github.com/wojdyr/xylib/releases/latest
+__ https://github.com/wojdyr/xylib/releases
 .. _`from OBS`: http://software.opensuse.org/download/package?project=home:wojdyr&package=xyconvert
 
 .. |ico-win| image:: web/ico-win.png

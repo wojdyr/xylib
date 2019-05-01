@@ -82,8 +82,15 @@ void le_to_host(void *ptr, int size)
     for (int i = 0; i < size/2; ++i)
         swap(p[i], p[size-i-1]);
 }
+void be_to_host(void *, int) {}
 #else
 void le_to_host(void *, int) {}
+void be_to_host(void *ptr, int size)
+{
+    char *p = (char*) ptr;
+    for (int i = 0; i < size/2; ++i)
+        swap(p[i], p[size-i-1]);
+}
 #endif
 
 // read little-endian number from f and return equivalent in host endianess
@@ -96,12 +103,24 @@ T read_le(istream &f)
     return val;
 }
 
+// read big-endian number from f and return equivalent in host endianess
+template<typename T>
+T read_be(istream &f)
+{
+    T val;
+    my_read(f, reinterpret_cast<char*>(&val), sizeof(val));
+    be_to_host(&val, sizeof(val));
+    return val;
+}
+
 unsigned int read_uint32_le(istream &f) { return read_le<uint32_t>(f); }
-int read_int32_le(istream &f) { return read_le<int32_t>(f); } //SK: Added for signed integer
+int read_int32_le(istream &f) { return read_le<int32_t>(f); }
 unsigned int read_uint16_le(istream &f) { return read_le<uint16_t>(f); }
 int read_int16_le(istream &f) { return read_le<int16_t>(f); }
 float read_flt_le(istream &f) { return read_le<float>(f); }
 double read_dbl_le(istream &f) { return read_le<double>(f); }
+
+int read_int32_be(istream &f) { return read_be<int32_t>(f); }
 
 char read_char(istream &f)
 {
@@ -447,18 +466,6 @@ void VecColumn::calculate_min_max() const
     }
     last_minmax_length = data.size();
 }
-
-//SK:
-//we need byte swapping, howver, the preferred __builtin_bswap32 does not work
-//for all cases
-//https://stackoverflow.com/questions/2182002/convert-big-endian-to-little-endian-in-c-without-using-provided-func#2182184
-//! Byte swap int
-int32_t swap_int32(int32_t val)
-{
-  val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF );
-  return (val << 16) | ((val >> 16) & 0xFFFF);
-}
-
 
 } } // namespace xylib::util
 

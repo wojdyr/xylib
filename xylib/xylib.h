@@ -278,7 +278,7 @@ public:
     Block const* get_block(int n) const;
 
     /// read data from file
-    virtual void load_data(std::istream &f) = 0;
+    virtual void load_data(std::istream &f, const char* path) = 0;
 
     /// delete all data stored in this class (use only if you want to
     /// call load_data() more than once)
@@ -351,7 +351,7 @@ XYLIB_API bool is_directory(std::string const& path);
 #define OBLIGATORY_DATASET_MEMBERS(class_name) \
     public: \
         class_name() : DataSet(&fmt_info) {} \
-        void load_data(std::istream &f); \
+        void load_data(std::istream &f, const char* path); \
         static bool check(std::istream &f, std::string *details); \
         static DataSet* ctor() { return new class_name; } \
         static const FormatInfo fmt_info;

@@ -97,7 +97,7 @@ bool VamasDataSet::check(istream &f, string*)
 // file_header block_header block_data [block_header block_data] ...
 // There is only a value in every line without a key or label; the meaning is
 // determined by its position and values in preceding lines
-void VamasDataSet::load_data(std::istream &f)
+void VamasDataSet::load_data(std::istream &f, const char*)
 {
     int n;
     skip_whitespace(f);

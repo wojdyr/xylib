@@ -408,7 +408,7 @@ bool DataSet::is_valid_option(std::string const& opt) const
 }
 
 DataSet* load_stream_of_format(istream &is, FormatInfo const* fi,
-                               string const& options)
+                               string const& options, const char* path=NULL)
 {
     assert(fi != NULL);
     // check if the file is not empty
@@ -419,7 +419,7 @@ DataSet* load_stream_of_format(istream &is, FormatInfo const* fi,
     DataSet *ds = (*fi->ctor)();
     ds->set_options(options);
     try {
-        ds->load_data(is);
+        ds->load_data(is, path);
     }
     catch (FormatError &e) {
         throw FormatError(string(e.what()) + " [filetype: " + fi->name + "]");
@@ -532,7 +532,7 @@ DataSet* guess_and_load_stream(istream &is,
                                 + format_name);
     }
 
-    return load_stream_of_format(is, fi, options);
+    return load_stream_of_format(is, fi, options, path.c_str());
 }
 
 // MSVC has no S_ISDIR

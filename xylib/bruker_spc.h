@@ -14,7 +14,6 @@ namespace xylib {
     class BrukerSpcDataSet : public DataSet
     {
         OBLIGATORY_DATASET_MEMBERS(BrukerSpcDataSet)
-
     };
 
 } // namespace

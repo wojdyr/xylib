@@ -51,7 +51,7 @@ bool SpectraDataSet::check(istream &f, string*)
 }
 
 
-void SpectraDataSet::load_data(std::istream &f)
+void SpectraDataSet::load_data(std::istream &f, const char*)
 {
     f.ignore(1024, '\n'); // first line --> Experimentname
     for (;;) {

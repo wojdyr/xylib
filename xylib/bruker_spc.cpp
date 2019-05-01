@@ -2,7 +2,8 @@
 // Licence: Lesser GNU Public License 2.1 (LGPL)
 // Implementation based on work by Christoph Burow done for his R package 'ESR'
 // https://github.com/tzerk/ESR
-// Implementation carried out by Sebastian Kreutzer, IRAMAT-CRP2A, Universite Bordeaux Montaigne, France
+// Implementation carried out by Sebastian Kreutzer, IRAMAT-CRP2A,
+// Universite Bordeaux Montaigne, France
 
 #define BUILDING_XYLIB
 #include "bruker_spc.h"
@@ -25,56 +26,23 @@ const FormatInfo BrukerSpcDataSet::fmt_info(
 
 );
 
-bool BrukerSpcDataSet::check(std::istream &f, string*)
+bool BrukerSpcDataSet::check(std::istream&, string*)
 {
-
-  return true;
+    return true;
 }
 
-
-void BrukerSpcDataSet::load_data(std::istream &f)
+void BrukerSpcDataSet::load_data(std::istream &f, const char*)
 {
-
-
-  Block* blk = new Block;
-
-  //predefine vectors
-  VecColumn *xcol = new VecColumn;
-  VecColumn *ycol = new VecColumn;
-
-  //initialise values
-  int channel = 1;
-  int stop = 0;
-
-  //run the import until we struggle
-  while (stop == 0) {
-
-    //we only try
-    try{
-
-      //the file format is quite simple, however,
-      //we have BIG endian, means we have to swap the byte position ...
-      int y = swap_int32(read_int32_le(f));
-      ycol -> add_val(y);
-
-      //set x-value and update channel number
-      xcol -> add_val(channel);
-      channel++;
-
+    VecColumn *ycol = new VecColumn;
+    try { // read until read_int32_be throws error
+        int y = read_int32_be(f);
+        ycol->add_val(y);
     }
-
-    //catch the expection and set stop to 1
-    catch (const exception& e) {
-      stop = 1;
-    }
-
-  }
-
-  //add block data
-  blk->add_column(xcol);
-  blk->add_column(ycol);
-  add_block(blk);
-
+    catch (const FormatError& e) {}
+    Block* blk = new Block;
+    blk->add_column(new StepColumn(1, 1));
+    blk->add_column(ycol);
+    add_block(blk);
 }
 
 } // end of namespace xylib

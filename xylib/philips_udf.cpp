@@ -45,7 +45,7 @@ RawScan
     ...
     442/                                # last data ends with a '/'
 */
-void UdfDataSet::load_data(std::istream &f)
+void UdfDataSet::load_data(std::istream &f, const char*)
 {
     Block *blk = new Block;
 

@@ -55,7 +55,7 @@ bool DbwsDataSet::check(istream &f, string*)
     return true;
 }
 
-void DbwsDataSet::load_data(std::istream &f)
+void DbwsDataSet::load_data(std::istream &f, const char*)
 {
     Block* blk = new Block;
 

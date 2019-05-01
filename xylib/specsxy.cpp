@@ -116,7 +116,7 @@ Block* read_block(istream &f)
     return blk;
 }
 
-void SpecsxyDataSet::load_data(std::istream &f)
+void SpecsxyDataSet::load_data(std::istream &f, const char*)
 {
     Block* blk = NULL;
     while ((blk = read_block(f)) != NULL)

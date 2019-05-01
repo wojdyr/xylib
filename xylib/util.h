@@ -29,6 +29,7 @@ unsigned int read_uint16_le(std::istream &f);
 int read_int16_le(std::istream &f);
 float read_flt_le(std::istream &f);
 double read_dbl_le(std::istream &f);
+int read_int32_be(std::istream &f);
 
 char read_char(std::istream &f);
 std::string read_string(std::istream &f, unsigned len);

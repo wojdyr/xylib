@@ -76,7 +76,7 @@ static Block* make_block_from_points(const ptree& data_points)
     return blk.release();
 }
 
-void XrdmlDataSet::load_data(std::istream &f)
+void XrdmlDataSet::load_data(std::istream &f, const char*)
 {
     ptree tree;
     try {

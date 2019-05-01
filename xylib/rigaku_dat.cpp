@@ -63,7 +63,7 @@ and "*STEP" included).The data body of one group begins after "*COUNT=XXX").
 *EOF
 ///////////////////////////////////////////////////////////////////////////////
 */
-void RigakuDataSet::load_data(std::istream &f)
+void RigakuDataSet::load_data(std::istream &f, const char*)
 {
     Block *blk = NULL;
     VecColumn *ycol = NULL;

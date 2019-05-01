@@ -45,7 +45,7 @@ bool BrukerRawDataSet::check(istream &f, string* details)
 }
 
 
-void BrukerRawDataSet::load_data(std::istream &f)
+void BrukerRawDataSet::load_data(std::istream &f, const char*)
 {
     string head = read_string(f, 4);
     format_assert(this, head == "RAW " || head == "RAW2" || head == "RAW1");
