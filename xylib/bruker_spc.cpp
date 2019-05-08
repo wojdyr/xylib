@@ -56,8 +56,14 @@ void BrukerSpcDataSet::load_data(std::istream &f, const char* path)
     if(par.length() > 3){
      string key, value;
 
+     //replace file extension
+     par.replace(par.end()-3, par.end(), "PAR");
+
+     //translate to char for ifstream
+     const char * par_char = par.c_str();
+
         try {
-         ifstream par_file(par.replace(par.end()-3, par.end(), "PAR"));
+         ifstream par_file(par_char);
 
              for(std::string line; getline(par_file, line);){
                par_file >> key >> value;
