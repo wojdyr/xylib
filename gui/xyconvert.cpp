@@ -157,16 +157,16 @@ bool App::OnInit()
     frame->Show();
 
     Connect(dir_cb->GetId(), wxEVT_COMMAND_CHECKBOX_CLICKED,
-            (wxObjectEventFunction) &App::OnDirCheckBox);
+            wxCommandEventHandler(App::OnDirCheckBox));
     browser->Connect(browser->filectrl->GetId(), wxEVT_FILECTRL_FOLDERCHANGED,
-            (wxObjectEventFunction) &App::OnFolderChanged, NULL, this);
+            wxFileCtrlEventHandler(App::OnFolderChanged), NULL, this);
 
     Connect(about->GetId(), wxEVT_COMMAND_BUTTON_CLICKED,
-            (wxObjectEventFunction) &App::OnAbout);
+            wxCommandEventHandler(App::OnAbout));
     Connect(convert->GetId(), wxEVT_COMMAND_BUTTON_CLICKED,
-            (wxObjectEventFunction) &App::OnConvert);
+            wxCommandEventHandler(App::OnConvert));
     Connect(close->GetId(), wxEVT_COMMAND_BUTTON_CLICKED,
-            (wxObjectEventFunction) &App::OnClose);
+            wxCommandEventHandler(App::OnClose));
     return true;
 }
 
