@@ -9,47 +9,48 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-18.04, windows-latest, macos-latest]
-        python: [3.5,3.6,3.7,3.8]
+        python-version: [3.5,3.6,3.7,3.8]
     steps:
       - uses: actions/checkout@v2
 
       - uses: actions/setup-python@v2
-        name: Install Python
+        name: Install Python v${{ matrix.python-version }}
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Download Boost
-        run: |
-          python -c "import urllib.request;urllib.request.urlretrieve('https://sourceforge.net/projects/boost/files/boost/1.60.0/boost_1_60_0.zip/download', 'boost_1_60_0.zip')"
       - name: Install wheel and setuptools
         run: |
           python -m pip install --upgrade setuptools
           python -m pip install --upgrade wheel
+      - name: Download Boost
+        run: |
+          python -c "import urllib.request;urllib.request.urlretrieve('https://sourceforge.net/projects/boost/files/boost/1.60.0/boost_1_60_0.zip/download', 'boost_1_60_0.zip')"
       - name: Windows Build
         if: runner.os == 'Windows'
         run: |
           choco install -y -f microsoft-build-tools
           choco install -y -f swig --version=4.0.1
           Expand-Archive boost_1_60_0.zip
-          $startDir=$(pwd)
-          cd $GITHUB_WORKSPACE
-          python setup.py build_ext -I$startDir\boost_1_60_0\boost_1_60_0 bdist_wheel
+          $startDir=$(pwd).tostring()
+          cd $Env:GITHUB_WORKSPACE
+          $command="python setup.py build_ext -I"+$startDir+"\boost_1_60_0\boost_1_60_0\ bdist_wheel"
+          cmd.exe /c $command
       - name: Linux Build
-        if: runner.os == "Linux"
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get install -y swig unzip
-          unzip boost_1_60_0.zip
+          unzip -qq boost_1_60_0.zip
           startDir=$(pwd)
           
-          python setup.py build_ext -I$startDir/boost_1_60_0/boost_1_60_0 bdist_wheel
+          python setup.py build_ext -I$startDir/boost_1_60_0/ bdist_wheel
       - name: macOS Build
-        if: runner.os == "macOS"
+        if: runner.os == 'macOS'
         run: |
           brew install swig
           brew install unzip
-          unzip boost_1_60_0.zip
+          unzip -qq boost_1_60_0.zip
           startDir=$(pwd)
           cd $GITHUB_WORKSPACE
-          python setup.py build_ext -I$startDir/boost_1_60_0/boost_1_60_0 bdist_wheel
+          python setup.py build_ext -I$startDir/boost_1_60_0/ bdist_wheel
       - uses: actions/upload-artifact@v2
         with:
-          path: $GITHUB_WORKSPACE/dist/*.whl
+          path: ./dist/*.whl
