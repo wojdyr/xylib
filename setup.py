@@ -12,8 +12,8 @@ The first two numbers in the version are the version of included xylib.
 
 Prerequisites for building: SWIG and Boost libraries (headers only).
 """
-
-from distutils.core import setup, Extension
+from setuptools import setup
+from distutils.core import Extension
 from distutils.command.sdist import sdist
 from glob import glob
 import sys
@@ -70,7 +70,6 @@ setup(name='xylib-py',
                              swig_opts=swig_opts,
                              include_dirs=['.'],
                              libraries=[])],
-      #package_dir={'': 'xylib'},
       py_modules=['xylib'],
       headers=headers,
       cmdclass={'build': CustomBuild})
