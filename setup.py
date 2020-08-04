@@ -3,15 +3,14 @@
 # This setup.py builds xylib as a python extension, which is experimental.
 # The normal way of building xylib is using configure && make. Or cmake.
 long_description="""\
-This package is a collection of built wheels for xylib-py (https://pypi.org/project/xylib-py/), pending approval of a PR that would autoupload these wheels to that package.
-
-Original Description:
 xylib is a library for reading obscure file formats with data from
 powder diffraction, spectroscopy and other experimental methods.
 For the list of supported formats see https://github.com/wojdyr/xylib .
 
 This module includes bindings to xylib and xylib itself.
 The first two numbers in the version are the version of included xylib.
+
+Prerequisites for building: SWIG and Boost libraries (headers only).
 """
 from setuptools import setup
 from distutils.core import Extension
@@ -49,9 +48,9 @@ swig_opts = ['-c++', '-modern', '-modernargs']
 if sys.version_info[0] == 3:
     swig_opts += ['-py3']
 
-setup(name='xylib-py-wheels',
+setup(name='xylib-py',
       version='1.6.0',
-      description='Built wheels for xylib-py by Marcin Wojdyr',
+      description='Python bindings to xylib',
       long_description=long_description,
       classifiers=[
           'Development Status :: 5 - Production/Stable',
@@ -61,10 +60,10 @@ setup(name='xylib-py-wheels',
           'Topic :: Scientific/Engineering :: Chemistry',
           'Topic :: Software Development :: Libraries :: Python Modules',
           ],
-      author='Christopher Stallard',
-      author_email='christopher.stallard1@gmail.com',
+      author='Marcin Wojdyr',
+      author_email='wojdyr@gmail.com',
       license='LGPL2.1',
-      url='https://github.com/chris-stallard1/xylib',
+      url='https://github.com/wojdyr/xylib',
       ext_modules=[Extension('_xylib',
                              sources=sources,
                              language='c++',
