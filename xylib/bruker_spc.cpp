@@ -18,7 +18,7 @@ namespace xylib {
 const FormatInfo BrukerSpcDataSet::fmt_info(
     "bruker_spc",
     "Bruker ESP300-E SPC",
-    "spc",
+    "spc par",
     true,                        // whether binary
     false,                       // whether has multi-blocks
     &BrukerSpcDataSet::ctor,
@@ -31,18 +31,52 @@ bool BrukerSpcDataSet::check(std::istream&, string*)
     return true;
 }
 
-void BrukerSpcDataSet::load_data(std::istream &f, const char*)
+void BrukerSpcDataSet::load_data(std::istream &f, const char* path)
 {
+    //(1) read y-data from the SPC-file
     VecColumn *ycol = new VecColumn;
     try { // read until read_int32_be throws error
         int y = read_int32_be(f);
         ycol->add_val(y);
     }
+
     catch (const FormatError& e) {}
     Block* blk = new Block;
     blk->add_column(new StepColumn(1, 1));
     blk->add_column(ycol);
+
+    //add block
     add_block(blk);
+
+    //(2) read meta-data from the PAR-file if available
+    //the PAR-file is a second file that should be in the
+    //same folder
+    string par = path;
+
+    if(par.length() > 3){
+     string key, value;
+
+     //replace file extension
+     par.replace(par.end()-3, par.end(), "PAR");
+
+     //translate to char for ifstream
+     const char * par_char = par.c_str();
+
+        try {
+         ifstream par_file(par_char);
+
+             for(std::string line; getline(par_file, line);){
+               par_file >> key >> value;
+               meta[key] = value;
+
+             }
+
+        }
+
+        catch (const FormatError& e) {}
+
+    }
+
 }
 
 } // end of namespace xylib
