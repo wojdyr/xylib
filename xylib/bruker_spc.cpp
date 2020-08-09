@@ -35,12 +35,18 @@ void BrukerSpcDataSet::load_data(std::istream &f, const char* path)
 {
     //(1) read y-data from the SPC-file
     VecColumn *ycol = new VecColumn;
-    try { // read until read_int32_be throws error
-        int y = read_int32_be(f);
-        ycol->add_val(y);
+
+    int i = 0;
+    while (i == 0) {
+        try { // read until read_int32_be throws error
+            int y = read_int32_be(f);
+            ycol->add_val(y);
+
+        } catch (const FormatError& e) {
+             break;
+        }
     }
 
-    catch (const FormatError& e) {}
     Block* blk = new Block;
     blk->add_column(new StepColumn(1, 1));
     blk->add_column(ycol);
