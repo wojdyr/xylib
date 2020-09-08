@@ -131,6 +131,9 @@ inline void format_assert(DataSet const* ds, bool condition,
                           + (comment.empty() ? comment : "; " + comment));
 }
 
+#if (defined(__GNUC__) && !defined(__MINGW32__)) || defined(__clang)
+__attribute__((format(printf, 1, 2)))
+#endif
 void warn(const char *fmt, ...);
 
 class ColumnWithName : public Column
