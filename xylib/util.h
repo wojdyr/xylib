@@ -46,7 +46,7 @@ T from_le(const char* p)
 double from_pdp11(const unsigned char* p);
 
 std::string str_trim(std::string const& str);
-void str_split(std::string const& line, std::string const& sep,
+void str_split(std::string const& line, char sep,
                std::string &key, std::string &val);
 inline bool str_startwith(const std::string &str, const std::string &prefix) {
     return str.compare(0, prefix.size(), prefix) == 0;

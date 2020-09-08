@@ -186,17 +186,16 @@ string str_trim(string const& str)
 
 
 // skip whitespace, get key and val that are separated by `sep'
-void str_split(string const& line, string const& sep,
-               string &key, string &val)
+void str_split(string const& line, char sep, string &key, string &val)
 {
-    string::size_type p = line.find_first_of(sep);
+    string::size_type p = line.find(sep);
     if (p == string::npos) {
         key = line;
         val = "";
     }
     else {
         key = str_trim(line.substr(0, p));
-        val = str_trim(line.substr(p + sep.size()));
+        val = str_trim(line.substr(p + 1));
     }
 }
 

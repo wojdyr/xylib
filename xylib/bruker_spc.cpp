@@ -69,7 +69,7 @@ void BrukerSpcDataSet::load_data(std::istream &f, const char* path)
         std::string line;
         while (std::getline(par_file, line, '\r')) {
             std::string key, value;
-            str_split(line, " ", key, value);
+            str_split(line, ' ', key, value);
             if (value.find('\n') == std::string::npos)
                 meta[key] = value;
         }

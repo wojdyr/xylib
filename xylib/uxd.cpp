@@ -146,7 +146,7 @@ void UxdDataSet::load_data(std::istream &f, const char*)
             // other meta key-value pair.
             // NOTE the order, it must follow other "_XXX" branches
             string key, val;
-            str_split(line.substr(1), "=", key, val);
+            str_split(line.substr(1), '=', key, val);
 
             if (key == "START")
                 start = my_strtod(val);

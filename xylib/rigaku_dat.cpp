@@ -95,7 +95,7 @@ void RigakuDataSet::load_data(std::istream &f, const char*)
             else { // meta key-value pair
                 string key, val;
                 // parse "*KEY = VALUE"
-                str_split(line.substr(1), "=", key, val);
+                str_split(line.substr(1), '=', key, val);
                 if (key == "START")
                     start = my_strtod(val);
                 else if (key == "STEP")
