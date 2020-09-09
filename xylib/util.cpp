@@ -261,6 +261,32 @@ bool get_valid_line(std::istream &is, std::string &line, char comment_char)
     return true;
 }
 
+// get line ending with \r, \n or \r\n
+// based on https://stackoverflow.com/a/6089413/104453
+std::istream& getline_with_any_ending(std::istream& is, std::string& t)
+{
+    t.clear();
+    std::istream::sentry se(is, true);
+    std::streambuf* sb = is.rdbuf();
+    for (;;) {
+        int c = sb->sbumpc();
+        if (c == '\n')
+            return is;
+        if (c == '\r') {
+            if (sb->sgetc() == '\n')
+                sb->sbumpc();
+            return is;
+        }
+        if (c == std::streambuf::traits_type::eof()) {
+            // Also handle the case when the last line has no line ending
+            if (t.empty())
+                is.setstate(std::ios::eofbit);
+            return is;
+        }
+        t += (char)c;
+    }
+}
+
 
 void skip_whitespace(istream &f)
 {

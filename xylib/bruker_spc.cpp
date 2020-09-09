@@ -67,7 +67,7 @@ void BrukerSpcDataSet::load_data(std::istream &f, const char* path)
 #endif
     if (par_file) {
         std::string line;
-        while (std::getline(par_file, line, '\r')) {
+        while (getline_with_any_ending(par_file, line) && !par_file.eof()) {
             std::string key, value;
             str_split(line, ' ', key, value);
             if (value.find('\n') == std::string::npos)

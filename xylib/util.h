@@ -57,6 +57,7 @@ bool has_word(const std::string &sentence, const std::string &word);
 
 std::string read_line(std::istream &is);
 bool get_valid_line(std::istream &is, std::string &line, char comment_char);
+std::istream& getline_with_any_ending(std::istream& is, std::string& t);
 
 void skip_whitespace(std::istream &f);
 Column* read_start_step_end_line(std::istream& f);
