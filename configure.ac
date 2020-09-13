@@ -68,8 +68,6 @@ AC_CHECK_HEADER([climits], [],
                 [AC_MSG_ERROR([Could not find necessary C++ libs headers])])
 AC_CHECK_HEADER([boost/cstdint.hpp], [],
                 [AC_MSG_ERROR([Could not find necessary Boost headers])])
-AC_CHECK_HEADER([boost/detail/endian.hpp], [],
-                [AC_MSG_ERROR([Could not find necessary Boost headers])])
 AC_CHECK_HEADER([boost/spirit/version.hpp], [],
                 [AC_MSG_ERROR([Boost::Spirit headers were not found.])])
 AC_CHECK_HEADER([boost/tokenizer.hpp], [],

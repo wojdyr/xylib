@@ -14,11 +14,18 @@
 #include <cstdio>
 #include <cstdlib> // strtol, strtod
 #include <limits>
-#include <boost/detail/endian.hpp>
+#include <boost/version.hpp>
 #include <boost/cstdint.hpp>
-
+#if BOOST_VERSION >= 106500
+#include <boost/predef/other/endian.h>
+#if !BOOST_ENDIAN_LITTLE_BYTE && !BOOST_ENDIAN_BIG_BYTE
+# error "Unknown endianness"
+#endif
+#else
+#include <boost/detail/endian.hpp>
 #if !defined(BOOST_LITTLE_ENDIAN) && !defined(BOOST_BIG_ENDIAN)
-#error "Unknown endianness"
+# error "Unknown endianness"
+#endif
 #endif
 
 using namespace std;
@@ -75,7 +82,8 @@ void my_read(istream &f, char *buf, int len)
 
 // change the byte-order from "little endian" to host endian
 // ptr: pointer to the data, size - size in bytes
-#if defined(BOOST_BIG_ENDIAN)
+#if defined(BOOST_BIG_ENDIAN) || \
+    (defined(BOOST_ENDIAN_BIG_BYTE) && BOOST_ENDIAN_BIG_BYTE)
 void le_to_host(void *ptr, int size)
 {
     char *p = (char*) ptr;
