@@ -32,6 +32,8 @@ Supported formats:
    *(only 1-D data is supported)*
 - χPLOT CHI_
 - Ron Unwin's Spectra XPS format (VGX-900 compatible)
+- Freiberg Instruments XSYG (from lexsyg)
+- Bruker SPC/PAR
 
 .. _CHI: http://www.esrf.eu/computing/scientific/FIT2D/FIT2D_REF/node115.html#SECTION0001851500000000000000
 
@@ -113,7 +115,7 @@ __ https://github.com/wojdyr/xylib/releases
 * `tarball`_
 * GitHub repository_ |travis-status|_ |appveyor-status|_
 
-.. _`tarball`: https://github.com/wojdyr/xylib/releases/download/v1.5/xylib-1.5.tar.bz2
+.. _`tarball`: https://github.com/wojdyr/xylib/releases/download/v1.6/xylib-1.6.tar.bz2
 .. _repository: https://github.com/wojdyr/xylib
 .. _travis-status: https://travis-ci.org/wojdyr/xylib/
 .. |travis-status| image:: https://api.travis-ci.org/wojdyr/xylib.png
@@ -123,7 +125,7 @@ __ https://github.com/wojdyr/xylib/releases
 **To compile** the source code you need:
 
 * C++ compiler (all popular ones are tested: GCC, Clang, MSVC, icc)
-* Boost_ libraries (only headers).
+* Boost_ libraries >= 1.46.1 (only headers).
 * optionally, zlib and bzlib libraries (for reading compressed files)
 * optionally, wxWidgets 3.0 (for xyconvert - GUI converter)
 
@@ -181,7 +183,9 @@ CREDITS
 HISTORY
 =======
 
-* 1.6 (unreleased)
+* 1.6 (2020-09-08)
+  - added XSYG format from Freiberg Instruments' lexsyg (Johannes Friedrich)
+  - added Bruker SPC binary format (Sebastian Kreutzer)
   - added PANalytical XRDML
 
 * 1.5 (2016-12-17)
