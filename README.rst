@@ -184,11 +184,13 @@ HISTORY
 =======
 
 * 1.6 (2020-09-08)
+
   - added XSYG format from Freiberg Instruments' lexsyg (Johannes Friedrich)
   - added Bruker SPC binary format (Sebastian Kreutzer)
   - added PANalytical XRDML
 
 * 1.5 (2016-12-17)
+
   - improved CNF reading (thanks to Jim and Miha)
   - changes to reading SpecsLab2 xy
   - support text files with lines terminated by CR only
