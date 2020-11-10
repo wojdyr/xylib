@@ -26,30 +26,14 @@ class CustomBuild(build):
                     ('build_clib', build.has_c_libraries),
                     ('build_scripts', build.has_scripts)]
 
-
-# from distutils/command/sdist.py, the default files are, among others:
-#       - all C sources listed as part of extensions or C libraries
-#         in the setup script (doesn't catch C headers!)
-# No idea what was the reason to have C sources without headers.
-# Anyway, let's monkey-patch it.
-sdist.add_defaults_without_headers = sdist.add_defaults
-def add_defaults_with_headers(self):
-    self.add_defaults_without_headers()
-    self.filelist.extend(self.distribution.headers)
-    # actually we may add also a few other files, no need for MANIFEST.in
-    self.filelist.extend(['README.rst', 'xyconv.py'])
-sdist.add_defaults = add_defaults_with_headers
-
-
 sources = glob('xylib/*.cpp') + ['xylib.i']
-headers = glob('xylib/*.h')
 
 swig_opts = ['-c++', '-modern', '-modernargs']
 if sys.version_info[0] == 3:
     swig_opts += ['-py3']
 
 setup(name='xylib-py',
-      version='1.6.0',
+      version='1.6.1',
       description='Python bindings to xylib',
       long_description=long_description,
       classifiers=[
@@ -71,5 +55,4 @@ setup(name='xylib-py',
                              include_dirs=['.'],
                              libraries=[])],
       py_modules=['xylib'],
-      headers=headers,
       cmdclass={'build': CustomBuild})
