@@ -12,9 +12,9 @@ if [ $# -eq 0 ]; then
     echo 4. RPMs: https://build.opensuse.org/project/show?project=home%3Awojdyr
 #    echo 5. prepare DEBs in Launchpad  /obsolete/
     echo p. update xylib-py in PyPI
-    echo "6. git tag -a v$VERSION -m 'version $VERSION'; git push --tags"
+    echo "6. git tag -a v$VERSION -m 'version $VERSION'; git push --follow-tags"
     echo "   (and upload tarball and binaries)"
-    echo 7. update webpage
+    echo 7. "(not used)"
     echo 8. draft github release / announce
     echo 9. make Windows static lib for linking with fityk
     exit
@@ -114,13 +114,14 @@ fi
 
 # 6. GitHub file release
 if [ $arg = 6 ]; then
-    echo "do: git tag -a v$vERSION -m 'version $VERSION'; git push --tags"
+    echo "do: git tag -a v$vERSION -m 'version $VERSION'; git push --follow-tags"
 fi
 
 # 7. update webpage
 if [ $arg = 7 ]; then
     make index.html
-    scp index.html `whoami`,xylib@web.sourceforge.net:htdocs/
+    # SF project page is now redirected to github project page
+    #scp index.html `whoami`,xylib@web.sourceforge.net:htdocs/
 fi
 
 # 8. announce

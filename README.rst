@@ -71,6 +71,7 @@ xylib is used by:
 
 -  `fityk <http://fityk.nieto.pl>`_
 -  `qpx-gamma <https://github.com/usnistgov/qpx-gamma>`_
+-  `GammaSpy <https://github.com/wgurecky/GammaSpy>`_
 -  ...
 
 xyconv
@@ -177,6 +178,8 @@ CREDITS
    Canberra (Genie) CNF files.
 -  Matthias Richter added Ron Unwin's Spectra XPS format
    and SpecsLab2 xy format.
+-  Johannes Friedrich added xsyg (lexsyg) format.
+-  Sebastian Kreutzer added Bruker SPC binary format.
 
 .. _FitzPeaks: http://www.jimfitz.demon.co.uk/fitzpeak.htm
 
