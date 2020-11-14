@@ -72,6 +72,7 @@ xylib is used by:
 -  `fityk <http://fityk.nieto.pl>`_
 -  `qpx-gamma <https://github.com/usnistgov/qpx-gamma>`_
 -  `GammaSpy <https://github.com/wgurecky/GammaSpy>`_
+-  `gamma <https://github.com/crp2a/gamma>`_ through `rxylib <https://github.com/R-Lum/rxylib>`_
 -  ...
 
 xyconv
