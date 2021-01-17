@@ -19,7 +19,7 @@ namespace xylib {
 
 const FormatInfo XsygDataSet::fmt_info(
     "xsyg",
-    "Freiberg Instruments (FI) Lexsyg",
+    "Freiberg Instruments XSYG",
     "xsyg",
     false,                     // whether binary
     true,                      // whether has multi-blocks
