@@ -115,12 +115,12 @@ __ https://github.com/wojdyr/xylib/releases
 **Source**:
 
 * `tarball`_
-* GitHub repository_ |travis-status|_ |appveyor-status|_
+* GitHub repository_ |ci-status|_ |appveyor-status|_
 
 .. _`tarball`: https://github.com/wojdyr/xylib/releases/download/v1.6/xylib-1.6.tar.bz2
 .. _repository: https://github.com/wojdyr/xylib
-.. _travis-status: https://travis-ci.org/wojdyr/xylib/
-.. |travis-status| image:: https://api.travis-ci.org/wojdyr/xylib.png
+.. _ci-status: https://github.com/wojdyr/xylib/actions
+.. |ci-status| image:: https://github.com/wojdyr/xylib/workflows/CI/badge.svg
 .. _appveyor-status: https://ci.appveyor.com/project/wojdyr/xylib
 .. |appveyor-status| image:: https://ci.appveyor.com/api/projects/status/9gotaqqhl8j9ovge?svg=true
 

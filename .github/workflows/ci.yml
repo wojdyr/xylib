@@ -40,7 +40,7 @@ jobs:
         cmake -DGUI=OFF ..
         make -j2
         ./xyconv --version
-        ./xyconv samples/mjr9_64c.vms tmp.xy
+        ./xyconv ../samples/mjr9_64c.vms tmp.xy
 
   centos:
     runs-on: ubuntu-latest
