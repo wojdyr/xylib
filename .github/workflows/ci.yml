@@ -16,7 +16,9 @@ jobs:
         cmake -DCMAKE_CXX_STANDARD=14 -DUSE_BZIP2=1 -DGUI=1 .
         make -j2
         sudo make install
+        export LD_LIBRARY_PATH=/usr/local/lib
         xyconv --version
+        xyconv samples/BT86.raw tmp.xy
 
   clang35:
     name: "Ubuntu 16.04, Clang 3.5"
@@ -32,12 +34,13 @@ jobs:
       run: |
         $CXX --version
         autoreconf -i
-        ./configure --without-gui
+        ./configure --without-gui CXXFLAGS="-Wall -Wextra"
         mkdir build
         cd build
         cmake -DGUI=OFF ..
         make -j2
         ./xyconv --version
+        ./xyconv samples/mjr9_64c.vms tmp.xy
 
   centos:
     runs-on: ubuntu-latest
@@ -57,3 +60,6 @@ jobs:
         pwd
         cmake3 . -DGUI=OFF
         make -j2
+        ./xyconv --version
+        ./xyconv samples/03yag02.mca tmp.xy
+        make install
