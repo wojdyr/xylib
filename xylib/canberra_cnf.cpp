@@ -224,7 +224,7 @@ void CanberraCnfDataSet::load_data(std::istream &f, const char*)
         warn("Warning. PHA keyword not found.\n");
 
     int n_channels = from_le<uint16_t>(pha_ptr+10) * 256;
-    if (n_channels < 256 || n_channels > 16384)
+    if (n_channels < 256)
         throw FormatError("Unexpected number of channels" + S(n_channels));
 
     // dates and times
