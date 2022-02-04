@@ -327,21 +327,24 @@ void BrukerRawDataSet::load_version4(std::istream &f)
     f.ignore(27);                               // address 34
 
     // begin global metadata segment reading
-    // here we pretend to undestand only type 10 and 30
+    // here we pretend to undestand only types 10 (0A), 30 (1E), 60 (3C)
     int segment_type = -1;
     int segment_len = 0;
-    string tag_name;
+    int drive_num = 0;
     while (1 == 1) {
         segment_type = read_uint32_le(f);       // offset +0
         if (segment_type == 0 || segment_type == 160)
             break; // start of ranges
         segment_len = read_uint32_le(f);        // offset +4
-        if (segment_type == 10) {
+        assert(segment_len >= 8);
+        if (segment_type == 10) { // VarInfo
+            assert(segment_len >= 36);
             f.ignore(4);                        // offset +8
-            tag_name = read_string(f, 24);      // offset +12
+            string tag_name = read_string(f, 24);      // offset +12
             meta[tag_name] = read_string(f, segment_len-36); // offset +36
         }
-        else if (segment_type == 30) {
+        else if (segment_type == 30) { // HardwareConfiguration
+            assert(segment_len >= 120);
             f.ignore(64);                               // offset +8
             meta["ALPHA_AVERAGE"] = S(read_dbl_le(f));  // offset +72
             meta["ALPHA1"] = S(read_dbl_le(f));         // offset +80
@@ -352,6 +355,17 @@ void BrukerRawDataSet::load_version4(std::istream &f)
             meta["ANODE_MATERIAL"] = read_string(f,4);  // offset +116
             f.ignore(segment_len-120);                  // offset +120
         }
+        else if (segment_type == 60) { // DriveAlignment
+            assert(segment_len >= 76);
+            int align_flag = read_uint32_le(f);         // offset +8
+            string drive_name = read_string(f, 24);     // offset +12
+            f.ignore(32);                               // offset +36
+            double delta = read_dbl_le(f);              // offset +68
+            f.ignore(segment_len-76);
+            meta["DRIVE" + S(drive_num) + "_ALIGN_FLAG"] = S(align_flag);
+            meta["DRIVE" + S(drive_num) + "_DELTA"] = S(delta);
+            drive_num++;
+        }
         else { // skip others
             f.ignore(segment_len-8);
         }
@@ -360,38 +374,67 @@ void BrukerRawDataSet::load_version4(std::istream &f)
     // now process ranges
     while (segment_type == 0 || segment_type == 160) {
         Block* blk = new Block;
+        // primary range header
         f.ignore(28);                               // offset +4
         blk->meta["SCAN_TYPE"] = read_string(f,24); // offset +32
-        // we only support Locked Coupled Scans
-        if (blk->meta["SCAN_TYPE"] == "Locked Coupled") {
-            f.ignore(16);                           // offset +56
-            double start_2theta = read_dbl_le(f);   // offset +72
-            blk->meta["START_2THETA"] = S(start_2theta);
-            double step_size = read_dbl_le(f);      // offset +80
-            blk->meta["STEP_SIZE"] = S(step_size);
-            int steps = read_uint32_le(f);          // offset +88
-            blk->meta["STEPS"] = S(steps);
-            blk->meta["TIME_PER_STEP"] = S(read_flt_le(f)); // offset +92
-            f.ignore(4);                            // offset +96
-            blk->meta["GENERATOR_VOLTAGE"] = Su(read_flt_le(f)); // +100
-            blk->meta["GENERATOR_CURRENT"] = Su(read_flt_le(f)); // +104
-            f.ignore(4);                            // offset +108
-            blk->meta["USED_LAMBDA"] = S(read_dbl_le(f)); // offset +112
-            f.ignore(20);                           // offset +120
-            int hdr_size = read_uint32_le(f);       // offset +140
-            f.ignore(16);                           // offset +144
+        f.ignore(16);                               // offset +56
+        double start_angle = read_dbl_le(f);        // offset +72
+        blk->meta["START_ANGLE"] = S(start_angle);
+        double step_size = read_dbl_le(f);          // offset +80
+        blk->meta["STEP_SIZE"] = S(step_size);
+        int steps = read_uint32_le(f);              // offset +88
+        blk->meta["STEPS"] = S(steps);
+        blk->meta["TIME_PER_STEP"] = S(read_flt_le(f)); // offset +92
+        f.ignore(4);                                // offset +96
+        blk->meta["GENERATOR_VOLTAGE"] = Su(read_flt_le(f)); // +100
+        blk->meta["GENERATOR_CURRENT"] = Su(read_flt_le(f)); // +104
+        f.ignore(4);                                // offset +108
+        blk->meta["USED_LAMBDA"] = S(read_dbl_le(f));     // offset +112
+        f.ignore(16);                               // offset +120
+        int datum_size = read_uint32_le(f);         // offset +136
+        int hdr_size = read_uint32_le(f);           // offset +140
+        f.ignore(16);                               // offset +144
 
+        // We only grock Locked Coupled and Unlocked Coupled for now
+        if (blk->meta["SCAN_TYPE"] == "Locked Coupled" || blk->meta["SCAN_TYPE"] == "Unlocked Coupled") {
             // process ranges for the remaining block headers,
             // ignoring types we don't understand
             while (hdr_size > 0) {
                 segment_type = read_uint32_le(f);   // offset +0
                 segment_len = read_uint32_le(f);    // offset +4
+                assert(segment_len >= 8);
                 if (segment_type == 50) {
+                    assert(segment_len >= 64);
                     f.ignore(4);                    // offset +8
                     string segment_name = read_string(f,24); // offset +12
                     if (segment_name == "Theta") {
                         f.ignore(20);               // offset +36
                         blk->meta["START_THETA"] = S(read_dbl_le(f)); // +56
+                        f.ignore(segment_len-64);
+                    }
+                    else if (segment_name == "2Theta") {
+                        f.ignore(20);               // offset +36
+                        blk->meta["START_2THETA"] = S(read_dbl_le(f)); // +56
+                        f.ignore(segment_len-64);
+                    }
+                    else if (segment_name == "Chi") {
+                        f.ignore(20);               // offset +36
+                        blk->meta["START_CHI"] = S(read_dbl_le(f)); // +56
+                        f.ignore(segment_len-64);
+                    }
+                    else if (segment_name == "Phi") {
+                        f.ignore(20);               // offset +36
+                        blk->meta["START_PHI"] = S(read_dbl_le(f)); // +56
+                        f.ignore(segment_len-64);
+                    }
+                    else if (segment_name == "BeamTranslation") {
+                        f.ignore(20);               // offset +36
+                        blk->meta["START_BEAM_TRANSLATION"] = S(read_dbl_le(f)); // +56
+                        f.ignore(segment_len-64);
+                    }
+                    else if (segment_name == "Z-Drive") {
+                        f.ignore(20);               // offset +36
+                        blk->meta["START_Z-DRIVE"] = S(read_dbl_le(f)); // +56
                         f.ignore(segment_len-64);
                     }
                     else if (segment_name == "Divergence Slit") {
@@ -403,6 +446,8 @@ void BrukerRawDataSet::load_version4(std::istream &f)
                         f.ignore(segment_len-36);
                     }
                 }
+                // Segment type 300 = HRXRD is needed to properly interpret certain
+                // scan types. Not implemented here.
                 else {
                     f.ignore(segment_len-8);
                 }
@@ -410,18 +455,24 @@ void BrukerRawDataSet::load_version4(std::istream &f)
             }
 
             // Now compute the x values and read the y values
-            StepColumn *xcol = new StepColumn(start_2theta, step_size);
+            StepColumn *xcol = new StepColumn(start_angle, step_size);
             blk->add_column(xcol);
 
             VecColumn *ycol = new VecColumn;
+            assert(datum_size == 4);
             for (int i = 0; i < steps; ++i) {
                 float y = read_flt_le(f);
                 ycol->add_val(y);
             }
             blk->add_column(ycol);
-
-            add_block(blk);
         }
+        else { // Skip ranges we don't understand
+            blk->meta["UNKNOWN_RANGE_SCAN_TYPE"] = "true";
+            f.ignore(hdr_size);
+            f.ignore(datum_size*steps);
+        }
+
+        add_block(blk);
 
         // End or next range
         (void)f.peek(); // force eof if at end
