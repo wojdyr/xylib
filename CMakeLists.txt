@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.12)
 project(xylib C CXX)
 
 option(USE_ZLIB "Handle compressed GZ files - requires Zlib library" ON)
@@ -9,10 +9,6 @@ option(BUILD_SHARED_LIBS "Build as a shared library" ON)
 
 if(NOT DEFINED LIB_INSTALL_DIR)
   set(LIB_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/lib)
-endif()
-
-if (POLICY CMP0042)
-  cmake_policy(SET CMP0042 OLD)
 endif()
 
 # if we build static library we likely prefer 3rd-party libraries also static
@@ -33,8 +29,8 @@ if (DOWNLOAD_ZLIB)
   include(ExternalProject)
   set(zlib_install "${CMAKE_INSTALL_PREFIX}")
   ExternalProject_Add(zlib
-    URL "http://zlib.net/zlib-1.2.8.tar.gz"
-    URL_MD5 44d667c142d7cda120332623eab69f40
+    URL "http://zlib.net/zlib-1.2.12.tar.gz"
+    URL_MD5 5fc414a9726be31427b440b434d05f78
     PREFIX zlib
     CMAKE_ARGS -DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
                -DCMAKE_INSTALL_PREFIX:PATH=${zlib_install}
