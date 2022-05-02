@@ -98,7 +98,7 @@ int count_csv_numbers(const string& line, char sep, int *number_count,
         *number_count = append_numbers_from_line(line, sep, &out);
     }
 
-    return out.size() == 1 ? out[0].size() : 0;
+    return out.size() == 1 ? (int)out[0].size() : 0;
 }
 
 static

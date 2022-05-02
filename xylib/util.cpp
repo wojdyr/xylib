@@ -497,7 +497,7 @@ void VecColumn::calculate_min_max() const
         if (*i > max_val)
             max_val = *i;
     }
-    last_minmax_length = data.size();
+    last_minmax_length = (int) data.size();
 }
 
 } } // namespace xylib::util

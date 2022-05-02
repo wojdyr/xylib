@@ -40,7 +40,7 @@ void BrukerSpcDataSet::load_data(std::istream &f, const char* path)
             int y = read_int32_be(f);
             ycol->add_val(y);
 
-        } catch (const FormatError& e) {
+        } catch (const FormatError&) {
              break;
         }
     }

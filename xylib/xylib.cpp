@@ -700,8 +700,8 @@ string get_wildcards_string(string const& all_files)
                     short_ext_list += " ";
                 }
                 const char* end = strchr(start, ' ');
-                int ext_len = (end == NULL ? len - (start - exts)
-                                           : end - start);
+                size_t ext_len = (end == NULL ? len - (start - exts)
+                                              : end - start);
                 string ext(start, ext_len);
                 ext_list += "*." + ext;
                 short_ext_list += "." + ext;

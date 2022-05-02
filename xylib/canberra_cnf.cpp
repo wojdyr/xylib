@@ -111,7 +111,7 @@ string convert_date(const char* p)
     le_to_host(&d, sizeof(d));
     time_t t = d / 10000000 - 3506716800u; // time since the Epoch
     char s[64];
-    int r = strftime(s, sizeof(s), "%a, %Y-%m-%d %H:%M:%S", gmtime(&t));
+    size_t r = strftime(s, sizeof(s), "%a, %Y-%m-%d %H:%M:%S", gmtime(&t));
     if (r == 0)
         throw FormatError("reading date failed.");
     return string(s);
