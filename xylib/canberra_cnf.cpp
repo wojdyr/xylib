@@ -6,6 +6,7 @@
 
 #include <ctime>
 #include <cstring>
+#include <memory>  // for unique_ptr
 #include <boost/cstdint.hpp>
 
 #include "util.h"
@@ -196,7 +197,7 @@ void CanberraCnfDataSet::load_data(std::istream &f, const char*)
     if (enc_offset == 0)
         enc_offset = acq_offset;
 
-    AutoPtrBlock blk(new Block);
+    std::unique_ptr<Block> blk(new Block);
 
     // sample data - split name into name and description
     // (this was not in code from JF, it's my guess - MW)

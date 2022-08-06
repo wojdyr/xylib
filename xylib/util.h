@@ -9,7 +9,6 @@
 #include <cstdio>   // snprintf
 #include <cstring>  // memcpy
 #include <fstream>
-#include <memory>   // auto_ptr/unique_ptr
 #include <string>
 #include <vector>
 
@@ -208,16 +207,6 @@ public:
         return get_value(n-1);
     }
 };
-
-/// SK: Add declaration of swapping of signed integer binaries
-int swap_int32(int val);
-
-#if __cplusplus-0 < 201103L
-typedef std::auto_ptr<Block> AutoPtrBlock;
-#else
-typedef std::unique_ptr<Block> AutoPtrBlock;
-#endif
-
 
 } } // namespace xylib::util
 

@@ -5,6 +5,7 @@
 #include "xrdml.h"
 
 #include <cstring>
+#include <memory>  // for unique_ptr
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include "util.h"
@@ -38,7 +39,7 @@ bool XrdmlDataSet::check(istream &f, string*)
 
 static Block* make_block_from_points(const ptree& data_points)
 {
-    AutoPtrBlock blk(new Block);
+    std::unique_ptr<Block> blk(new Block);
     StepColumn *xs_col = NULL;
     std::pair<ptiter, ptiter> prange = data_points.equal_range("positions");
     for (ptiter i = prange.first; i != prange.second; ++i) {

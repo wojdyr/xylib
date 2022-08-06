@@ -45,7 +45,7 @@ __ https://raw.github.com/wojdyr/xylib/master/sample-urls
 LIBRARY
 =======
 
-The library is written in C++ and has C bindings.
+The library is written in C++11 and has C bindings.
 
 R bindings: `rxylib (CRAN) <https://CRAN.R-project.org/package=rxylib>`_
 by Sebastian Kreutzer.
