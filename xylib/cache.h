@@ -1,10 +1,9 @@
 // Public API of xylib library.
 // Licence: Lesser GNU Public License 2.1 (LGPL)
 
-/// This header is new in 0.4 and may be changed in future.
 /// Support for caching files read by xylib.
 /// Usage is similar to load_file() from xylib.h:
-///  dataset_shared_ptr my_dataset = xylib::cached_load_file(...);
+///  std::shared_ptr<const xylib::DataSet> my_dataset = xylib::cached_load_file(...);
 /// or
 ///  xylib::DataSet const& my_dataset = xylib::Cache::Get()->load_file(...);
 
@@ -18,19 +17,13 @@
 #include <ctime>
 #include <string>
 #include <vector>
+#include <memory>  // for shared_ptr
 #include "xylib.h"
-
-// boost::shared_ptr is more portable than C++11 or TR1 shared_ptr
-// and this extra caching utility is intendent for programs that
-// use Boost anyway. The usual way of using xylib is by including
-// only xylib.h (without extra caching). I'd not recommend adding
-// Boost as a dependency of xylib-devel (or equivalent) packages.
-#include <boost/shared_ptr.hpp>
-
-typedef boost::shared_ptr<const xylib::DataSet> dataset_shared_ptr;
 
 namespace xylib
 {
+
+using dataset_shared_ptr = std::shared_ptr<const xylib::DataSet>;
 
 struct CacheImp;
 
@@ -71,7 +64,9 @@ dataset_shared_ptr cached_load_file(std::string const& path,
     return Cache::Get()->load_file(path, format_name, options);
 }
 
-
 } // namespace xylib
+
+// deprecated, for compatibility with xylib 1.6
+using xylib::dataset_shared_ptr;
 
 #endif // XYLIB_CACHE_H_

@@ -13,10 +13,6 @@
 
 #include "uplot.h"
 
-#if XYLIB_VERSION < 10500
-typedef shared_ptr<const xylib::DataSet> dataset_shared_ptr;
-#endif
-
 class PreviewPlot : public PlotWithTics
 {
 public:
@@ -26,11 +22,11 @@ public:
     virtual void draw(wxDC &dc, bool);
     void load_dataset(const std::string& filename, const std::string& filetype,
                       const std::string& options);
-    dataset_shared_ptr get_data() const { return data_; }
+    xylib::dataset_shared_ptr get_data() const { return data_; }
     void make_outdated() { data_updated_ = false; }
 
 private:
-    dataset_shared_ptr data_;
+    xylib::dataset_shared_ptr data_;
     bool data_updated_; // if false, draw() doesn't do anything (plot is clear)
 };
 

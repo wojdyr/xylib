@@ -37,12 +37,12 @@ struct CachedFile
     std::string format_name_;
     std::string options_;
     std::time_t read_time_;
-    dataset_shared_ptr dataset_;
+    xylib::dataset_shared_ptr dataset_;
 
     CachedFile(std::string const& path,
                std::string const& format_name,
                std::string const& options,
-               dataset_shared_ptr dataset)
+               xylib::dataset_shared_ptr dataset)
         : path_(path), format_name_(format_name), options_(options),
           read_time_(std::time(NULL)), dataset_(dataset) {}
 };
