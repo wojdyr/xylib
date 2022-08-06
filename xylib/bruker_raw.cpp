@@ -386,8 +386,8 @@ void BrukerRawDataSet::load_version4(std::istream &f)
         blk->meta["STEPS"] = S(steps);
         blk->meta["TIME_PER_STEP"] = S(read_flt_le(f)); // offset +92
         f.ignore(4);                                // offset +96
-        blk->meta["GENERATOR_VOLTAGE"] = Su(read_flt_le(f)); // +100
-        blk->meta["GENERATOR_CURRENT"] = Su(read_flt_le(f)); // +104
+        blk->meta["GENERATOR_VOLTAGE"] = S(read_flt_le(f)); // +100
+        blk->meta["GENERATOR_CURRENT"] = S(read_flt_le(f)); // +104
         f.ignore(4);                                // offset +108
         blk->meta["USED_LAMBDA"] = S(read_dbl_le(f));     // offset +112
         f.ignore(16);                               // offset +120
@@ -396,7 +396,8 @@ void BrukerRawDataSet::load_version4(std::istream &f)
         f.ignore(16);                               // offset +144
 
         // We only grock Locked Coupled and Unlocked Coupled for now
-        if (blk->meta["SCAN_TYPE"] == "Locked Coupled" || blk->meta["SCAN_TYPE"] == "Unlocked Coupled") {
+        if (blk->meta["SCAN_TYPE"] == "Locked Coupled" ||
+            blk->meta["SCAN_TYPE"] == "Unlocked Coupled") {
             // process ranges for the remaining block headers,
             // ignoring types we don't understand
             while (hdr_size > 0) {
