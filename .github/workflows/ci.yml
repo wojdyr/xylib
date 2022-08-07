@@ -8,8 +8,10 @@ jobs:
     runs-on: ubuntu-22.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
-    - uses: actions/checkout@v2
-    - run: sudo apt-get install libz-dev libbz2-dev g++ libboost-dev libwxgtk3.0-gtk3-dev
+    - uses: actions/checkout@v3
+    - run: |
+        sudo apt-get update
+        sudo apt-get install libz-dev libbz2-dev g++ libboost-dev libwxgtk3.0-gtk3-dev
     - name: build
       run: |
         g++ --version
@@ -28,13 +30,13 @@ jobs:
       CC: clang-3.9
       CXX: clang++-3.9
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - run: sudo apt-get install libz-dev clang-3.9 libboost-dev autoconf automake libtool
     - name: build
       run: |
         $CXX --version
         autoreconf -i
-        ./configure --without-gui CXXFLAGS="-Wall -Wextra"
+        ./configure --without-gui CXXFLAGS="-std=c++11 -Wall -Wextra"
         mkdir build
         cd build
         cmake -DGUI=OFF ..
@@ -48,7 +50,7 @@ jobs:
     container: centos:7
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: yum
       run: |
         yum update -y && yum install -y epel-release
@@ -58,7 +60,7 @@ jobs:
     - name: build
       run: |
         pwd
-        cmake3 . -DGUI=OFF
+        cmake3 . -DGUI=OFF -DCMAKE_CXX_STANDARD=11
         make -j2
         ./xyconv --version
         ./xyconv samples/03yag02.mca tmp.xy
