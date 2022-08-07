@@ -3,9 +3,9 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  ubuntu2004:
-    name: "Ubuntu 20.04"
-    runs-on: ubuntu-20.04
+  ubuntu2204:
+    name: "Ubuntu 22.04"
+    runs-on: ubuntu-22.04
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
     - uses: actions/checkout@v2
@@ -13,7 +13,7 @@ jobs:
     - name: build
       run: |
         g++ --version
-        cmake -DCMAKE_CXX_STANDARD=14 -DUSE_BZIP2=1 -DGUI=1 .
+        cmake -DCMAKE_CXX_STANDARD=20 -DUSE_BZIP2=1 -DGUI=1 .
         make -j2
         sudo make install
         export LD_LIBRARY_PATH=/usr/local/lib
