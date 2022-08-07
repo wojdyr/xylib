@@ -11,11 +11,11 @@
 #include <cmath>
 #include <climits>
 #include <cstdarg>
+#include <cstdint>
 #include <cstdio>
 #include <cstdlib> // strtol, strtod
 #include <limits>
 #include <boost/version.hpp>
-#include <boost/cstdint.hpp>
 #if BOOST_VERSION >= 106500
 #include <boost/predef/other/endian.h>
 #if !BOOST_ENDIAN_LITTLE_BYTE && !BOOST_ENDIAN_BIG_BYTE
@@ -29,8 +29,6 @@
 #endif
 
 using namespace std;
-using namespace xylib::util;
-using namespace boost;
 
 namespace xylib { namespace util {
 

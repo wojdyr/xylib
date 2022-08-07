@@ -7,19 +7,15 @@
 #include <ctime>
 #include <cstring>
 #include <memory>  // for unique_ptr
-#include <boost/cstdint.hpp>
+#include <cstdint>
 
 #include "util.h"
 
 using namespace std;
 using namespace xylib::util;
-using boost::uint16_t;
-using boost::uint32_t;
-using boost::uint64_t;
 
 
 namespace xylib {
-
 
 const FormatInfo CanberraCnfDataSet::fmt_info(
     "canberra_cnf",

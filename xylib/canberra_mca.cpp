@@ -5,18 +5,15 @@
 #include "canberra_mca.h"
 
 #include <cmath>
-#include <boost/cstdint.hpp>
+#include <cstdint>
 
 #include "util.h"
 
 using namespace std;
 using namespace xylib::util;
-using boost::uint16_t;
-using boost::uint32_t;
 
 
 namespace xylib {
-
 
 const FormatInfo CanberraMcaDataSet::fmt_info(
     "canberra_mca",
@@ -89,6 +86,4 @@ void CanberraMcaDataSet::load_data(std::istream &f, const char*)
     add_block(blk);
 }
 
-
 } // namespace xylib
-

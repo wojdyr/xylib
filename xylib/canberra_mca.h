@@ -29,4 +29,3 @@ namespace xylib {
 
 }
 #endif // CANBERRA_MCA_H_
-
