@@ -1,0 +1,27 @@
+version: '{branch}-{build}'
+branches:
+  only:
+  - master
+skip_tags: true
+configuration: Release
+clone_depth: 1
+environment:
+  matrix:
+  - CMAKE_GEN: Visual Studio 17 2022
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+    BOOST: C:\Libraries\boost_1_77_0
+  - CMAKE_GEN: Visual Studio 15 2017 Win64
+    APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    BOOST: C:\Libraries\boost_1_69_0
+  - CMAKE_GEN: Visual Studio 12 2013
+    BOOST: C:\Libraries\boost_1_63_0
+
+build_script:
+- cmd: >-
+    dir C:\Libraries
+    cmake -D USE_ZLIB=OFF -D USE_BZIP2=OFF -D GUI=OFF -D BOOST_ROOT=%BOOST% -G "%CMAKE_GEN%" .
+    cmake --build . --config Release
+
+artifacts:
+- path: Release
+
