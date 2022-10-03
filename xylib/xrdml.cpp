@@ -65,12 +65,17 @@ static Block* make_block_from_points(const ptree& data_points)
     if (blk->get_column_count() == 0)
         throw FormatError("cannot deduce x values");
 
-    string inten_str = data_points.get<string>("intensities");
+    string inten_str = data_points.get<string>("counts");
     VecColumn *ycol = new VecColumn;
     blk->add_column(ycol);
     ycol->add_values_from_str(inten_str);
     if (ycol->get_point_count() < 2)
-        throw FormatError("intensities do not look correct");
+        string inten_str = data_points.get<string>("intensities");
+    VecColumn *ycol = new VecColumn;
+    blk->add_column(ycol);
+    ycol->add_values_from_str(inten_str);
+    if (ycol->get_point_count() < 2)
+        throw FormatError("intensities/counts do not look correct");
     if (xs_col != NULL)
         xs_col->set_step(xs_col->get_step() / (ycol->get_point_count() - 1));
     //blk->set_name(title);
