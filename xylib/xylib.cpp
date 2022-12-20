@@ -116,7 +116,7 @@ const char* xylib_get_version()
     static bool initialized = false;
     static char ver[16];
     if (!initialized) {
-        sprintf(ver, "%d.%d.%d", XYLIB_VERSION / 10000,
+        snprintf(ver, sizeof(ver), "%d.%d.%d", XYLIB_VERSION / 10000,
                                  XYLIB_VERSION / 100 % 100,
                                  XYLIB_VERSION % 100);
         initialized = true;
@@ -727,5 +727,3 @@ string get_wildcards_string(string const& all_files)
 }
 
 } // namespace xylib
-
-
