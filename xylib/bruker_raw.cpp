@@ -395,9 +395,18 @@ void BrukerRawDataSet::load_version4(std::istream &f)
         int hdr_size = read_uint32_le(f);           // offset +140
         f.ignore(16);                               // offset +144
 
-        // We only grock Locked Coupled and Unlocked Coupled for now
-        if (blk->meta["SCAN_TYPE"] == "Locked Coupled" ||
-            blk->meta["SCAN_TYPE"] == "Unlocked Coupled") {
+        // We only rock the common step-scan types for now: the locked/unlocked
+        //
+        // extended with the help of PositAI (1.6.0) and DeepSeek Flash V4
+        // coupled modes and the individual goniometer-axis scans (Theta, 2Theta,
+        // Chi, Phi). DIFFRAC.EVA writes area-detector scans as e.g. "2Theta".
+        std::string scan_type = blk->meta["SCAN_TYPE"];
+        if (scan_type == "Locked Coupled" ||
+            scan_type == "Unlocked Coupled" ||
+            scan_type == "Theta" ||
+            scan_type == "2Theta" ||
+            scan_type == "Chi" ||
+            scan_type == "Phi") {
             // process ranges for the remaining block headers,
             // ignoring types we don't understand
             while (hdr_size > 0) {
@@ -460,10 +469,17 @@ void BrukerRawDataSet::load_version4(std::istream &f)
             blk->add_column(xcol);
 
             VecColumn *ycol = new VecColumn;
-            assert(datum_size == 4);
+            // extended with the help of PositAI (1.6.0) and DeepSeek Flash V4
+            // Each data point occupies `datum_size` bytes. For 4-byte data the
+            // value is a plain little-endian float. Some DIFFRAC.EVA framer
+            // files use datum_size == 8, where each point the value is stored
+            // in the low 4 bytes and the remaining bytes are padding.
+            assert(datum_size == 4 || datum_size == 8);
             for (int i = 0; i < steps; ++i) {
                 float y = read_flt_le(f);
                 ycol->add_val(y);
+                if (datum_size > 4)
+                    f.ignore(datum_size - 4);
             }
             blk->add_column(ycol);
         }
